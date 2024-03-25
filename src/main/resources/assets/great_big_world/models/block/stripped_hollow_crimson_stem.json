@@ -1,0 +1,8 @@
+{
+  "parent": "great_big_world:block/hollow_log",
+  "textures": {
+    "end": "block/stripped_crimson_stem_top",
+    "side": "block/stripped_crimson_stem",
+    "inner": "block/stripped_crimson_stem"
+  }
+}

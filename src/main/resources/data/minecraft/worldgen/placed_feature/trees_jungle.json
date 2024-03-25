@@ -1,0 +1,41 @@
+{
+  "feature": "minecraft:trees_jungle",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:weighted_list",
+        "distribution": [
+          {
+            "data": 50,
+            "weight": 9
+          },
+          {
+            "data": 51,
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "creo:noise",
+      "noise": "great_big_world:forest_trees",
+      "min_threshold": -2.0,
+      "max_threshold": 0.7
+    },
+    {
+      "type": "minecraft:surface_water_depth_filter",
+      "max_water_depth": 0
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "OCEAN_FLOOR"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

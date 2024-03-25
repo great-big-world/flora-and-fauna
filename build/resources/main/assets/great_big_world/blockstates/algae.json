@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "density=1": {
+      "model": "great_big_world:block/algae_loose"
+    },
+    "density=2": {
+      "model": "great_big_world:block/algae"
+    },
+    "density=3": {
+      "model": "great_big_world:block/algae_dense"
+    }
+  }
+}

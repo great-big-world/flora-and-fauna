@@ -1,0 +1,19 @@
+{
+  "values": [
+    "#minecraft:is_explosion",
+    "#minecraft:is_lightning",
+    "#minecraft:is_projectile",
+    "minecraft:cramming",
+    "minecraft:generic",
+    "minecraft:magic",
+    "minecraft:dragon_breath",
+    "minecraft:stalagmite",
+    "minecraft:falling_block",
+    "minecraft:falling_anvil",
+    "minecraft:falling_stalactite",
+    "minecraft:mob_attack",
+    "minecraft:player_attack",
+    "minecraft:wither_skull",
+    "minecraft:sonic_boom"
+  ]
+}

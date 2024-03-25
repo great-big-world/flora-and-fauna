@@ -1,0 +1,17 @@
+repositories {
+    maven {
+        url = uri "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/flora_and_fauna.accesswidener")
+}
+
+dependencies {
+    modCompileOnly "maven.modrinth:sodium:mc$project.minecraft_version-0.5.8"
+    modCompileOnly "maven.modrinth:visuality:0.7.3+$project.minecraft_version"
+}

@@ -1,0 +1,27 @@
+v1	named	intermediary
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/block/SmallDripleafBlockMixin	Lnet/minecraft/state/property/BooleanProperty;	WATERLOGGED	field_28691
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/block/SmallDripleafBlockMixin	Lnet/minecraft/state/property/DirectionProperty;	FACING	field_29563
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/block/TallPlantBlockMixin	Lnet/minecraft/state/property/EnumProperty;	HALF	field_10929
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/client/WorldRendererMixin	Lnet/minecraft/client/world/ClientWorld;	world	field_4085
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/compat/visuality/CirclesOnWaterEventMixin	Lnet/minecraft/client/network/AbstractClientPlayerEntity;	player	player
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/world/VanillaBiomeParametersMixin	[[Lnet/minecraft/registry/RegistryKey;	uncommonBiomes	field_34520
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/world/VanillaBiomeParametersMixin	Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;	defaultParameter	field_34504
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/world/VanillaBiomeParametersMixin	Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;	coastContinentalness	field_34513
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/world/VanillaBiomeParametersMixin	[Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;	erosionParameters	field_34507
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/world/VanillaBiomeParametersMixin	[Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;	temperatureParameters	field_34505
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/world/VanillaBiomeParametersMixin	[Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;	humidityParameters	field_34506
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/world/VanillaBiomeParametersMixin	Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;	farInlandContinentalness	field_34517
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/world/VanillaBiomeParametersMixin	Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;	nearInlandContinentalness	field_34515
+FIELD	dev/creoii/greatbigworld/floraandfauna/mixin/world/VanillaBiomeParametersMixin	Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;	frozenTemperature	field_34508
+METHOD	dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin	()Lnet/minecraft/world/World;	getWorld	method_37908
+METHOD	dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin	()Lnet/minecraft/util/math/BlockPos;	getBlockPos	method_24515
+METHOD	dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin	()F	getWidth	method_17681
+METHOD	dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin	()F	getHeight	method_17682
+METHOD	dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin	()Z	isSprinting	method_5624
+METHOD	dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin	()Z	hasPassengers	method_5782
+METHOD	dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin	(Z)V	setSwimming	method_5796
+METHOD	dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin	(Lnet/minecraft/entity/EntityPose;)V	setPose	method_18380
+METHOD	dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin	()Lnet/minecraft/entity/EntityType;	getType	method_5864
+METHOD	dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin	()Lnet/minecraft/util/math/Direction;	getHorizontalFacing	method_5735
+METHOD	dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin	(Lnet/minecraft/entity/EntityPose;)Z	isInPose	method_41328
+METHOD	dev/creoii/greatbigworld/floraandfauna/mixin/world/VanillaBiomeParametersMixin	(Ljava/util/function/Consumer;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;FLnet/minecraft/registry/RegistryKey;)V	writeBiomeParameters	method_38187

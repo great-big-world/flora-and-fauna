@@ -1,0 +1,8 @@
+{
+  "parent": "great_big_world:block/hollow_log",
+  "textures": {
+    "end": "block/jungle_log_top",
+    "side": "block/jungle_log",
+    "inner": "block/stripped_jungle_log"
+  }
+}

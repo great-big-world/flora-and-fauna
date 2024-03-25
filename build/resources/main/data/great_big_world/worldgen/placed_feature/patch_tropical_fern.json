@@ -1,0 +1,31 @@
+{
+  "feature": "great_big_world:patch_tropical_fern",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:uniform",
+        "value": {
+          "min_inclusive": 1,
+          "max_inclusive": 8
+        }
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "creo:noise",
+      "noise": "great_big_world:forest_trees",
+      "min_threshold": -0.75,
+      "max_threshold": 0.75
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

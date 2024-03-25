@@ -1,0 +1,25 @@
+BUGS
+
+Seasons do not tint the world correctly when loading the world
+Tinted block's break particles are not tinted
+Birch/Spruce Leaves aren't affect by seasonal tint when sodium is loaded
+Season tint breaks biome blend in vanilla environment
+
+Random snowy grass blocks (without snow on top) in snowy biomes
+- something to do with rendering?
+
+Z-fighting on moss carpets when there are multiple in a block
+
+Ice does not melt when it should out of Winter
+randomtick issues
+- How to place snow in all chunks when snowing in winter?
+- How to melt all snow in chunks when out of winter?
+
+Ducks
+- wrong pivot point for wings?
+- babies can still die in water
+- duck death/hurt subtitles say Chicken
+- babies spin in water until parent moves
+
+Algae
+- how to fluently redensify algae when not colliding?

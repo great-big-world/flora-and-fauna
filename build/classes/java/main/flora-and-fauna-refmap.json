@@ -1,0 +1,192 @@
+{
+  "mappings": {
+    "dev/creoii/greatbigworld/floraandfauna/mixin/BlocksMixin": {
+      "<clinit>": "Lnet/minecraft/class_2246;<clinit>()V",
+      "Lnet/minecraft/block/FlowerBlock;<init>(Lnet/minecraft/entity/effect/StatusEffect;ILnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2356;<init>(Lnet/minecraft/class_1291;ILnet/minecraft/class_4970$class_2251;)V",
+      "Lnet/minecraft/block/MushroomPlantBlock;<init>(Lnet/minecraft/registry/RegistryKey;Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2420;<init>(Lnet/minecraft/class_5321;Lnet/minecraft/class_4970$class_2251;)V",
+      "Lnet/minecraft/block/SeagrassBlock;<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2476;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+      "Lnet/minecraft/block/ShortPlantBlock;<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2526;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+      "Lnet/minecraft/block/SmallDripleafBlock;<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_5808;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+      "Lnet/minecraft/block/TallFlowerBlock;<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2521;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+      "Lnet/minecraft/block/TallPlantBlock;<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2320;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+      "Lnet/minecraft/block/TallSeagrassBlock;<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2525;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+      "Lnet/minecraft/block/WitherRoseBlock;<init>(Lnet/minecraft/entity/effect/StatusEffect;ILnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2563;<init>(Lnet/minecraft/class_1291;ILnet/minecraft/class_4970$class_2251;)V"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/block/BeehiveBlockEntityMixin": {
+      "releaseBee": "Lnet/minecraft/class_4482;method_21855(Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_4482$class_4483;Ljava/util/List;Lnet/minecraft/class_4482$class_4484;Lnet/minecraft/class_2338;)Z"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/block/FlowerBlockMixin": {
+      "<init>(Ljava/util/List;Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2356;<init>(Ljava/util/List;Lnet/minecraft/class_4970$class_2251;)V",
+      "getOutlineShape": "Lnet/minecraft/class_2356;method_9530(Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/block/MushroomPlantBlockMixin": {
+      "<init>": "Lnet/minecraft/class_2420;<init>(Lnet/minecraft/class_5321;Lnet/minecraft/class_4970$class_2251;)V",
+      "getOutlineShape": "Lnet/minecraft/class_2420;method_9530(Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/block/ShortPlantBlockMixin": {
+      "<init>": "Lnet/minecraft/class_2526;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+      "getOutlineShape": "Lnet/minecraft/class_2526;method_9530(Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/block/SmallDripleafBlockMixin": {
+      "<init>": "Lnet/minecraft/class_5808;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+      "appendProperties": "Lnet/minecraft/class_5808;method_9515(Lnet/minecraft/class_2689$class_2690;)V"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/block/SnowBlockMixin": {
+      "Lnet/minecraft/block/BlockState;isIn(Lnet/minecraft/registry/tag/TagKey;)Z": "Lnet/minecraft/class_2680;method_26164(Lnet/minecraft/class_6862;)Z",
+      "canPlaceAt": "Lnet/minecraft/class_2488;method_9558(Lnet/minecraft/class_2680;Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z",
+      "getPlacementState": "Lnet/minecraft/class_2488;method_9605(Lnet/minecraft/class_1750;)Lnet/minecraft/class_2680;",
+      "randomTick": "Lnet/minecraft/class_2488;method_9514(Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;)V"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/block/SnowyBlockMixin": {
+      "isSnow": "Lnet/minecraft/class_2493;method_35291(Lnet/minecraft/class_2680;)Z"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/block/TallPlantBlockMixin": {
+      "<init>": "Lnet/minecraft/class_2320;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+      "appendProperties": "Lnet/minecraft/class_2320;method_9515(Lnet/minecraft/class_2689$class_2690;)V",
+      "getPlacementState": "Lnet/minecraft/class_2320;method_9605(Lnet/minecraft/class_1750;)Lnet/minecraft/class_2680;",
+      "onPlaced": "Lnet/minecraft/class_2320;method_9567(Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_1309;Lnet/minecraft/class_1799;)V"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/client/BlockColorsMixin": {
+      "getColor": "Lnet/minecraft/class_324;method_1697(Lnet/minecraft/class_2680;Lnet/minecraft/class_1920;Lnet/minecraft/class_2338;I)I"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/client/ClientWorldMixin": {
+      "calculateColor": "Lnet/minecraft/class_638;method_23780(Lnet/minecraft/class_2338;Lnet/minecraft/class_6539;)I"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/client/RebuildTaskMixin": {
+      "Lnet/minecraft/client/render/block/BlockRenderManager;renderBlock(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;)V": "Lnet/minecraft/class_776;method_3355(Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_1920;Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;ZLnet/minecraft/class_5819;)V",
+      "render": "Lnet/minecraft/class_846$class_851$class_4578;method_22785(FFFLnet/minecraft/class_750;)Lnet/minecraft/class_846$class_851$class_4578$class_7435;"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/client/WorldRendererMixin": {
+      "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;": "Lnet/minecraft/class_1959;method_48162(Lnet/minecraft/class_2338;)Lnet/minecraft/class_1959$class_1963;",
+      "renderWeather": "Lnet/minecraft/class_761;method_22714(Lnet/minecraft/class_765;FDDD)V",
+      "tickRainSplashing": "Lnet/minecraft/class_761;method_22713(Lnet/minecraft/class_4184;)V"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/compat/visuality/CirclesOnWaterEventMixin": {
+      "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;)Z": "Lnet/minecraft/class_1959;method_39927(Lnet/minecraft/class_2338;)Z",
+      "onTick": "Lvisuality/event/CirclesOnWaterEvent;onTick(Lnet/minecraft/class_638;)V"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/entity/AnimalEntityMixin": {
+      "damage": "Lnet/minecraft/class_1429;method_5643(Lnet/minecraft/class_1282;F)Z"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin": {
+      "Lnet/minecraft/util/profiler/Profiler;pop()V": "Lnet/minecraft/class_3695;method_15407()V",
+      "move": "Lnet/minecraft/class_1297;method_5784(Lnet/minecraft/class_1313;Lnet/minecraft/class_243;)V"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/entity/EscapeDangerGoalMixin": {
+      "Lnet/minecraft/entity/ai/NoPenaltyTargeting;find(Lnet/minecraft/entity/mob/PathAwareEntity;II)Lnet/minecraft/util/math/Vec3d;": "Lnet/minecraft/class_5532;method_31510(Lnet/minecraft/class_1314;II)Lnet/minecraft/class_243;",
+      "findTarget": "Lnet/minecraft/class_1374;method_6301()Z"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/world/BiomeMixin": {
+      "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;)Z": "Lnet/minecraft/class_1959;method_39927(Lnet/minecraft/class_2338;)Z",
+      "canSetIce(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Z)Z": "Lnet/minecraft/class_1959;method_8685(Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;Z)Z",
+      "canSetSnow": "Lnet/minecraft/class_1959;method_8696(Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/world/ServerWorldMixin": {
+      "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z": "Lnet/minecraft/class_3218;method_8501(Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Z",
+      "Lnet/minecraft/world/biome/Biome;canSetSnow(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;)Z": "Lnet/minecraft/class_1959;method_8696(Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z",
+      "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;": "Lnet/minecraft/class_1959;method_48162(Lnet/minecraft/class_2338;)Lnet/minecraft/class_1959$class_1963;",
+      "tickIceAndSnow": "Lnet/minecraft/class_3218;method_52370(Lnet/minecraft/class_2338;)V"
+    },
+    "dev/creoii/greatbigworld/floraandfauna/mixin/world/VanillaBiomeParametersMixin": {
+      "<init>": "Lnet/minecraft/class_6554;<init>()V",
+      "Lnet/minecraft/world/biome/source/util/VanillaBiomeParameters;writeBiomeParameters(Ljava/util/function/Consumer;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;FLnet/minecraft/registry/RegistryKey;)V": "Lnet/minecraft/class_6554;method_38187(Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;FLnet/minecraft/class_5321;)V",
+      "writeValleyBiomes": "Lnet/minecraft/class_6554;method_38203(Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;)V"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "dev/creoii/greatbigworld/floraandfauna/mixin/BlocksMixin": {
+        "<clinit>": "Lnet/minecraft/class_2246;<clinit>()V",
+        "Lnet/minecraft/block/FlowerBlock;<init>(Lnet/minecraft/entity/effect/StatusEffect;ILnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2356;<init>(Lnet/minecraft/class_1291;ILnet/minecraft/class_4970$class_2251;)V",
+        "Lnet/minecraft/block/MushroomPlantBlock;<init>(Lnet/minecraft/registry/RegistryKey;Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2420;<init>(Lnet/minecraft/class_5321;Lnet/minecraft/class_4970$class_2251;)V",
+        "Lnet/minecraft/block/SeagrassBlock;<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2476;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+        "Lnet/minecraft/block/ShortPlantBlock;<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2526;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+        "Lnet/minecraft/block/SmallDripleafBlock;<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_5808;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+        "Lnet/minecraft/block/TallFlowerBlock;<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2521;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+        "Lnet/minecraft/block/TallPlantBlock;<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2320;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+        "Lnet/minecraft/block/TallSeagrassBlock;<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2525;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+        "Lnet/minecraft/block/WitherRoseBlock;<init>(Lnet/minecraft/entity/effect/StatusEffect;ILnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2563;<init>(Lnet/minecraft/class_1291;ILnet/minecraft/class_4970$class_2251;)V"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/block/BeehiveBlockEntityMixin": {
+        "releaseBee": "Lnet/minecraft/class_4482;method_21855(Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_4482$class_4483;Ljava/util/List;Lnet/minecraft/class_4482$class_4484;Lnet/minecraft/class_2338;)Z"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/block/FlowerBlockMixin": {
+        "<init>(Ljava/util/List;Lnet/minecraft/block/AbstractBlock$Settings;)V": "Lnet/minecraft/class_2356;<init>(Ljava/util/List;Lnet/minecraft/class_4970$class_2251;)V",
+        "getOutlineShape": "Lnet/minecraft/class_2356;method_9530(Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/block/MushroomPlantBlockMixin": {
+        "<init>": "Lnet/minecraft/class_2420;<init>(Lnet/minecraft/class_5321;Lnet/minecraft/class_4970$class_2251;)V",
+        "getOutlineShape": "Lnet/minecraft/class_2420;method_9530(Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/block/ShortPlantBlockMixin": {
+        "<init>": "Lnet/minecraft/class_2526;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+        "getOutlineShape": "Lnet/minecraft/class_2526;method_9530(Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/block/SmallDripleafBlockMixin": {
+        "<init>": "Lnet/minecraft/class_5808;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+        "appendProperties": "Lnet/minecraft/class_5808;method_9515(Lnet/minecraft/class_2689$class_2690;)V"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/block/SnowBlockMixin": {
+        "Lnet/minecraft/block/BlockState;isIn(Lnet/minecraft/registry/tag/TagKey;)Z": "Lnet/minecraft/class_2680;method_26164(Lnet/minecraft/class_6862;)Z",
+        "canPlaceAt": "Lnet/minecraft/class_2488;method_9558(Lnet/minecraft/class_2680;Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z",
+        "getPlacementState": "Lnet/minecraft/class_2488;method_9605(Lnet/minecraft/class_1750;)Lnet/minecraft/class_2680;",
+        "randomTick": "Lnet/minecraft/class_2488;method_9514(Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;)V"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/block/SnowyBlockMixin": {
+        "isSnow": "Lnet/minecraft/class_2493;method_35291(Lnet/minecraft/class_2680;)Z"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/block/TallPlantBlockMixin": {
+        "<init>": "Lnet/minecraft/class_2320;<init>(Lnet/minecraft/class_4970$class_2251;)V",
+        "appendProperties": "Lnet/minecraft/class_2320;method_9515(Lnet/minecraft/class_2689$class_2690;)V",
+        "getPlacementState": "Lnet/minecraft/class_2320;method_9605(Lnet/minecraft/class_1750;)Lnet/minecraft/class_2680;",
+        "onPlaced": "Lnet/minecraft/class_2320;method_9567(Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_1309;Lnet/minecraft/class_1799;)V"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/client/BlockColorsMixin": {
+        "getColor": "Lnet/minecraft/class_324;method_1697(Lnet/minecraft/class_2680;Lnet/minecraft/class_1920;Lnet/minecraft/class_2338;I)I"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/client/ClientWorldMixin": {
+        "calculateColor": "Lnet/minecraft/class_638;method_23780(Lnet/minecraft/class_2338;Lnet/minecraft/class_6539;)I"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/client/RebuildTaskMixin": {
+        "Lnet/minecraft/client/render/block/BlockRenderManager;renderBlock(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;)V": "Lnet/minecraft/class_776;method_3355(Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_1920;Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;ZLnet/minecraft/class_5819;)V",
+        "render": "Lnet/minecraft/class_846$class_851$class_4578;method_22785(FFFLnet/minecraft/class_750;)Lnet/minecraft/class_846$class_851$class_4578$class_7435;"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/client/WorldRendererMixin": {
+        "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;": "Lnet/minecraft/class_1959;method_48162(Lnet/minecraft/class_2338;)Lnet/minecraft/class_1959$class_1963;",
+        "renderWeather": "Lnet/minecraft/class_761;method_22714(Lnet/minecraft/class_765;FDDD)V",
+        "tickRainSplashing": "Lnet/minecraft/class_761;method_22713(Lnet/minecraft/class_4184;)V"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/compat/visuality/CirclesOnWaterEventMixin": {
+        "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;)Z": "Lnet/minecraft/class_1959;method_39927(Lnet/minecraft/class_2338;)Z",
+        "onTick": "Lvisuality/event/CirclesOnWaterEvent;onTick(Lnet/minecraft/class_638;)V"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/entity/AnimalEntityMixin": {
+        "damage": "Lnet/minecraft/class_1429;method_5643(Lnet/minecraft/class_1282;F)Z"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/entity/EntityMixin": {
+        "Lnet/minecraft/util/profiler/Profiler;pop()V": "Lnet/minecraft/class_3695;method_15407()V",
+        "move": "Lnet/minecraft/class_1297;method_5784(Lnet/minecraft/class_1313;Lnet/minecraft/class_243;)V"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/entity/EscapeDangerGoalMixin": {
+        "Lnet/minecraft/entity/ai/NoPenaltyTargeting;find(Lnet/minecraft/entity/mob/PathAwareEntity;II)Lnet/minecraft/util/math/Vec3d;": "Lnet/minecraft/class_5532;method_31510(Lnet/minecraft/class_1314;II)Lnet/minecraft/class_243;",
+        "findTarget": "Lnet/minecraft/class_1374;method_6301()Z"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/world/BiomeMixin": {
+        "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;)Z": "Lnet/minecraft/class_1959;method_39927(Lnet/minecraft/class_2338;)Z",
+        "canSetIce(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Z)Z": "Lnet/minecraft/class_1959;method_8685(Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;Z)Z",
+        "canSetSnow": "Lnet/minecraft/class_1959;method_8696(Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/world/ServerWorldMixin": {
+        "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z": "Lnet/minecraft/class_3218;method_8501(Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Z",
+        "Lnet/minecraft/world/biome/Biome;canSetSnow(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;)Z": "Lnet/minecraft/class_1959;method_8696(Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z",
+        "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;": "Lnet/minecraft/class_1959;method_48162(Lnet/minecraft/class_2338;)Lnet/minecraft/class_1959$class_1963;",
+        "tickIceAndSnow": "Lnet/minecraft/class_3218;method_52370(Lnet/minecraft/class_2338;)V"
+      },
+      "dev/creoii/greatbigworld/floraandfauna/mixin/world/VanillaBiomeParametersMixin": {
+        "<init>": "Lnet/minecraft/class_6554;<init>()V",
+        "Lnet/minecraft/world/biome/source/util/VanillaBiomeParameters;writeBiomeParameters(Ljava/util/function/Consumer;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;FLnet/minecraft/registry/RegistryKey;)V": "Lnet/minecraft/class_6554;method_38187(Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;FLnet/minecraft/class_5321;)V",
+        "writeValleyBiomes": "Lnet/minecraft/class_6554;method_38203(Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;)V"
+      }
+    }
+  }
+}

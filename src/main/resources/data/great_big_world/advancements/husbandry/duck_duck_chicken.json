@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:husbandry/breed_an_animal",
+  "criteria": {
+    "follow_chicken": {
+      "trigger": "great_big_world:duck_follow_parent",
+      "conditions": {}
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.adventure.duck_duck_chicken.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:chicken_spawn_egg"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.adventure.duck_duck_chicken.title"
+    }
+  },
+  "requirements": [
+    [
+      "follow_chicken"
+    ]
+  ]
+}

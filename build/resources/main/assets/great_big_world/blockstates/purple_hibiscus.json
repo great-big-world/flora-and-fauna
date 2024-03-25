@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "flowers=1": {
+      "model": "great_big_world:block/purple_hibiscus"
+    },
+    "flowers=2": {
+      "model": "great_big_world:block/two_purple_hibiscuses"
+    },
+    "flowers=3": {
+      "model": "great_big_world:block/three_purple_hibiscuses"
+    },
+    "flowers=4": {
+      "model": "great_big_world:block/four_purple_hibiscuses"
+    }
+  }
+}

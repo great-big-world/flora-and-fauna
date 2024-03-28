@@ -1,9 +1,0 @@
-{
-  "parent": "block/cube_bottom_top",
-  "textures": {
-    "bottom": "block/dirt",
-    "particle": "block/dirt",
-    "side": "great_big_world:block/humus",
-    "top": "great_big_world:block/humus_top"
-  }
-}

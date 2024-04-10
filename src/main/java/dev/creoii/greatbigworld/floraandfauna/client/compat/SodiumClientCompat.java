@@ -24,15 +24,12 @@ public final class SodiumClientCompat {
     public static void updateSeason(MinecraftClient client) {
         if (client.world != null) {
             RenderSectionManager renderSectionManager = ((SodiumWorldRendererAccessor) ((WorldRendererExtended) client.worldRenderer).sodium$getWorldRenderer()).gbw$getRenderSectionManager();
-            RenderSectionManagerAccessor accessor = (RenderSectionManagerAccessor) renderSectionManager;
-            RenderSectionManagerInvoker invoker = (RenderSectionManagerInvoker) renderSectionManager;
-
             ChunkTracker.forEachChunk(ChunkTrackerHolder.get(client.world).getReadyChunks(), (x, z) -> {
                 for (int y = client.world.getBottomSectionCoord(); y < client.world.getTopSectionCoord(); ++y) {
-                    RenderSection renderSection = accessor.getSectionByPosition().get(ChunkSectionPos.asLong(x, y, z));
+                    RenderSection renderSection = ((RenderSectionManagerAccessor) renderSectionManager).getSectionByPosition().get(ChunkSectionPos.asLong(x, y, z));
                     if (renderSection != null) {
                         renderSection.setPendingUpdate(ChunkUpdateType.REBUILD);
-                        invoker.gbw$connectNeighborNodes(renderSection);
+                        ((RenderSectionManagerInvoker) renderSectionManager).gbw$connectNeighborNodes(renderSection);
                     }
                 }
             });

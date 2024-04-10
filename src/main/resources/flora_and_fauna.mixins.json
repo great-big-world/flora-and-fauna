@@ -8,6 +8,7 @@
     "BlocksMixin",
     "block.BeehiveBlockEntityMixin",
     "block.FlowerBlockMixin",
+    "block.IceBlockMixin",
     "block.MushroomPlantBlockMixin",
     "block.ShortPlantBlockMixin",
     "block.SmallDripleafBlockMixin",

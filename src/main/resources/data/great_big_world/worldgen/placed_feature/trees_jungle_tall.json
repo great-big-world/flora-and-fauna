@@ -1,5 +1,5 @@
 {
-  "feature": "minecraft:trees_jungle",
+  "feature": "great_big_world:trees_jungle_tall",
   "placement": [
     {
       "type": "minecraft:count",
@@ -23,8 +23,8 @@
     {
       "type": "creo:noise",
       "noise": "great_big_world:forest_trees",
-      "min_threshold": -0.15,
-      "max_threshold": 0.7
+      "min_threshold": -2.0,
+      "max_threshold": -0.15
     },
     {
       "type": "minecraft:surface_water_depth_filter",

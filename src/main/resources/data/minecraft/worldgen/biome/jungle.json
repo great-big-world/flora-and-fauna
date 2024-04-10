@@ -48,7 +48,9 @@
     [
       "great_big_world:fallen_jungle_tree",
       "minecraft:bamboo_light",
+      "great_big_world:trees_jungle_tall",
       "minecraft:trees_jungle",
+      "great_big_world:trees_jungle_lower",
       "great_big_world:jungle_bush",
       "great_big_world:jungle_bamboo",
       "minecraft:flower_warm",

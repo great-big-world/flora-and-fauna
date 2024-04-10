@@ -74,6 +74,9 @@ public class SeasonManager extends PersistentState {
 
     public void tick(ServerWorld world) {
         MinecraftServer server = world.getServer();
+        if (!server.getTickManager().shouldTick())
+            return;
+
         if (instance == null) {
             instance = getServerState(server);
 

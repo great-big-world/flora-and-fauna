@@ -1,5 +1,5 @@
 {
-  "feature": "minecraft:trees_jungle",
+  "feature": "minecraft:jungle_tree",
   "placement": [
     {
       "type": "minecraft:count",
@@ -7,12 +7,12 @@
         "type": "minecraft:weighted_list",
         "distribution": [
           {
-            "data": 50,
-            "weight": 9
+            "weight": 9,
+            "data": 7
           },
           {
-            "data": 51,
-            "weight": 1
+            "weight": 1,
+            "data": 3
           }
         ]
       }
@@ -23,8 +23,8 @@
     {
       "type": "creo:noise",
       "noise": "great_big_world:forest_trees",
-      "min_threshold": -0.15,
-      "max_threshold": 0.7
+      "min_threshold": -0.5,
+      "max_threshold": 0.5
     },
     {
       "type": "minecraft:surface_water_depth_filter",
@@ -32,10 +32,22 @@
     },
     {
       "type": "minecraft:heightmap",
-      "heightmap": "OCEAN_FLOOR"
+      "heightmap": "MOTION_BLOCKING_NO_LEAVES"
     },
     {
       "type": "minecraft:biome"
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:would_survive",
+        "state": {
+          "Name": "minecraft:jungle_sapling",
+          "Properties": {
+            "stage": "0"
+          }
+        }
+      }
     }
   ]
 }

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "chance": 0.05,
+        "feature": "great_big_world:mossy_mega_jungle_tree_tall_checked"
+      }
+    ],
+    "default": "great_big_world:mega_jungle_tree_tall_checked"
+  }
+}

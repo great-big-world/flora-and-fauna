@@ -3,11 +3,15 @@
   "config": {
     "decorators": [
       {
+        "type": "great_big_world:moss",
+        "probability": 1.0
+      },
+      {
         "type": "minecraft:trunk_vine"
       },
       {
         "type": "minecraft:leave_vine",
-        "probability": 0.15
+        "probability": 0.25
       },
       {
         "type": "minecraft:alter_ground",
@@ -20,10 +24,6 @@
             }
           }
         }
-      },
-      {
-        "type": "great_big_world:moss",
-        "probability": 0.2
       },
       {
         "type": "great_big_world:branch",
@@ -41,8 +41,7 @@
             "Properties": {
               "axis": "y"
             }
-          },
-          "min_height": 9
+          }
         }
       }
     ],
@@ -56,13 +55,7 @@
       "type": "minecraft:jungle_foliage_placer",
       "height": 2,
       "offset": 0,
-      "radius": {
-        "type": "minecraft:uniform",
-        "value": {
-          "min_inclusive": 2,
-          "max_inclusive": 3
-        }
-      }
+      "radius": 2
     },
     "foliage_provider": {
       "type": "minecraft:simple_state_provider",
@@ -85,9 +78,9 @@
     },
     "trunk_placer": {
       "type": "minecraft:mega_jungle_trunk_placer",
-      "base_height": 20,
+      "base_height": 32,
       "height_rand_a": 4,
-      "height_rand_b": 4
+      "height_rand_b": 2
     },
     "trunk_provider": {
       "type": "minecraft:simple_state_provider",

@@ -23,7 +23,6 @@
     "compat.visuality.CirclesOnWaterEventMixin",
     "entity.AnimalEntityMixin",
     "entity.ChickenEntityMixin",
-    "entity.EntityMixin",
     "entity.EscapeDangerGoalMixin",
     "world.BiomeMixin",
     "world.ServerWorldMixin",

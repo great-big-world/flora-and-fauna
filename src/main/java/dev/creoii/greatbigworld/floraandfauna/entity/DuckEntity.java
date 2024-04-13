@@ -178,11 +178,11 @@ public class DuckEntity extends AnimalEntity implements DuckLike {
     }
 
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_CHICKEN_HURT;
+        return FloraAndFaunaSoundEvents.ENTITY_DUCK_HURT;
     }
 
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_CHICKEN_DEATH;
+        return FloraAndFaunaSoundEvents.ENTITY_DUCK_DEATH;
     }
 
     protected void playStepSound(BlockPos pos, BlockState state) {
@@ -235,7 +235,7 @@ public class DuckEntity extends AnimalEntity implements DuckLike {
     }
 
     public double getSwimHeight() {
-        return isBaby() ? .4d : .65d;
+        return .3d;
     }
 
     @Override

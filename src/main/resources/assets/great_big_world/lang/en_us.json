@@ -46,6 +46,8 @@
   "entity.great_big_world.duck": "Duck",
 
   "great_big_world.subtitles.entity.duck.quack": "Duck quacks",
+  "great_big_world.subtitles.entity.duck.hurt": "Duck hurts",
+  "great_big_world.subtitles.entity.duck.death": "Duck dies",
 
   "biome.great_big_world.desert_river": "Desert River",
   "biome.great_big_world.jungle_river": "Jungle River",

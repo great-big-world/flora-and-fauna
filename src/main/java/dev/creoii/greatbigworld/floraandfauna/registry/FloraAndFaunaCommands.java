@@ -28,7 +28,13 @@ public final class FloraAndFaunaCommands {
                             })
                             .executes(context -> {
                                 String season = context.getArgument("season", String.class);
-                                SeasonManager.getInstance(context.getSource().getServer()).setCurrentSeason(context.getSource().getWorld(), Season.valueOf(season.toUpperCase()), false);
+                                SeasonManager manager = SeasonManager.getInstance(context.getSource().getServer());
+                                if (manager != null) {
+                                    manager.setCurrentSeason(context.getSource().getWorld(), Season.valueOf(season.toUpperCase()), false);
+                                } else {
+                                    context.getSource().sendError(Text.literal("An unexpected error occurred."));
+                                    return -1;
+                                }
                                 context.getSource().sendFeedback(() -> Text.literal("Set season to " + season), true);
                                 return 1;
                             })

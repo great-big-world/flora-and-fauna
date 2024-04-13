@@ -4,20 +4,27 @@ import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import dev.creoii.greatbigworld.floraandfauna.client.compat.SodiumClientCompat;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaEntities;
+import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaGameRules;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaItems;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
+import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.chunk.ChunkBuilder;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.biome.Biome;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 
 public class FloraAndFaunaClient implements ClientModInitializer {
     private static final boolean SODIUM_LOADED = FabricLoader.getInstance().isModLoaded("sodium");
     @Nullable private static Season currentSeason;
+    private static int seasonColorTime;
 
     @Override
     public void onInitializeClient() {
@@ -27,7 +34,11 @@ public class FloraAndFaunaClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SYNC_SEASON, (client, handler, buf, responseSender) -> {
             Season season = Season.values()[buf.readInt()];
-            client.execute(() -> currentSeason = season);
+            int colorTime = buf.readInt();
+            client.execute(() -> {
+                currentSeason = season;
+                seasonColorTime = colorTime;
+            });
         });
 
         if (SODIUM_LOADED) {
@@ -53,5 +64,22 @@ public class FloraAndFaunaClient implements ClientModInitializer {
                 chunk.scheduleRebuild(true);
             }
         }
+    }
+
+    public static int getSeasonColor(BlockRenderView world, BlockPos pos, int color) {
+        if (world == null)
+            return color;
+
+        Season.Context context = new Season.Context(world, pos, color);
+        RegistryEntry<Biome> biomeEntry = world.getBiomeFabric(pos);
+        if (biomeEntry == null || !biomeEntry.hasKeyAndValue()) {
+            return color;
+        }
+
+        return ColorHelper.interpolate(getSeasonColorPercentage(), currentSeason.getColorChange().apply(context), SeasonManager.getNextSeason(currentSeason).getColorChange().apply(context));
+    }
+
+    private static float getSeasonColorPercentage() {
+        return (float) seasonColorTime / MinecraftClient.getInstance().world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH);
     }
 }

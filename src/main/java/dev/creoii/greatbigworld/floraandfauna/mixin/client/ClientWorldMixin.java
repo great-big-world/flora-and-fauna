@@ -1,7 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.client;
 
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
-import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -30,7 +29,7 @@ public abstract class ClientWorldMixin extends World {
     private void gbw$modifyBlockColor(BlockPos pos, ColorResolver colorResolver, CallbackInfoReturnable<Integer> cir) {
         if (!getBlockState(pos).isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
             if (FloraAndFaunaClient.getCurrentSeason() != null) {
-                cir.setReturnValue(SeasonManager.getColor(this, pos, cir.getReturnValue()));
+                cir.setReturnValue(FloraAndFaunaClient.getSeasonColor(this, pos, cir.getReturnValue()));
             }
         }
     }

@@ -3,6 +3,7 @@ package dev.creoii.greatbigworld.floraandfauna.season;
 import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaGameRules;
 import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
@@ -54,7 +55,7 @@ public class SeasonManager extends PersistentState {
     }
 
     public static int getColor(BlockRenderView world, BlockPos pos, int color) {
-        if (world == null)
+        if (world == null || instance == null)
             return color;
 
         Season.Context context = new Season.Context(world, pos, color);
@@ -67,8 +68,8 @@ public class SeasonManager extends PersistentState {
     }
 
     public void load(ServerWorld world) {
-        instance.syncSeason(world.getServer());
         instance.updateSeasonTime(world);
+        instance.syncSeason(world.getServer());
         instance.syncSeasonColor(world.getServer());
     }
 
@@ -93,6 +94,9 @@ public class SeasonManager extends PersistentState {
         }
 
         if (world.getRegistryKey() == World.OVERWORLD && world.getGameRules().getBoolean(FloraAndFaunaGameRules.DO_SEASON_CYCLE)) {
+            if (syncSeasonTime != world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH))
+                instance.updateSeasonTime(world);
+
             // season transition
             if (++instance.seasonTime >= syncSeasonTime) {
                 instance.currentSeason = getNextSeason(instance.currentSeason);
@@ -100,9 +104,6 @@ public class SeasonManager extends PersistentState {
                 instance.seasonTime = 0;
                 instance.seasonColorTime = 0;
             }
-
-            if (syncSeasonTime != world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH))
-                instance.updateSeasonTime(world);
 
             // color transition
             if (instance.seasonTime >= syncSeasonColorTimeLength && instance.seasonTime < syncSeasonColorTimeLength * 2) {
@@ -140,8 +141,9 @@ public class SeasonManager extends PersistentState {
     }
 
     private PacketByteBuf getSyncData() {
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer(8));
         buf.writeInt(instance.currentSeason.ordinal());
+        buf.writeInt(instance.seasonColorTime);
         return buf;
     }
 

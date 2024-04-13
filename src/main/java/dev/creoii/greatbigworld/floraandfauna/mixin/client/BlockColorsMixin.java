@@ -2,7 +2,6 @@ package dev.creoii.greatbigworld.floraandfauna.mixin.client;
 
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
-import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.color.block.BlockColors;
@@ -20,7 +19,7 @@ public class BlockColorsMixin {
         if (!state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
             Season season = FloraAndFaunaClient.getCurrentSeason();
             if (season != null) {
-                cir.setReturnValue(SeasonManager.getColor(world, pos, cir.getReturnValue()));
+                cir.setReturnValue(FloraAndFaunaClient.getSeasonColor(world, pos, cir.getReturnValue()));
             }
         }
     }
@@ -30,7 +29,7 @@ public class BlockColorsMixin {
         if (!state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
             Season season = FloraAndFaunaClient.getCurrentSeason();
             if (season != null) {
-                cir.setReturnValue(SeasonManager.getColor(world, pos, cir.getReturnValue()));
+                cir.setReturnValue(FloraAndFaunaClient.getSeasonColor(world, pos, cir.getReturnValue()));
             }
         }
     }

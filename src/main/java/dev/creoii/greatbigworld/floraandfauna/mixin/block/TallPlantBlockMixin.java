@@ -1,6 +1,7 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.creoii.creoapi.api.block.CreoBlock;
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
@@ -32,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TallPlantBlock.class)
-public abstract class TallPlantBlockMixin extends PlantBlock {
+public abstract class TallPlantBlockMixin extends PlantBlock implements CreoBlock {
     @Shadow @Final public static EnumProperty<DoubleBlockHalf> HALF;
 
     protected TallPlantBlockMixin(Settings settings) {
@@ -107,5 +108,13 @@ public abstract class TallPlantBlockMixin extends PlantBlock {
             return SnowyHelper.getSnowShape(state);
         }
         return VoxelShapes.empty();
+    }
+
+    @Override
+    public BlockState getOverlayState(BlockState state, BlockPos pos, Random random) {
+        if (SnowyHelper.isSnowy(state)) {
+            return Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS));
+        }
+        return Blocks.AIR.getDefaultState();
     }
 }

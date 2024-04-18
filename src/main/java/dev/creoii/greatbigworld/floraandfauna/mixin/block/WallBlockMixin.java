@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
+import dev.creoii.creoapi.api.block.CreoBlock;
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
@@ -27,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Map;
 
 @Mixin(WallBlock.class)
-public abstract class WallBlockMixin extends Block implements Waterloggable {
+public abstract class WallBlockMixin extends Block implements Waterloggable, CreoBlock {
     @Shadow @Final private Map<BlockState, VoxelShape> shapeMap;
     @Shadow @Final private Map<BlockState, VoxelShape> collisionShapeMap;
 
@@ -75,5 +76,13 @@ public abstract class WallBlockMixin extends Block implements Waterloggable {
                 dropStacks(Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS)), world, pos);
             world.setBlockState(pos, state.with(SnowyHelper.SNOW_LAYERS, 0));
         }
+    }
+
+    @Override
+    public BlockState getOverlayState(BlockState state, BlockPos pos, Random random) {
+        if (SnowyHelper.isSnowy(state)) {
+            return Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS));
+        }
+        return Blocks.AIR.getDefaultState();
     }
 }

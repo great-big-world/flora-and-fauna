@@ -12,7 +12,6 @@ import java.util.Set;
 
 public class FloraAndFaunaMixinPlugin implements IMixinConfigPlugin {
     private static final Map<String, String> MOD_DEPENDENT_MIXINS = new ImmutableMap.Builder<String, String>()
-            .put("dev.creoii.greatbigworld.floraandfauna.mixin.compat.sodium.ChunkBuilderMeshingTaskMixin", "sodium")
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.compat.sodium.DefaultColorProvidersMixin", "sodium")
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.compat.sodium.RenderSectionManagerAccessor", "sodium")
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.compat.sodium.RenderSectionManagerMixin", "sodium")

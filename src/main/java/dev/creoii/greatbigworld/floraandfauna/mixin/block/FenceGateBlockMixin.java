@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
+import dev.creoii.creoapi.api.block.CreoBlock;
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
@@ -23,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(FenceGateBlock.class)
-public abstract class FenceGateBlockMixin extends HorizontalFacingBlock {
+public abstract class FenceGateBlockMixin extends HorizontalFacingBlock implements CreoBlock {
     protected FenceGateBlockMixin(Settings settings) {
         super(settings);
     }
@@ -61,5 +62,13 @@ public abstract class FenceGateBlockMixin extends HorizontalFacingBlock {
                 dropStacks(Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS)), world, pos);
             world.setBlockState(pos, state.with(SnowyHelper.SNOW_LAYERS, 0));
         }
+    }
+
+    @Override
+    public BlockState getOverlayState(BlockState state, BlockPos pos, Random random) {
+        if (SnowyHelper.isSnowy(state)) {
+            return Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS));
+        }
+        return Blocks.AIR.getDefaultState();
     }
 }

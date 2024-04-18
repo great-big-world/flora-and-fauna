@@ -18,7 +18,6 @@
     "block.SnowyBlockMixin",
     "block.TallPlantBlockMixin",
     "block.WallBlockMixin",
-    "compat.sodium.ChunkBuilderMeshingTaskMixin",
     "compat.sodium.DefaultColorProvidersMixin",
     "compat.sodium.RenderSectionManagerAccessor",
     "compat.sodium.RenderSectionManagerMixin",
@@ -34,7 +33,6 @@
   "client": [
     "client.BlockColorsMixin",
     "client.ClientWorldMixin",
-    "client.RebuildTaskMixin",
     "client.WorldRendererMixin"
   ],
   "injectors": {

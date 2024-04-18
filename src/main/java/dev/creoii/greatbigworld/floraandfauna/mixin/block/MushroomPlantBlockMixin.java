@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
+import dev.creoii.creoapi.api.block.CreoBlock;
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
@@ -30,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MushroomPlantBlock.class)
-public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fertilizable {
+public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fertilizable, CreoBlock {
     @Unique
     private static final IntProperty MUSHROOMS = IntProperty.of("mushrooms", 1, 4);
     @Unique
@@ -119,5 +120,13 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
     @SuppressWarnings("deprecation")
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
         return !context.shouldCancelInteraction() && ((context.getStack().isOf(asItem()) && state.get(MUSHROOMS) < 4) || (context.getStack().isOf(Items.SNOW) && state.get(SnowyHelper.SNOW_LAYERS) < 8)) || super.canReplace(state, context);
+    }
+
+    @Override
+    public BlockState getOverlayState(BlockState state, BlockPos pos, Random random) {
+        if (SnowyHelper.isSnowy(state)) {
+            return Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS));
+        }
+        return Blocks.AIR.getDefaultState();
     }
 }

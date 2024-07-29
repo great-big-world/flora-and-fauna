@@ -1,4 +1,4 @@
-package dev.creoii.greatbigworld.floraandfauna.mixin;
+package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Blocks;
@@ -23,12 +23,12 @@ public class BlocksMixin {
         return settings.dynamicBounds();
     }
 
-    @ModifyArg(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/FlowerBlock;<init>(Lnet/minecraft/entity/effect/StatusEffect;ILnet/minecraft/block/AbstractBlock$Settings;)V"))
+    @ModifyArg(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/FlowerBlock;<init>(Lnet/minecraft/registry/entry/RegistryEntry;FLnet/minecraft/block/AbstractBlock$Settings;)V"))
     private static AbstractBlock.Settings gbw$modifyFlowerSettings(AbstractBlock.Settings settings) {
         return settings.dynamicBounds();
     }
 
-    @ModifyArg(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/WitherRoseBlock;<init>(Lnet/minecraft/entity/effect/StatusEffect;ILnet/minecraft/block/AbstractBlock$Settings;)V"))
+    @ModifyArg(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/WitherRoseBlock;<init>(Lnet/minecraft/registry/entry/RegistryEntry;FLnet/minecraft/block/AbstractBlock$Settings;)V"))
     private static AbstractBlock.Settings gbw$modifyWitherRoseSettings(AbstractBlock.Settings settings) {
         return settings.dynamicBounds();
     }

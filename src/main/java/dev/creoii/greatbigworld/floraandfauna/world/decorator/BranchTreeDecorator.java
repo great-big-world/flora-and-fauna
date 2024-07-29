@@ -1,6 +1,7 @@
 package dev.creoii.greatbigworld.floraandfauna.world.decorator;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaTreeDecoratorTypes;
 import net.minecraft.block.BlockState;
@@ -15,7 +16,7 @@ import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 public class BranchTreeDecorator extends TreeDecorator {
-    public static final Codec<BranchTreeDecorator> CODEC = RecordCodecBuilder.create((instance) -> {
+    public static final MapCodec<BranchTreeDecorator> CODEC = RecordCodecBuilder.mapCodec(instance -> {
         return instance.group(BlockStateProvider.TYPE_CODEC.fieldOf("branch_provider").forGetter(config -> {
             return config.branchProvider;
         }), IntProvider.NON_NEGATIVE_CODEC.fieldOf("branch_count").forGetter(config -> {

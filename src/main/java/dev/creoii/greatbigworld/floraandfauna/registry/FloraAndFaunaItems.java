@@ -56,7 +56,9 @@ public final class FloraAndFaunaItems {
         final SimpleDefaultedRegistry<Item> items = (SimpleDefaultedRegistry<Item>) Registries.ITEM;
 
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "humus"), HUMUS);
-        items.set(items.getRawId(Items.MOSS_CARPET), RegistryKey.of(RegistryKeys.ITEM, new Identifier("moss_carpet")), MOSS_CARPET, Lifecycle.stable());
+        //items.set(items.getRawId(Items.MOSS_CARPET), RegistryKey.of(RegistryKeys.ITEM, new Identifier("moss_carpet")), MOSS_CARPET, Lifecycle.stable());
+        Registry.register(Registries.ITEM, new Identifier("moss_carpet"), MOSS_CARPET);
+
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "tropical_fern"), TROPICAL_FERN);
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "large_tropical_fern"), LARGE_TROPICAL_FERN);
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "red_hibiscus"), RED_HIBISCUS);

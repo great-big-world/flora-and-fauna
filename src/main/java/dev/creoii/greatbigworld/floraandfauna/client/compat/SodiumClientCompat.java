@@ -16,8 +16,8 @@ import net.minecraft.util.math.ChunkSectionPos;
 
 public final class SodiumClientCompat {
     public static void registerSyncSeasonColorReceiver() {
-        ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SYNC_SEASON_COLOR, (client, handler, buf, responseSender) -> {
-            client.execute(() -> updateSeason(client));
+        ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonColor.PACKET_ID, (payload, context) -> {
+            context.client().execute(() -> updateSeason(context.client()));
         });
     }
 

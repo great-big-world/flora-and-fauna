@@ -51,7 +51,6 @@ public abstract class ShortPlantBlockMixin extends PlantBlock implements Fertili
         return SnowyHelper.isSnowy(state);
     }
 
-    @SuppressWarnings("deprecation")
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
         if (world.getLightLevel(LightType.BLOCK, pos) > 11 || (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos))) {
@@ -61,7 +60,6 @@ public abstract class ShortPlantBlockMixin extends PlantBlock implements Fertili
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
         if (super.canReplace(state, context))
             return true;
@@ -77,13 +75,13 @@ public abstract class ShortPlantBlockMixin extends PlantBlock implements Fertili
         }
     }
 
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    @Override
+    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
         if (type == NavigationType.LAND)
             return state.get(SnowyHelper.SNOW_LAYERS) < 5;
         return false;
     }
 
-    @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.LAYERS_TO_SHAPE[state.get(SnowyHelper.SNOW_LAYERS) - 1];
@@ -91,7 +89,6 @@ public abstract class ShortPlantBlockMixin extends PlantBlock implements Fertili
         return VoxelShapes.empty();
     }
 
-    @SuppressWarnings("deprecation")
     public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.getSnowShape(state);
@@ -99,7 +96,6 @@ public abstract class ShortPlantBlockMixin extends PlantBlock implements Fertili
         return VoxelShapes.empty();
     }
 
-    @SuppressWarnings("deprecation")
     public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.getSnowShape(state);

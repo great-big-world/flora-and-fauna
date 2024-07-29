@@ -55,7 +55,8 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         cir.setReturnValue(VoxelShapes.union(state.get(MUSHROOMS) > 2 ? LARGE_SHAPE : cir.getReturnValue(), snowShape));
     }
 
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    @Override
+    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
         if (type == NavigationType.LAND)
             return state.get(SnowyHelper.SNOW_LAYERS) < 5;
         return false;
@@ -66,7 +67,6 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         return SnowyHelper.isSnowy(state);
     }
 
-    @SuppressWarnings("deprecation")
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
         if (world.getLightLevel(LightType.BLOCK, pos) > 11 || (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos))) {
@@ -76,7 +76,6 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         }
     }
 
-    @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.LAYERS_TO_SHAPE[state.get(SnowyHelper.SNOW_LAYERS) - 1];
@@ -84,7 +83,6 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         return VoxelShapes.empty();
     }
 
-    @SuppressWarnings("deprecation")
     public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.getSnowShape(state);
@@ -92,7 +90,6 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         return VoxelShapes.empty();
     }
 
-    @SuppressWarnings("deprecation")
     public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.getSnowShape(state);
@@ -117,7 +114,6 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         return super.getPlacementState(ctx);
     }
 
-    @SuppressWarnings("deprecation")
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
         return !context.shouldCancelInteraction() && ((context.getStack().isOf(asItem()) && state.get(MUSHROOMS) < 4) || (context.getStack().isOf(Items.SNOW) && state.get(SnowyHelper.SNOW_LAYERS) < 8)) || super.canReplace(state, context);
     }

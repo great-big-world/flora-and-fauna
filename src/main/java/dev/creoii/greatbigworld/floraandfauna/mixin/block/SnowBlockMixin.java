@@ -8,6 +8,7 @@ import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.SnowBlock;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.registry.entry.RegistryEntry;

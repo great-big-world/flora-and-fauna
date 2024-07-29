@@ -102,9 +102,9 @@ public class DuckEntity extends AnimalEntity implements DuckLike {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        dataTracker.startTracking(FOLLOWING, Optional.empty());
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(FOLLOWING, Optional.empty());
     }
 
     @Override
@@ -123,10 +123,6 @@ public class DuckEntity extends AnimalEntity implements DuckLike {
                 follow(mob);
             }
         }
-    }
-
-    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
-        return dimensions.height;
     }
 
     @Override
@@ -239,7 +235,7 @@ public class DuckEntity extends AnimalEntity implements DuckLike {
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
         if (entityData == null) {
             entityData = new DuckData();
         }

@@ -9,6 +9,7 @@ import dev.creoii.greatbigworld.floraandfauna.world.feature.FreezeTopLayerFeatur
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -29,13 +30,17 @@ public class FloraAndFauna implements ModInitializer {
         FloraAndFaunaBlocks.register();
         FloraAndFaunaItems.register();
         FloraAndFaunaEntities.register();
-        FloraAndFaunaSoundEvents.register();
         FloraAndFaunaTreeDecoratorTypes.register();
+        FloraAndFaunaSoundEvents.register();
         FloraAndFaunaCommands.register();
         FloraAndFaunaGameRules.register();
         FloraAndFaunaCriteria.register();
         Registry.register(Registries.FEATURE, new Identifier(NAMESPACE, "freeze_top_layer"), FREEZE_TOP_LAYER);
         Registry.register(Registries.FEATURE, new Identifier(NAMESPACE, "fallen_tree"), FALLEN_TREE);
+
+        PayloadTypeRegistry.playS2C().register(SeasonManager.SyncSeason.PACKET_ID, SeasonManager.SyncSeason.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(SeasonManager.SyncSeasonColor.PACKET_ID, SeasonManager.SyncSeasonColor.PACKET_CODEC);
+
         ServerWorldEvents.LOAD.register((server, world) -> {
             SeasonManager seasonManager = SeasonManager.getInstance(server);
             seasonManager.setCurrentSeason(world, seasonManager.getCurrentSeason(), true);

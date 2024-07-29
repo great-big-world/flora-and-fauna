@@ -3,11 +3,12 @@ package dev.creoii.greatbigworld.floraandfauna.season;
 import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaGameRules;
 import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -17,8 +18,6 @@ import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 
 public class SeasonManager extends PersistentState {
-    public static final Identifier SYNC_SEASON = new Identifier(FloraAndFauna.NAMESPACE, "sync_season");
-    public static final Identifier SYNC_SEASON_COLOR = new Identifier(FloraAndFauna.NAMESPACE, "sync_season_color");
     private static final Type<SeasonManager> STATE_TYPE = new Type<>(SeasonManager::new, SeasonManager::createFromNbt, null);
     private static SeasonManager instance;
     private Season currentSeason = Season.SUMMER;
@@ -125,14 +124,14 @@ public class SeasonManager extends PersistentState {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         nbt.putInt("season", instance.currentSeason.ordinal());
         nbt.putInt("season_time", instance.seasonTime);
         nbt.putInt("season_color_time", instance.seasonColorTime);
         return nbt;
     }
 
-    private static SeasonManager createFromNbt(NbtCompound nbt) {
+    private static SeasonManager createFromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup lookup) {
         SeasonManager manager = new SeasonManager();
         manager.currentSeason = Season.values()[nbt.getInt("season")];
         manager.seasonTime = nbt.getInt("season_time");
@@ -140,17 +139,10 @@ public class SeasonManager extends PersistentState {
         return manager;
     }
 
-    private PacketByteBuf getSyncData() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer(8));
-        buf.writeInt(instance.currentSeason.ordinal());
-        buf.writeInt(instance.seasonColorTime);
-        return buf;
-    }
-
     private void syncSeason(MinecraftServer server) {
         server.execute(() -> {
             server.getPlayerManager().getPlayerList().forEach(serverPlayer -> {
-                ServerPlayNetworking.send(serverPlayer, SYNC_SEASON, instance.getSyncData());
+                ServerPlayNetworking.send(serverPlayer, new SyncSeason(instance.currentSeason.ordinal(), instance.seasonColorTime));
             });
         });
     }
@@ -158,7 +150,7 @@ public class SeasonManager extends PersistentState {
     private void syncSeasonColor(MinecraftServer server) {
         server.execute(() -> {
             server.getPlayerManager().getPlayerList().forEach(serverPlayer -> {
-                ServerPlayNetworking.send(serverPlayer, SYNC_SEASON_COLOR, PacketByteBufs.empty());
+                ServerPlayNetworking.send(serverPlayer, new SyncSeasonColor());
             });
         });
     }
@@ -168,5 +160,35 @@ public class SeasonManager extends PersistentState {
         SeasonManager manager = persistentStateManager.getOrCreate(STATE_TYPE, FloraAndFauna.NAMESPACE);
         manager.markDirty();
         return manager;
+    }
+
+    public record SyncSeason(int season, int colorTime) implements CustomPayload {
+        public static final CustomPayload.Id<SyncSeason> PACKET_ID = new CustomPayload.Id<>(new Identifier(FloraAndFauna.NAMESPACE, "sync_season"));
+        public static final PacketCodec<RegistryByteBuf, SyncSeason> PACKET_CODEC = PacketCodec.of(SyncSeason::write, SyncSeason::new);
+
+        public SyncSeason(RegistryByteBuf buf) {
+            this(buf.readVarInt(), buf.readVarInt());
+        }
+
+        public void write(RegistryByteBuf buf) {
+            buf.writeVarInt(season);
+            buf.writeVarInt(colorTime);
+        }
+
+        @Override
+        public Id<? extends CustomPayload> getId() {
+            return PACKET_ID;
+        }
+    }
+
+    public record SyncSeasonColor() implements CustomPayload {
+        public static final CustomPayload.Id<SyncSeasonColor> PACKET_ID = new CustomPayload.Id<>(new Identifier(FloraAndFauna.NAMESPACE, "sync_season_color"));
+        public static final SyncSeasonColor INSTANCE = new SyncSeasonColor();
+        public static final PacketCodec<RegistryByteBuf, SyncSeasonColor> PACKET_CODEC = PacketCodec.unit(INSTANCE);
+
+        @Override
+        public Id<? extends CustomPayload> getId() {
+            return PACKET_ID;
+        }
     }
 }

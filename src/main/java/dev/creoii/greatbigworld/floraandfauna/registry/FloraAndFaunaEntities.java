@@ -11,16 +11,15 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 
 public final class FloraAndFaunaEntities {
-    public static final EntityType<DuckEntity> DUCK = FabricEntityTypeBuilder.create(SpawnGroup.CREATURE).dimensions(EntityDimensions.changing(.4f, .85f)).trackRangeChunks(10).entityFactory(DuckEntity::new).build();
+    public static final EntityType<DuckEntity> DUCK = EntityType.Builder.create(DuckEntity::new, SpawnGroup.CREATURE).dimensions(.4f, .85f).maxTrackingRange(10).passengerAttachments(new Vec3d(0d, .7d, -.1d)).build();
 
     public static void register() {
         Registry.register(Registries.ENTITY_TYPE, new Identifier(FloraAndFauna.NAMESPACE, "duck"), DUCK);

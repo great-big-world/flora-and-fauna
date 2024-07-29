@@ -1,6 +1,7 @@
 package dev.creoii.greatbigworld.floraandfauna.world.decorator;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaTreeDecoratorTypes;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
@@ -14,7 +15,9 @@ import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 public class MossTreeDecorator extends TreeDecorator {
-    public static final Codec<MossTreeDecorator> CODEC = Codec.floatRange(0f, 1f).fieldOf("probability").xmap(MossTreeDecorator::new, decorator -> decorator.probability).codec();
+    public static final MapCodec<MossTreeDecorator> CODEC = Codec.floatRange(0f, 1f).fieldOf("probability").xmap(MossTreeDecorator::new, decorator -> {
+        return decorator.probability;
+    });
     private final float probability;
 
     public MossTreeDecorator(float probability) {

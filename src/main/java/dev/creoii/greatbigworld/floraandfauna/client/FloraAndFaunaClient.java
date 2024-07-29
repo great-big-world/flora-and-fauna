@@ -32,10 +32,10 @@ public class FloraAndFaunaClient implements ClientModInitializer {
         FloraAndFaunaItems.registerClient();
         FloraAndFaunaEntities.registerClient();
 
-        ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SYNC_SEASON, (client, handler, buf, responseSender) -> {
-            Season season = Season.values()[buf.readInt()];
-            int colorTime = buf.readInt();
-            client.execute(() -> {
+        ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeason.PACKET_ID, (payload, context) -> {
+            Season season = Season.values()[payload.season()];
+            int colorTime = payload.colorTime();
+            context.client().execute(() -> {
                 currentSeason = season;
                 seasonColorTime = colorTime;
             });
@@ -45,8 +45,8 @@ public class FloraAndFaunaClient implements ClientModInitializer {
             FloraAndFauna.LOGGER.log(Level.INFO, "Sodium detected, modifying season sync color rebuilds.");
             SodiumClientCompat.registerSyncSeasonColorReceiver();
         } else {
-            ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SYNC_SEASON_COLOR, (client, handler, buf, responseSender) -> {
-                client.execute(() -> updateSeason(client));
+            ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonColor.PACKET_ID, (payload, context) -> {
+                context.client().execute(() -> updateSeason(context.client()));
             });
         }
     }
@@ -67,7 +67,7 @@ public class FloraAndFaunaClient implements ClientModInitializer {
     }
 
     public static int getSeasonColor(BlockRenderView world, BlockPos pos, int color) {
-        if (world == null)
+        if (world == null || currentSeason == null)
             return color;
 
         Season.Context context = new Season.Context(world, pos, color);
@@ -80,6 +80,9 @@ public class FloraAndFaunaClient implements ClientModInitializer {
     }
 
     private static float getSeasonColorPercentage() {
+        if (MinecraftClient.getInstance().world == null) {
+            return 1f;
+        }
         return (float) seasonColorTime / MinecraftClient.getInstance().world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH);
     }
 }

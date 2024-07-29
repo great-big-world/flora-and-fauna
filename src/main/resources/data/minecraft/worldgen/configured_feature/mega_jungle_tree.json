@@ -29,10 +29,8 @@
         "type": "great_big_world:branch",
         "branch_count": {
           "type": "minecraft:uniform",
-          "value": {
-            "min_inclusive": 0,
-            "max_inclusive": 4
-          }
+          "min_inclusive": 0,
+          "max_inclusive": 4
         },
         "branch_provider": {
           "type": "minecraft:simple_state_provider",
@@ -58,10 +56,8 @@
       "offset": 0,
       "radius": {
         "type": "minecraft:uniform",
-        "value": {
-          "min_inclusive": 2,
-          "max_inclusive": 3
-        }
+        "min_inclusive": 2,
+        "max_inclusive": 3
       }
     },
     "foliage_provider": {

@@ -19,7 +19,7 @@ import java.util.List;
 @Mixin(BeehiveBlockEntity.class)
 public class BeehiveBlockEntityMixin {
     @Inject(method = "releaseBee", at = @At("HEAD"), cancellable = true)
-    private static void gbw$dontReleaseBeeDuringWinter(World world, BlockPos pos, BlockState state, BeehiveBlockEntity.Bee bee, @Nullable List<Entity> entities, BeehiveBlockEntity.BeeState beeState, @Nullable BlockPos flowerPos, CallbackInfoReturnable<Boolean> cir) {
+    private static void gbw$dontReleaseBeeDuringWinter(World world, BlockPos pos, BlockState state, BeehiveBlockEntity.BeeData bee, List<Entity> entities, BeehiveBlockEntity.BeeState beeState, BlockPos flowerPos, CallbackInfoReturnable<Boolean> cir) {
         if (!world.isClient) {
             if (SeasonManager.getInstance(((ServerWorld) world).getServer()).getCurrentSeason() == Season.WINTER && beeState != BeehiveBlockEntity.BeeState.EMERGENCY)
                 cir.setReturnValue(false);

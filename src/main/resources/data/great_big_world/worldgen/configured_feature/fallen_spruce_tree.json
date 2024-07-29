@@ -23,10 +23,8 @@
     },
     "length": {
       "type": "minecraft:uniform",
-      "value": {
-        "min_inclusive": 6,
-        "max_inclusive": 10
-      }
+      "min_inclusive": 6,
+      "max_inclusive": 10
     },
     "moss_chance": 0.1
   }

@@ -7,6 +7,7 @@ import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
 import net.minecraft.block.*;
+import net.minecraft.component.type.SuspiciousStewEffectsComponent;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.Items;
@@ -30,8 +31,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
-
 @Mixin(FlowerBlock.class)
 public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousStewIngredient, CreoBlock {
     @Unique
@@ -43,8 +42,8 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
         super(settings);
     }
 
-    @Inject(method = "<init>(Ljava/util/List;Lnet/minecraft/block/AbstractBlock$Settings;)V", at = @At("TAIL"))
-    private void gbw$setSnowyDefaultState(List<SuspiciousStewIngredient.StewEffect> stewEffects, Settings settings, CallbackInfo ci) {
+    @Inject(method = "<init>(Lnet/minecraft/component/type/SuspiciousStewEffectsComponent;Lnet/minecraft/block/AbstractBlock$Settings;)V", at = @At("TAIL"))
+    private void gbw$setSnowyDefaultState(SuspiciousStewEffectsComponent stewEffects, Settings settings, CallbackInfo ci) {
         setDefaultState(getStateManager().getDefaultState().with(FLOWERS, 1).with(SnowyHelper.SNOW_LAYERS, 0));
     }
 
@@ -57,7 +56,7 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
         cir.setReturnValue(VoxelShapes.union(state.get(FLOWERS) > 2 ? LARGE_SHAPE.offset(vec3d.x, vec3d.y, vec3d.z) : cir.getReturnValue(), snowShape));
     }
 
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         if (type == NavigationType.LAND)
             return state.get(SnowyHelper.SNOW_LAYERS) < 5;
         return false;
@@ -68,7 +67,6 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
         return SnowyHelper.isSnowy(state);
     }
 
-    @SuppressWarnings("deprecation")
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
         if (world.getLightLevel(LightType.BLOCK, pos) > 11 || (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos))) {
@@ -78,7 +76,6 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
         }
     }
 
-    @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.LAYERS_TO_SHAPE[state.get(SnowyHelper.SNOW_LAYERS) - 1];
@@ -86,7 +83,6 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
         return VoxelShapes.empty();
     }
 
-    @SuppressWarnings("deprecation")
     public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.getSnowShape(state);
@@ -94,7 +90,6 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
         return VoxelShapes.empty();
     }
 
-    @SuppressWarnings("deprecation")
     public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.getSnowShape(state);
@@ -119,7 +114,6 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
         return super.getPlacementState(ctx);
     }
 
-    @SuppressWarnings("deprecation")
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
         return !context.shouldCancelInteraction() && ((context.getStack().isOf(asItem()) && state.get(FLOWERS) < 4) || (context.getStack().isOf(Items.SNOW) && state.get(SnowyHelper.SNOW_LAYERS) < 8)) || super.canReplace(state, context);
     }

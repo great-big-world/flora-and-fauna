@@ -14,7 +14,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "minecraft:chicken_spawn_egg"
+      "id": "minecraft:chicken_spawn_egg"
     },
     "show_toast": true,
     "title": {

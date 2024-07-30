@@ -1,6 +1,5 @@
 package dev.creoii.greatbigworld.floraandfauna.registry;
 
-import com.mojang.serialization.Lifecycle;
 import dev.creoii.creoapi.api.item.CreoItemSettings;
 import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
@@ -53,10 +52,7 @@ public final class FloraAndFaunaItems {
     public static final Item DUCK_SPAWN_EGG = new SpawnEggItem(FloraAndFaunaEntities.DUCK, 3637554, 16245884, new CreoItemSettings());
 
     public static void register() {
-        final SimpleDefaultedRegistry<Item> items = (SimpleDefaultedRegistry<Item>) Registries.ITEM;
-
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "humus"), HUMUS);
-        //items.set(items.getRawId(Items.MOSS_CARPET), RegistryKey.of(RegistryKeys.ITEM, new Identifier("moss_carpet")), MOSS_CARPET, Lifecycle.stable());
         Registry.register(Registries.ITEM, new Identifier("moss_carpet"), MOSS_CARPET);
 
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "tropical_fern"), TROPICAL_FERN);

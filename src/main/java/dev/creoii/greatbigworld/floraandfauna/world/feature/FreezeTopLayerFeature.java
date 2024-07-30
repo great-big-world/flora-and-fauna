@@ -61,7 +61,7 @@ public class FreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
                             world.setBlockState(topDown, blockState1.with(SnowyBlock.SNOWY, true), Block.NOTIFY_LISTENERS);
 
                         if (world.getBlockState(topDown).isOf(Blocks.GRASS_BLOCK) && world.getBlockState(topDown).get(SnowyBlock.SNOWY) && (world.getBlockState(top).isOf(Blocks.AIR) || world.getBlockState(top).isOf(Blocks.TALL_GRASS) || world.getBlockState(top).isOf(Blocks.SHORT_GRASS) && (!SnowyHelper.isSnowy(world.getBlockState(top)) || world.getBlockState(top).isOf(Blocks.SNOW)))) {
-                            System.out.println("bad snowy at: " + topDown.toShortString());
+                            //System.out.println("bad snowy at: " + topDown.toShortString());
                         }
                     }
                 }
@@ -87,7 +87,7 @@ public class FreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
                             world.setBlockState(bottomDown, blockState1.with(SnowyBlock.SNOWY, true), Block.NOTIFY_LISTENERS);
 
                         if (world.getBlockState(bottomDown).isOf(Blocks.GRASS_BLOCK) && world.getBlockState(bottomDown).get(SnowyBlock.SNOWY) && (world.getBlockState(bottom).isOf(Blocks.AIR) || world.getBlockState(bottom).isOf(Blocks.TALL_GRASS) || world.getBlockState(bottom).isOf(Blocks.SHORT_GRASS) && SnowyHelper.isSnowy(world.getBlockState(bottom)))) {
-                            System.out.println("bad snowy at: " + bottomDown.toShortString());
+                            //System.out.println("bad snowy at: " + bottomDown.toShortString());
                         }
                     }
                 }

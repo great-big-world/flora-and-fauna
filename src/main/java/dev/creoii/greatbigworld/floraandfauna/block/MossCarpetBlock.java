@@ -45,7 +45,6 @@ public class MossCarpetBlock extends MultifaceGrowthBlock {
         return SnowyHelper.isSnowy(state);
     }
 
-    @SuppressWarnings("deprecation")
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
         if (world.getLightLevel(LightType.BLOCK, pos) > 11 || (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos))) {
@@ -62,8 +61,8 @@ public class MossCarpetBlock extends MultifaceGrowthBlock {
         return context.getStack().isOf(Items.SNOW);
     }
 
-    @SuppressWarnings("deprecation")
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    @Override
+    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
         if (type == NavigationType.LAND)
             return state.get(SnowyHelper.SNOW_LAYERS) < 5;
         return false;

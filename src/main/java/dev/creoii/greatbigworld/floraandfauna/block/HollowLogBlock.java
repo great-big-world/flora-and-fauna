@@ -32,7 +32,6 @@ public class HollowLogBlock extends PillarBlock implements CreoBlock, Waterlogga
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return switch (state.get(AXIS)) {
             case X -> X_SHAPE;
@@ -42,7 +41,6 @@ public class HollowLogBlock extends PillarBlock implements CreoBlock, Waterlogga
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return switch (state.get(AXIS)) {
             case X -> X_COLLISION_SHAPE;
@@ -52,13 +50,11 @@ public class HollowLogBlock extends PillarBlock implements CreoBlock, Waterlogga
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
         return VoxelShapes.fullCube();
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }

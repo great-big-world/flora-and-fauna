@@ -5,8 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaMixinPlugin",
   "mixins": [
-    "block.BlocksMixin",
     "block.BeehiveBlockEntityMixin",
+    "block.BlocksMixin",
     "block.FenceAndPaneBlockMixin",
     "block.FenceGateBlockMixin",
     "block.FlowerBlockMixin",
@@ -31,6 +31,7 @@
     "world.VanillaBiomeParametersMixin"
   ],
   "client": [
+    "client.BlockDustParticleMixin",
     "client.BlockColorsMixin",
     "client.ClientWorldMixin",
     "client.WorldRendererMixin"

@@ -10,19 +10,25 @@ import net.minecraft.world.biome.Biome;
 import java.util.function.Function;
 
 public enum Season {
-    AUTUMN(Season::applyAutumnColorChange),
-    WINTER(Season::applyWinterColorChange),
-    SPRING(Season::applySpringColorChange),
-    SUMMER(Season::applySummerColorChange);
+    AUTUMN(Season::applyAutumnColorChange, Season::applyAutumnColorChangeParticle),
+    WINTER(Season::applyWinterColorChange, Season::applyWinterColorChangeParticle),
+    SPRING(Season::applySpringColorChange, Season::applySpringColorChangeParticle),
+    SUMMER(Season::applySummerColorChange, Season::applySummerColorChange);
 
     private final Function<Context, Integer> colorChange;
+    private final Function<Context, Integer> colorChangeParticle;
 
-    Season(Function<Context, Integer> colorChange) {
+    Season(Function<Context, Integer> colorChange, Function<Context, Integer> colorChangeParticle) {
         this.colorChange = colorChange;
+        this.colorChangeParticle = colorChangeParticle;
     }
 
     public Function<Context, Integer> getColorChange() {
         return colorChange;
+    }
+
+    public Function<Context, Integer> getColorChangeParticle() {
+        return colorChangeParticle;
     }
 
     private static int applyAutumnColorChange(Context context) {
@@ -35,6 +41,10 @@ public enum Season {
         return ColorHelper.add(context.defaultColor, 100, 0, 0);
     }
 
+    private static int applyAutumnColorChangeParticle(Context context) {
+        return ColorHelper.add(context.defaultColor, 100, 0, 0);
+    }
+
     private static int applyWinterColorChange(Context context) {
         RegistryEntry<Biome> biomeEntry = context.world.getBiomeFabric(context.pos);
 
@@ -42,7 +52,11 @@ public enum Season {
             return context.defaultColor;
         }
 
-        return ColorHelper.add(context.defaultColor, 100, 100, 100);
+        return ColorHelper.add(context.defaultColor, 90, 100, 100);
+    }
+
+    private static int applyWinterColorChangeParticle(Context context) {
+        return ColorHelper.add(context.defaultColor, 90, 100, 100);
     }
 
     private static int applySpringColorChange(Context context) {
@@ -52,6 +66,10 @@ public enum Season {
             return context.defaultColor;
         }
 
+        return ColorHelper.add(context.defaultColor, 10, 100, 0);
+    }
+
+    private static int applySpringColorChangeParticle(Context context) {
         return ColorHelper.add(context.defaultColor, 10, 100, 0);
     }
 

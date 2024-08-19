@@ -1,0 +1,10 @@
+{
+  "type": "great_big_world:sawmilling",
+  "count": 1,
+  "ingredient": {
+    "item": "minecraft:crimson_stem"
+  },
+  "result": {
+    "id": "great_big_world:hollow_crimson_stem"
+  }
+}

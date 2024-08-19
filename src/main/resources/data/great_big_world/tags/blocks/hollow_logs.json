@@ -1,24 +1,14 @@
 {
   "values": [
-    "great_big_world:hollow_oak_log",
-    "great_big_world:hollow_spruce_log",
-    "great_big_world:hollow_birch_log",
-    "great_big_world:hollow_jungle_log",
-    "great_big_world:hollow_dark_oak_log",
-    "great_big_world:hollow_acacia_log",
-    "great_big_world:hollow_mangrove_log",
-    "great_big_world:hollow_cherry_log",
-    "great_big_world:hollow_crimson_stem",
-    "great_big_world:hollow_warped_stem",
-    "great_big_world:stripped_hollow_oak_log",
-    "great_big_world:stripped_hollow_spruce_log",
-    "great_big_world:stripped_hollow_birch_log",
-    "great_big_world:stripped_hollow_jungle_log",
-    "great_big_world:stripped_hollow_dark_oak_log",
-    "great_big_world:stripped_hollow_acacia_log",
-    "great_big_world:stripped_hollow_mangrove_log",
-    "great_big_world:stripped_hollow_cherry_log",
-    "great_big_world:stripped_hollow_crimson_stem",
-    "great_big_world:stripped_hollow_warped_stem"
+    "#great_big_world:hollow_oak_logs",
+    "#great_big_world:hollow_spruce_logs",
+    "#great_big_world:hollow_birch_logs",
+    "#great_big_world:hollow_jungle_logs",
+    "#great_big_world:hollow_dark_oak_logs",
+    "#great_big_world:hollow_acacia_logs",
+    "#great_big_world:hollow_mangrove_logs",
+    "#great_big_world:hollow_cherry_logs",
+    "#great_big_world:hollow_crimson_stems",
+    "#great_big_world:hollow_warped_stems"
   ]
 }

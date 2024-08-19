@@ -59,8 +59,8 @@ public class DuckEntity extends AnimalEntity implements DuckLike {
         goalSelector.add(1, new EscapeDangerGoal(this, 1.2d));
         goalSelector.add(2, new AnimalMateGoal(this, 1d));
         goalSelector.add(3, new TemptGoal(this, 1d, BREEDING_INGREDIENT, false));
-        goalSelector.add(4, new DuckCaravanGoal(this, 5, .85d));
-        goalSelector.add(5, new WanderAroundFarInWaterGoal(this, .75d, .01f));
+        goalSelector.add(4, new WanderAroundFarInWaterGoal(this, .75d, .01f));
+        goalSelector.add(5, new DuckCaravanGoal(this, 5, .85d));
         goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 5f));
         goalSelector.add(7, new LookAroundGoal(this));
     }

@@ -1,0 +1,10 @@
+{
+  "type": "great_big_world:sawmilling",
+  "count": 1,
+  "ingredient": {
+    "item": "minecraft:stripped_birch_log"
+  },
+  "result": {
+    "id": "great_big_world:stripped_hollow_birch_log"
+  }
+}

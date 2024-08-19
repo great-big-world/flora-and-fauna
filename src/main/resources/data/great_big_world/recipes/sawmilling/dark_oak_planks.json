@@ -1,0 +1,10 @@
+{
+  "type": "great_big_world:sawmilling",
+  "count": 2,
+  "ingredient": {
+    "tag": "great_big_world:hollow_dark_oak_logs"
+  },
+  "result": {
+    "id": "minecraft:dark_oak_planks"
+  }
+}

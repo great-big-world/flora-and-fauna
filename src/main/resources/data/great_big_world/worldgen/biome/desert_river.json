@@ -42,9 +42,9 @@
     [
       "minecraft:ore_gravel",
       "minecraft:underwater_magma",
+      "minecraft:disk_sand",
       "minecraft:disk_clay",
-      "minecraft:disk_gravel",
-      "minecraft:disk_sand"
+      "minecraft:disk_gravel"
     ],
     [],
     [

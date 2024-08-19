@@ -44,6 +44,10 @@ public class SeasonManager extends PersistentState {
         return currentSeason;
     }
 
+    public int getSeasonColorTime() {
+        return seasonColorTime;
+    }
+
     public static Season getNextSeason(Season season) {
         return switch (season) {
             case AUTUMN -> Season.WINTER;
@@ -113,7 +117,7 @@ public class SeasonManager extends PersistentState {
         }
     }
 
-    private void updateSeasonTime(ServerWorld world) {
+    public void updateSeasonTime(ServerWorld world) {
         syncSeasonTime = world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH);
         syncSeasonColorTimeLength = syncSeasonTime / 3;
         syncSeasonColorTime = syncSeasonColorTimeLength / 30;
@@ -139,7 +143,7 @@ public class SeasonManager extends PersistentState {
         return manager;
     }
 
-    private void syncSeason(MinecraftServer server) {
+    public void syncSeason(MinecraftServer server) {
         server.execute(() -> {
             server.getPlayerManager().getPlayerList().forEach(serverPlayer -> {
                 ServerPlayNetworking.send(serverPlayer, new SyncSeason(instance.currentSeason.ordinal(), instance.seasonColorTime));

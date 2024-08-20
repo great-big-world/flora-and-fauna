@@ -25,6 +25,7 @@ public class FloraAndFaunaClient implements ClientModInitializer {
     private static final boolean SODIUM_LOADED = FabricLoader.getInstance().isModLoaded("sodium");
     @Nullable private static Season currentSeason;
     private static int seasonColorTime;
+    private static int syncSeasonTime;
 
     @Override
     public void onInitializeClient() {
@@ -35,9 +36,11 @@ public class FloraAndFaunaClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeason.PACKET_ID, (payload, context) -> {
             Season season = Season.values()[payload.season()];
             int colorTime = payload.colorTime();
+            int syncTime = payload.syncSeasonTime();
             context.client().execute(() -> {
                 currentSeason = season;
                 seasonColorTime = colorTime;
+                syncSeasonTime = syncTime;
             });
         });
 
@@ -57,7 +60,7 @@ public class FloraAndFaunaClient implements ClientModInitializer {
     }
 
     public static void updateSeason(MinecraftClient client) {
-        if (client.worldRenderer.chunks != null) {
+        if (client.world != null && client.worldRenderer.chunks != null && client.player != null) {
             for (ChunkBuilder.BuiltChunk chunk : client.worldRenderer.chunks.chunks) {
                 if (chunk == null)
                     continue;
@@ -70,19 +73,19 @@ public class FloraAndFaunaClient implements ClientModInitializer {
         if (world == null || currentSeason == null)
             return color;
 
-        Season.Context context = new Season.Context(world, pos, color);
         RegistryEntry<Biome> biomeEntry = world.getBiomeFabric(pos);
         if (biomeEntry == null || !biomeEntry.hasKeyAndValue()) {
             return color;
         }
 
+        Season.Context context = new Season.Context(world, pos, color);
         return ColorHelper.interpolate(getSeasonColorPercentage(), currentSeason.getColorChange().apply(context), SeasonManager.getNextSeason(currentSeason).getColorChange().apply(context));
     }
 
     private static float getSeasonColorPercentage() {
-        if (MinecraftClient.getInstance().world == null) {
+        if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().player == null) {
             return 1f;
         }
-        return (float) seasonColorTime / MinecraftClient.getInstance().world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH);
+        return (float) seasonColorTime / syncSeasonTime;
     }
 }

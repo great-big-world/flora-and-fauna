@@ -10,7 +10,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -44,15 +43,16 @@ public class FloraAndFauna implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(SeasonManager.SyncSeasonColor.PACKET_ID, SeasonManager.SyncSeasonColor.PACKET_CODEC);
 
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-            if (entity instanceof ServerPlayerEntity serverPlayerEntity) {
-                SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
-                ServerPlayNetworking.send(serverPlayerEntity, new SeasonManager.SyncSeason(seasonManager.getCurrentSeason().ordinal(), seasonManager.getSeasonColorTime()));
-                ServerPlayNetworking.send(serverPlayerEntity, new SeasonManager.SyncSeasonColor());
+            if (entity instanceof ServerPlayerEntity) {
+
+                SeasonManager.getInstance(world.getServer()).load(world);
             }
         });
         ServerTickEvents.END_WORLD_TICK.register(world -> {
-            SeasonManager.getInstance(world.getServer()).tick(world);
+            if (world.getTickManager().shouldTick())
+                SeasonManager.getInstance(world.getServer()).tick(world);
         });
+
         BlockModification.INSTANCE.setLuminance(Blocks.BROWN_MUSHROOM, 0);
     }
 }

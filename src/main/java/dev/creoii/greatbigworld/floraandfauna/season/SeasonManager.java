@@ -44,10 +44,6 @@ public class SeasonManager extends PersistentState {
         return currentSeason;
     }
 
-    public int getSeasonColorTime() {
-        return seasonColorTime;
-    }
-
     public static Season getNextSeason(Season season) {
         return switch (season) {
             case AUTUMN -> Season.WINTER;
@@ -58,29 +54,26 @@ public class SeasonManager extends PersistentState {
     }
 
     public static int getColor(BlockRenderView world, BlockPos pos, int color) {
-        if (world == null || instance == null)
+        if (world == null || instance == null || instance.currentSeason == null)
             return color;
 
-        Season.Context context = new Season.Context(world, pos, color);
         RegistryEntry<Biome> biomeEntry = world.getBiomeFabric(pos);
         if (biomeEntry == null || !biomeEntry.hasKeyAndValue()) {
             return color;
         }
 
+        Season.Context context = new Season.Context(world, pos, color);
         return ColorHelper.interpolate(instance.getSeasonColorPercentage(), instance.currentSeason.getColorChange().apply(context), getNextSeason(instance.currentSeason).getColorChange().apply(context));
     }
 
     public void load(ServerWorld world) {
-        instance.updateSeasonTime(world);
         instance.syncSeason(world.getServer());
+        instance.updateSeasonTime(world);
         instance.syncSeasonColor(world.getServer());
     }
 
     public void tick(ServerWorld world) {
         MinecraftServer server = world.getServer();
-        if (!server.getTickManager().shouldTick())
-            return;
-
         if (instance == null) {
             instance = getServerState(server);
 
@@ -100,7 +93,7 @@ public class SeasonManager extends PersistentState {
             if (syncSeasonTime != world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH))
                 instance.updateSeasonTime(world);
 
-            // season transition
+            // change season
             if (++instance.seasonTime >= syncSeasonTime) {
                 instance.currentSeason = getNextSeason(instance.currentSeason);
                 instance.syncSeason(server);
@@ -111,13 +104,14 @@ public class SeasonManager extends PersistentState {
             // color transition
             if (instance.seasonTime >= syncSeasonColorTimeLength && instance.seasonTime < syncSeasonColorTimeLength * 2) {
                 if (++instance.seasonColorTime % syncSeasonColorTime == 0) {
+                    // 30 updates per transition
                     syncSeasonColor(server);
                 }
             }
         }
     }
 
-    public void updateSeasonTime(ServerWorld world) {
+    private void updateSeasonTime(ServerWorld world) {
         syncSeasonTime = world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH);
         syncSeasonColorTimeLength = syncSeasonTime / 3;
         syncSeasonColorTime = syncSeasonColorTimeLength / 30;
@@ -143,10 +137,10 @@ public class SeasonManager extends PersistentState {
         return manager;
     }
 
-    public void syncSeason(MinecraftServer server) {
+    private void syncSeason(MinecraftServer server) {
         server.execute(() -> {
             server.getPlayerManager().getPlayerList().forEach(serverPlayer -> {
-                ServerPlayNetworking.send(serverPlayer, new SyncSeason(instance.currentSeason.ordinal(), instance.seasonColorTime));
+                ServerPlayNetworking.send(serverPlayer, new SyncSeason(instance.currentSeason.ordinal(), instance.seasonColorTime, syncSeasonTime));
             });
         });
     }
@@ -166,17 +160,18 @@ public class SeasonManager extends PersistentState {
         return manager;
     }
 
-    public record SyncSeason(int season, int colorTime) implements CustomPayload {
+    public record SyncSeason(int season, int colorTime, int syncSeasonTime) implements CustomPayload {
         public static final CustomPayload.Id<SyncSeason> PACKET_ID = new CustomPayload.Id<>(new Identifier(FloraAndFauna.NAMESPACE, "sync_season"));
         public static final PacketCodec<RegistryByteBuf, SyncSeason> PACKET_CODEC = PacketCodec.of(SyncSeason::write, SyncSeason::new);
 
         public SyncSeason(RegistryByteBuf buf) {
-            this(buf.readVarInt(), buf.readVarInt());
+            this(buf.readVarInt(), buf.readVarInt(), buf.readVarInt());
         }
 
         public void write(RegistryByteBuf buf) {
             buf.writeVarInt(season);
             buf.writeVarInt(colorTime);
+            buf.writeVarInt(syncSeasonTime);
         }
 
         @Override

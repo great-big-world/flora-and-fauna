@@ -21,9 +21,9 @@ public class SeasonManager extends PersistentState {
     private static final Type<SeasonManager> STATE_TYPE = new Type<>(SeasonManager::new, SeasonManager::createFromNbt, null);
     private static SeasonManager instance;
     private Season currentSeason = Season.SUMMER;
-    private static int syncSeasonTime;
-    private static int syncSeasonColorTime;
-    private static int syncSeasonColorTimeLength;
+    private int syncSeasonTime;
+    private int syncSeasonColorTime;
+    private int syncSeasonColorTimeLength;
     private int seasonTime = -1;
     private int seasonColorTime = -1;
 
@@ -32,10 +32,10 @@ public class SeasonManager extends PersistentState {
     }
 
     public void setCurrentSeason(ServerWorld world, Season season, boolean preserveTime) {
-        instance.currentSeason = season;
+        currentSeason = season;
         if (!preserveTime) {
-            instance.seasonTime = 0;
-            instance.seasonColorTime = 0;
+            seasonTime = 0;
+            seasonColorTime = 0;
         }
         load(world);
     }
@@ -67,9 +67,9 @@ public class SeasonManager extends PersistentState {
     }
 
     public void load(ServerWorld world) {
-        instance.syncSeason(world.getServer());
-        instance.updateSeasonTime(world);
-        instance.syncSeasonColor(world.getServer());
+        syncSeason(world.getServer());
+        updateSeasonTime(world);
+        syncSeasonColor(world.getServer());
     }
 
     public void tick(ServerWorld world) {
@@ -77,33 +77,33 @@ public class SeasonManager extends PersistentState {
         if (instance == null) {
             instance = getServerState(server);
 
-            if (instance.currentSeason == null) {
-                instance.currentSeason = Season.SUMMER;
+            if (currentSeason == null) {
+                currentSeason = Season.SUMMER;
             }
-            if (instance.seasonTime == -1) {
-                instance.seasonTime = 0;
+            if (seasonTime == -1) {
+                seasonTime = 0;
             }
-            if (instance.seasonColorTime == -1) {
-                instance.seasonColorTime = 0;
+            if (seasonColorTime == -1) {
+                seasonColorTime = 0;
             }
             load(world);
         }
 
         if (world.getRegistryKey() == World.OVERWORLD && world.getGameRules().getBoolean(FloraAndFaunaGameRules.DO_SEASON_CYCLE)) {
             if (syncSeasonTime != world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH))
-                instance.updateSeasonTime(world);
+                updateSeasonTime(world);
 
             // change season
-            if (++instance.seasonTime >= syncSeasonTime) {
-                instance.currentSeason = getNextSeason(instance.currentSeason);
-                instance.syncSeason(server);
-                instance.seasonTime = 0;
-                instance.seasonColorTime = 0;
+            if (++seasonTime >= syncSeasonTime) {
+                currentSeason = getNextSeason(instance.currentSeason);
+                syncSeason(server);
+                seasonTime = 0;
+                seasonColorTime = 0;
             }
 
             // color transition
-            if (instance.seasonTime >= syncSeasonColorTimeLength && instance.seasonTime < syncSeasonColorTimeLength * 2) {
-                if (++instance.seasonColorTime % syncSeasonColorTime == 0) {
+            if (seasonTime >= syncSeasonColorTimeLength && seasonTime < syncSeasonColorTimeLength * 2) {
+                if (++seasonColorTime % syncSeasonColorTime == 0) {
                     // 30 updates per transition
                     syncSeasonColor(server);
                 }
@@ -118,14 +118,14 @@ public class SeasonManager extends PersistentState {
     }
 
     private float getSeasonColorPercentage() {
-        return (float) instance.seasonColorTime / syncSeasonColorTimeLength;
+        return (float) seasonColorTime / syncSeasonColorTimeLength;
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        nbt.putInt("season", instance.currentSeason.ordinal());
-        nbt.putInt("season_time", instance.seasonTime);
-        nbt.putInt("season_color_time", instance.seasonColorTime);
+        nbt.putInt("season", currentSeason.ordinal());
+        nbt.putInt("season_time", seasonTime);
+        nbt.putInt("season_color_time", seasonColorTime);
         return nbt;
     }
 
@@ -140,7 +140,7 @@ public class SeasonManager extends PersistentState {
     private void syncSeason(MinecraftServer server) {
         server.execute(() -> {
             server.getPlayerManager().getPlayerList().forEach(serverPlayer -> {
-                ServerPlayNetworking.send(serverPlayer, new SyncSeason(instance.currentSeason.ordinal(), instance.seasonColorTime, syncSeasonTime));
+                ServerPlayNetworking.send(serverPlayer, new SyncSeason(currentSeason.ordinal()));
             });
         });
     }
@@ -148,7 +148,7 @@ public class SeasonManager extends PersistentState {
     private void syncSeasonColor(MinecraftServer server) {
         server.execute(() -> {
             server.getPlayerManager().getPlayerList().forEach(serverPlayer -> {
-                ServerPlayNetworking.send(serverPlayer, new SyncSeasonColor());
+                ServerPlayNetworking.send(serverPlayer, new SyncSeasonColor(syncSeasonTime, seasonColorTime));
             });
         });
     }
@@ -160,18 +160,16 @@ public class SeasonManager extends PersistentState {
         return manager;
     }
 
-    public record SyncSeason(int season, int colorTime, int syncSeasonTime) implements CustomPayload {
+    public record SyncSeason(int season) implements CustomPayload {
         public static final CustomPayload.Id<SyncSeason> PACKET_ID = new CustomPayload.Id<>(new Identifier(FloraAndFauna.NAMESPACE, "sync_season"));
         public static final PacketCodec<RegistryByteBuf, SyncSeason> PACKET_CODEC = PacketCodec.of(SyncSeason::write, SyncSeason::new);
 
         public SyncSeason(RegistryByteBuf buf) {
-            this(buf.readVarInt(), buf.readVarInt(), buf.readVarInt());
+            this(buf.readVarInt());
         }
 
         public void write(RegistryByteBuf buf) {
             buf.writeVarInt(season);
-            buf.writeVarInt(colorTime);
-            buf.writeVarInt(syncSeasonTime);
         }
 
         @Override
@@ -180,10 +178,18 @@ public class SeasonManager extends PersistentState {
         }
     }
 
-    public record SyncSeasonColor() implements CustomPayload {
+    public record SyncSeasonColor(int syncSeasonTime, int colorTime) implements CustomPayload {
         public static final CustomPayload.Id<SyncSeasonColor> PACKET_ID = new CustomPayload.Id<>(new Identifier(FloraAndFauna.NAMESPACE, "sync_season_color"));
-        public static final SyncSeasonColor INSTANCE = new SyncSeasonColor();
-        public static final PacketCodec<RegistryByteBuf, SyncSeasonColor> PACKET_CODEC = PacketCodec.unit(INSTANCE);
+        public static final PacketCodec<RegistryByteBuf, SyncSeasonColor> PACKET_CODEC = PacketCodec.of(SyncSeasonColor::write, SyncSeasonColor::new);
+
+        public SyncSeasonColor(RegistryByteBuf buf) {
+            this(buf.readVarInt(), buf.readVarInt());
+        }
+
+        public void write(RegistryByteBuf buf) {
+            buf.writeVarInt(syncSeasonTime);
+            buf.writeVarInt(colorTime);
+        }
 
         @Override
         public Id<? extends CustomPayload> getId() {

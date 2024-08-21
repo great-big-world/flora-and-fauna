@@ -4,7 +4,6 @@ import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import dev.creoii.greatbigworld.floraandfauna.client.compat.SodiumClientCompat;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaEntities;
-import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaGameRules;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaItems;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
@@ -35,21 +34,31 @@ public class FloraAndFaunaClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeason.PACKET_ID, (payload, context) -> {
             Season season = Season.values()[payload.season()];
-            int colorTime = payload.colorTime();
-            int syncTime = payload.syncSeasonTime();
             context.client().execute(() -> {
                 currentSeason = season;
-                seasonColorTime = colorTime;
-                syncSeasonTime = syncTime;
             });
         });
 
         if (SODIUM_LOADED) {
             FloraAndFauna.LOGGER.log(Level.INFO, "Sodium detected, modifying season sync color rebuilds.");
-            SodiumClientCompat.registerSyncSeasonColorReceiver();
+            ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonColor.PACKET_ID, (payload, context) -> {
+                int syncTime = payload.syncSeasonTime();
+                int colorTime = payload.colorTime();
+                context.client().execute(() -> {
+                    syncSeasonTime = syncTime;
+                    seasonColorTime = colorTime;
+                    SodiumClientCompat.updateSeason(context.client());
+                });
+            });
         } else {
             ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonColor.PACKET_ID, (payload, context) -> {
-                context.client().execute(() -> updateSeason(context.client()));
+                int syncTime = payload.syncSeasonTime();
+                int colorTime = payload.colorTime();
+                context.client().execute(() -> {
+                    syncSeasonTime = syncTime;
+                    seasonColorTime = colorTime;
+                    updateSeason(context.client());
+                });
             });
         }
     }

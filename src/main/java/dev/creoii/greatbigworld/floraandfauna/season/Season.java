@@ -10,17 +10,26 @@ import net.minecraft.world.biome.Biome;
 import java.util.function.Function;
 
 public enum Season {
-    AUTUMN(Season::applyAutumnColorChange, Season::applyAutumnColorChangeParticle),
-    WINTER(Season::applyWinterColorChange, Season::applyWinterColorChangeParticle),
-    SPRING(Season::applySpringColorChange, Season::applySpringColorChangeParticle),
-    SUMMER(Season::applySummerColorChange, Season::applySummerColorChange);
+    AUTUMN("season.autumn", Season::applyAutumnColorChange, Season::applyAutumnColorChangeParticle),
+    WINTER("season.winter", Season::applyWinterColorChange, Season::applyWinterColorChangeParticle),
+    SPRING("season.spring", Season::applySpringColorChange, Season::applySpringColorChangeParticle),
+    SUMMER("season.summer", Season::applySummerColorChange, Season::applySummerColorChange);
 
+    private final String translationKey;
     private final Function<Context, Integer> colorChange;
     private final Function<Context, Integer> colorChangeParticle;
 
-    Season(Function<Context, Integer> colorChange, Function<Context, Integer> colorChangeParticle) {
+    Season(String translationKey, Function<Context, Integer> colorChange, Function<Context, Integer> colorChangeParticle) {
+        this.translationKey = translationKey;
         this.colorChange = colorChange;
         this.colorChangeParticle = colorChangeParticle;
+    }
+
+    /**
+     * Unused for now. Will be used in Adventures' world start options.
+     */
+    public String getTranslationKey() {
+        return translationKey;
     }
 
     public Function<Context, Integer> getColorChange() {

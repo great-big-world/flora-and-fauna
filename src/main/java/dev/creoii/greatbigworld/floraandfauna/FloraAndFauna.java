@@ -43,10 +43,8 @@ public class FloraAndFauna implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(SeasonManager.SyncSeasonColor.PACKET_ID, SeasonManager.SyncSeasonColor.PACKET_CODEC);
 
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-            if (entity instanceof ServerPlayerEntity) {
-
+            if (entity instanceof ServerPlayerEntity)
                 SeasonManager.getInstance(world.getServer()).load(world);
-            }
         });
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             if (world.getTickManager().shouldTick())

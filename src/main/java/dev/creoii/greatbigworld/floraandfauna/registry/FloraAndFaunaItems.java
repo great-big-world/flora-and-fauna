@@ -53,7 +53,7 @@ public final class FloraAndFaunaItems {
 
     public static void register() {
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "humus"), HUMUS);
-        Registry.register(Registries.ITEM, new Identifier("moss_carpet"), MOSS_CARPET);
+        Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "moss_carpet"), MOSS_CARPET);
 
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "tropical_fern"), TROPICAL_FERN);
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "large_tropical_fern"), LARGE_TROPICAL_FERN);

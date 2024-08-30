@@ -1,6 +1,5 @@
 package dev.creoii.greatbigworld.floraandfauna.registry;
 
-import com.mojang.serialization.Lifecycle;
 import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import dev.creoii.greatbigworld.floraandfauna.block.AlgaeBlock;
 import dev.creoii.greatbigworld.floraandfauna.block.HollowLogBlock;
@@ -66,11 +65,8 @@ public final class FloraAndFaunaBlocks {
     public static final Block ALGAE = new AlgaeBlock(AbstractBlock.Settings.copy(Blocks.LILY_PAD));
 
     public static void register() {
-        final SimpleDefaultedRegistry<Block> blocks = (SimpleDefaultedRegistry<Block>) Registries.BLOCK;
-
         Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "humus"), HUMUS);
-        Registry.register(Registries.BLOCK, new Identifier("moss_carpet"), MOSS_CARPET);
-        //blocks.set(blocks.getRawId(Blocks.MOSS_CARPET), RegistryKey.of(RegistryKeys.BLOCK, new Identifier("moss_carpet")), MOSS_CARPET, Lifecycle.stable());
+        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "moss_carpet"), MOSS_CARPET);
 
         Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "tropical_fern"), TROPICAL_FERN);
         Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "large_tropical_fern"), LARGE_TROPICAL_FERN);

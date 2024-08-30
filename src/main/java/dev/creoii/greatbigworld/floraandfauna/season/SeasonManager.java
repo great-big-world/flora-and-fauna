@@ -3,6 +3,7 @@ package dev.creoii.greatbigworld.floraandfauna.season;
 import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaGameRules;
 import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.RegistryByteBuf;
@@ -139,7 +140,7 @@ public class SeasonManager extends PersistentState {
 
     private void syncSeason(MinecraftServer server) {
         server.execute(() -> {
-            server.getPlayerManager().getPlayerList().forEach(serverPlayer -> {
+            PlayerLookup.all(server).forEach(serverPlayer -> {
                 ServerPlayNetworking.send(serverPlayer, new SyncSeason(currentSeason.ordinal()));
             });
         });
@@ -147,7 +148,7 @@ public class SeasonManager extends PersistentState {
 
     private void syncSeasonColor(MinecraftServer server) {
         server.execute(() -> {
-            server.getPlayerManager().getPlayerList().forEach(serverPlayer -> {
+            PlayerLookup.all(server).forEach(serverPlayer -> {
                 ServerPlayNetworking.send(serverPlayer, new SyncSeasonColor(syncSeasonTime, seasonColorTime));
             });
         });

@@ -26,6 +26,7 @@
       "min_inclusive": 5,
       "max_inclusive": 10
     },
-    "moss_chance": 50
+    "moss_chance": 50,
+    "leaf_chance": 50
   }
 }

@@ -7,14 +7,20 @@ import net.minecraft.util.math.intprovider.IntProvider;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
-public record FallenTreeFeatureConfig(BlockStateProvider state, IntProvider length, IntProvider mossChance) implements FeatureConfig {
-    public static final Codec<FallenTreeFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> {
-        return instance.group(BlockStateProvider.TYPE_CODEC.fieldOf("state").forGetter((config) -> {
+import java.util.Optional;
+
+public record FallenTreeFeatureConfig(BlockStateProvider state, Optional<BlockStateProvider> leafState, IntProvider length, IntProvider mossChance, Optional<IntProvider> leafChance) implements FeatureConfig {
+    public static final Codec<FallenTreeFeatureConfig> CODEC = RecordCodecBuilder.create(instance -> {
+        return instance.group(BlockStateProvider.TYPE_CODEC.fieldOf("state").forGetter(config -> {
             return config.state;
-        }), IntProvider.createValidatingCodec(1, 16).fieldOf("length").forGetter((config) -> {
+        }), BlockStateProvider.TYPE_CODEC.optionalFieldOf("leaf_state").orElse(Optional.empty()).forGetter(config -> {
+            return Optional.ofNullable(config.state);
+        }), IntProvider.createValidatingCodec(1, 16).fieldOf("length").forGetter(config -> {
             return config.length;
-        }), IntProvider.createValidatingCodec(0, 100).fieldOf("moss_chance").orElse(ConstantIntProvider.create(0)).forGetter((config) -> {
+        }), IntProvider.createValidatingCodec(0, 100).fieldOf("moss_chance").orElse(ConstantIntProvider.create(0)).forGetter(config -> {
             return config.mossChance;
+        }), IntProvider.createValidatingCodec(0, 100).optionalFieldOf("leaf_chance").orElse(Optional.ofNullable(ConstantIntProvider.create(0))).forGetter(config -> {
+            return config.leafChance;
         })).apply(instance, FallenTreeFeatureConfig::new);
     });
 }

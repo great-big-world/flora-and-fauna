@@ -21,11 +21,18 @@
         }
       ]
     },
+    "leaf_state": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:oak_leaves"
+      }
+    },
     "length": {
       "type": "minecraft:uniform",
       "min_inclusive": 5,
       "max_inclusive": 8
     },
-    "moss_chance": 40
+    "moss_chance": 40,
+    "leaf_chance": 60
   }
 }

@@ -35,7 +35,7 @@ public final class FloraAndFaunaCommands {
                                     context.getSource().sendError(Text.literal("An unexpected error occurred."));
                                     return -1;
                                 }
-                                context.getSource().sendFeedback(() -> Text.literal("Set season to " + season), true);
+                                context.getSource().sendFeedback(() -> Text.literal("Set season to " + StringUtils.capitalize(season)), true);
                                 return 1;
                             })
                     )

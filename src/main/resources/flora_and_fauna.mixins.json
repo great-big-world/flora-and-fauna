@@ -26,13 +26,14 @@
     "entity.AnimalEntityMixin",
     "entity.ChickenEntityMixin",
     "entity.EscapeDangerGoalMixin",
+    "entity.LivingEntityMixin",
     "world.BiomeMixin",
     "world.ServerWorldMixin",
     "world.VanillaBiomeParametersMixin"
   ],
   "client": [
-    "client.BlockDustParticleMixin",
     "client.BlockColorsMixin",
+    "client.BlockDustParticleMixin",
     "client.ClientWorldMixin",
     "client.WorldRendererMixin"
   ],

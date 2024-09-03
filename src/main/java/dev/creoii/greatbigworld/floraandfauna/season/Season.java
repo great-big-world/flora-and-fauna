@@ -3,6 +3,7 @@ package dev.creoii.greatbigworld.floraandfauna.season;
 import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.biome.Biome;
@@ -10,19 +11,21 @@ import net.minecraft.world.biome.Biome;
 import java.util.function.Function;
 
 public enum Season {
-    AUTUMN("season.autumn", Season::applyAutumnColorChange, Season::applyAutumnColorChangeParticle),
-    WINTER("season.winter", Season::applyWinterColorChange, Season::applyWinterColorChangeParticle),
-    SPRING("season.spring", Season::applySpringColorChange, Season::applySpringColorChangeParticle),
-    SUMMER("season.summer", Season::applySummerColorChange, Season::applySummerColorChange);
+    AUTUMN("season.autumn", Season::applyAutumnColorChange, Season::applyAutumnColorChangeParticle, FloraAndFaunaTags.NOT_AFFECTED_BY_AUTUMN),
+    WINTER("season.winter", Season::applyWinterColorChange, Season::applyWinterColorChangeParticle, FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER),
+    SPRING("season.spring", Season::applySpringColorChange, Season::applySpringColorChangeParticle, FloraAndFaunaTags.NOT_AFFECTED_BY_SPRING),
+    SUMMER("season.summer", Season::applySummerColorChange, Season::applySummerColorChange, FloraAndFaunaTags.NOT_AFFECTED_BY_SUMMER);
 
     private final String translationKey;
     private final Function<Context, Integer> colorChange;
     private final Function<Context, Integer> colorChangeParticle;
+    private final TagKey<Biome> biomesNotAffectedBy;
 
-    Season(String translationKey, Function<Context, Integer> colorChange, Function<Context, Integer> colorChangeParticle) {
+    Season(String translationKey, Function<Context, Integer> colorChange, Function<Context, Integer> colorChangeParticle, TagKey<Biome> biomesNotAffectedBy) {
         this.translationKey = translationKey;
         this.colorChange = colorChange;
         this.colorChangeParticle = colorChangeParticle;
+        this.biomesNotAffectedBy = biomesNotAffectedBy;
     }
 
     /**
@@ -38,6 +41,10 @@ public enum Season {
 
     public Function<Context, Integer> getColorChangeParticle() {
         return colorChangeParticle;
+    }
+
+    public TagKey<Biome> getBiomesNotAffectedBy() {
+        return biomesNotAffectedBy;
     }
 
     private static int applyAutumnColorChange(Context context) {

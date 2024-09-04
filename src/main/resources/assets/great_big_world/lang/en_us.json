@@ -56,5 +56,6 @@
   "advancements.adventure.duck_duck_chicken.description": "Find a confused duckling.",
   "advancements.adventure.duck_duck_chicken.title": "Duck, Duck, Chicken",
 
-  "gamerule.doSeasonCycle": "Advance seasons"
+  "gamerule.doSeasonCycle": "Advance seasons",
+  "gamerule.seasonLength": "Length of seasons in ticks"
 }

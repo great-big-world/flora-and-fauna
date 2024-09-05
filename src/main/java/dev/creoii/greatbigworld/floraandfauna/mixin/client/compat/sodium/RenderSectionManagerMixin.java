@@ -1,4 +1,4 @@
-package dev.creoii.greatbigworld.floraandfauna.mixin.compat.sodium;
+package dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium;
 
 import dev.creoii.greatbigworld.floraandfauna.util.RenderSectionManagerInvoker;
 import me.jellysquid.mods.sodium.client.render.chunk.RenderSection;

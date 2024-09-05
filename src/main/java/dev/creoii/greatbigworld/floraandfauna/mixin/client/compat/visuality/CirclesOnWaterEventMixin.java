@@ -1,4 +1,4 @@
-package dev.creoii.greatbigworld.floraandfauna.mixin.compat.visuality;
+package dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.visuality;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

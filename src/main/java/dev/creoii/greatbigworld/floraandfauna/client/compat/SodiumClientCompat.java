@@ -1,7 +1,7 @@
 package dev.creoii.greatbigworld.floraandfauna.client.compat;
 
-import dev.creoii.greatbigworld.floraandfauna.mixin.compat.sodium.RenderSectionManagerAccessor;
-import dev.creoii.greatbigworld.floraandfauna.mixin.compat.sodium.SodiumWorldRendererAccessor;
+import dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.RenderSectionManagerAccessor;
+import dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.SodiumWorldRendererAccessor;
 import dev.creoii.greatbigworld.floraandfauna.util.RenderSectionManagerInvoker;
 import me.jellysquid.mods.sodium.client.render.chunk.ChunkUpdateType;
 import me.jellysquid.mods.sodium.client.render.chunk.RenderSection;

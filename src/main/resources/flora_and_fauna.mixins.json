@@ -11,14 +11,12 @@
     "block.ShortPlantBlockMixin",
     "block.SmallDripleafBlockMixin",
     "block.TallPlantBlockMixin",
-
     "block.FenceAndPaneBlockMixin",
     "block.FenceGateBlockMixin",
     "block.IceBlockMixin",
     "block.SnowBlockMixin",
     "block.SnowyBlockMixin",
     "block.WallBlockMixin",
-
     "entity.AnimalEntityMixin",
     "entity.EscapeDangerGoalMixin",
     "entity.LivingEntityMixin",

@@ -59,6 +59,7 @@ public abstract class FenceAndPaneBlockMixin extends HorizontalConnectingBlock i
         builder.add(SnowyHelper.SNOW_LAYERS);
     }
 
+    @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
         SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());

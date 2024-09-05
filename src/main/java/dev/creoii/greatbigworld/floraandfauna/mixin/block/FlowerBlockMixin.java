@@ -42,6 +42,11 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
         super(settings);
     }
 
+    @Override
+    public boolean hasDynamicBounds() {
+        return true;
+    }
+
     @Inject(method = "<init>(Lnet/minecraft/component/type/SuspiciousStewEffectsComponent;Lnet/minecraft/block/AbstractBlock$Settings;)V", at = @At("TAIL"))
     private void gbw$setSnowyDefaultState(SuspiciousStewEffectsComponent stewEffects, Settings settings, CallbackInfo ci) {
         setDefaultState(getStateManager().getDefaultState().with(FLOWERS, 1).with(SnowyHelper.SNOW_LAYERS, 0));

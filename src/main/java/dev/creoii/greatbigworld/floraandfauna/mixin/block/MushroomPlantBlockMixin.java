@@ -67,6 +67,7 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         return SnowyHelper.isSnowy(state);
     }
 
+    @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
         SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
@@ -77,6 +78,7 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         }
     }
 
+    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.LAYERS_TO_SHAPE[state.get(SnowyHelper.SNOW_LAYERS) - 1];
@@ -84,6 +86,7 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         return VoxelShapes.empty();
     }
 
+    @Override
     public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.getSnowShape(state);
@@ -91,6 +94,7 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         return VoxelShapes.empty();
     }
 
+    @Override
     public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.getSnowShape(state);
@@ -115,6 +119,7 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         return super.getPlacementState(ctx);
     }
 
+    @Override
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
         return !context.shouldCancelInteraction() && ((context.getStack().isOf(asItem()) && state.get(MUSHROOMS) < 4) || (context.getStack().isOf(Items.SNOW) && state.get(SnowyHelper.SNOW_LAYERS) < 8)) || super.canReplace(state, context);
     }

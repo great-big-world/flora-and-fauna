@@ -39,6 +39,11 @@ public abstract class TallPlantBlockMixin extends PlantBlock implements CreoBloc
         super(settings);
     }
 
+    @Override
+    public boolean hasDynamicBounds() {
+        return true;
+    }
+
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gbw$setSnowyDefaultState(Settings settings, CallbackInfo ci) {
         setDefaultState(stateManager.getDefaultState().with(HALF, DoubleBlockHalf.LOWER).with(SnowyHelper.SNOW_LAYERS, 0));
@@ -69,6 +74,7 @@ public abstract class TallPlantBlockMixin extends PlantBlock implements CreoBloc
         return SnowyHelper.isSnowy(state);
     }
 
+    @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
         SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
@@ -86,6 +92,7 @@ public abstract class TallPlantBlockMixin extends PlantBlock implements CreoBloc
         return false;
     }
 
+    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.LAYERS_TO_SHAPE[state.get(SnowyHelper.SNOW_LAYERS) - 1];
@@ -93,6 +100,7 @@ public abstract class TallPlantBlockMixin extends PlantBlock implements CreoBloc
         return VoxelShapes.empty();
     }
 
+    @Override
     public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.getSnowShape(state);
@@ -100,6 +108,7 @@ public abstract class TallPlantBlockMixin extends PlantBlock implements CreoBloc
         return VoxelShapes.empty();
     }
 
+    @Override
     public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.getSnowShape(state);

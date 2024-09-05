@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
+import com.google.common.collect.ImmutableMap;
 import dev.creoii.creoapi.api.block.CreoBlock;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
@@ -14,24 +15,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.LightType;
 import net.minecraft.world.biome.Biome;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Map;
-
 @Mixin(WallBlock.class)
 public abstract class WallBlockMixin extends Block implements Waterloggable, CreoBlock {
-    @Shadow @Final private Map<BlockState, VoxelShape> shapeMap;
-    @Shadow @Final private Map<BlockState, VoxelShape> collisionShapeMap;
-
     public WallBlockMixin(Settings settings) {
         super(settings);
     }
@@ -41,18 +35,16 @@ public abstract class WallBlockMixin extends Block implements Waterloggable, Cre
         setDefaultState(getStateManager().getDefaultState().with(SnowyHelper.SNOW_LAYERS, 0));
     }
 
-    @Inject(method = "getOutlineShape", at = @At("HEAD"), cancellable = true)
-    private void gbw$mergeSnowOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
-        if (SnowyHelper.isSnowy(state)) {
-            cir.setReturnValue(VoxelShapes.union(shapeMap.get(state.with(SnowyHelper.SNOW_LAYERS, 0)), SnowyHelper.getSnowShape(state)));
+    @SuppressWarnings("unchecked")
+    @Redirect(method = "getShapeMap", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;"))
+    private <K, V> ImmutableMap.Builder<BlockState, V> gbw$addSnowyPropertyToShapeMap(ImmutableMap.Builder<BlockState, V> instance, K key, V value) {
+        for (int i : SnowyHelper.SNOW_LAYERS.getValues()) {
+            BlockState state = ((BlockState) key).with(SnowyHelper.SNOW_LAYERS, i);
+            if (SnowyHelper.isSnowy(state)) {
+                instance.put(state, (V) VoxelShapes.union((VoxelShape) value, SnowyHelper.getSnowShape(state)));
+            } else instance.put(state, value);
         }
-    }
-
-    @Inject(method = "getCollisionShape", at = @At("RETURN"), cancellable = true)
-    private void gbw$mergeSnowCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
-        if (SnowyHelper.isSnowy(state)) {
-            cir.setReturnValue(VoxelShapes.union(collisionShapeMap.get(state.with(SnowyHelper.SNOW_LAYERS, 0)), SnowyHelper.getSnowShape(state)));
-        }
+        return instance;
     }
 
     @Inject(method = "getPlacementState", at = @At("RETURN"), cancellable = true)
@@ -68,6 +60,7 @@ public abstract class WallBlockMixin extends Block implements Waterloggable, Cre
         builder.add(SnowyHelper.SNOW_LAYERS);
     }
 
+    @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
         SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());

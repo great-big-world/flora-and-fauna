@@ -37,12 +37,12 @@ public class FloraAndFaunaClient implements ClientModInitializer {
             });
         });
 
-        FloraAndFauna.LOGGER.log(Level.INFO, "Sodium detected, modifying season sync color rebuilds.");
         ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonColor.PACKET_ID, (payload, context) -> {
             int[] context1 = payload.context();
             context.client().execute(() -> {
                 transitionContext = new TransitionContext(Season.values()[context1[0]], Season.values()[context1[1]], context1[2] / 100f);
                 if (SODIUM_LOADED) {
+                    FloraAndFauna.LOGGER.log(Level.INFO, "Sodium detected, modifying season sync color rebuilds.");
                     SodiumClientCompat.rebuildSeason(context.client());
                 } else rebuildSeason(context.client());
             });

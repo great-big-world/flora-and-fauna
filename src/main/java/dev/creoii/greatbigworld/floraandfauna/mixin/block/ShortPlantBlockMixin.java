@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -32,6 +33,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class ShortPlantBlockMixin extends PlantBlock implements Fertilizable, CreoBlock {
     protected ShortPlantBlockMixin(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    public boolean hasDynamicBounds() {
+        return true;
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))

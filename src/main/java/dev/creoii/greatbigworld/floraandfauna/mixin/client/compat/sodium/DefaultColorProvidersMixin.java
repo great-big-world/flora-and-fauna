@@ -1,8 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium;
 
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
-import dev.creoii.greatbigworld.floraandfauna.season.Season;
-import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import me.jellysquid.mods.sodium.client.model.color.DefaultColorProviders;
 import me.jellysquid.mods.sodium.client.world.WorldSlice;
@@ -19,11 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class DefaultColorProvidersMixin {
     @Inject(method = "getColor", at = @At("RETURN"), cancellable = true, remap = false)
     private void gbw$modifyBlockColor(WorldSlice world, int x, int y, int z, CallbackInfoReturnable<Integer> cir) {
-        if (!world.getBlockState(x, y, z).isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
-            Season season = FloraAndFaunaClient.getCurrentSeason();
-            if (season != null) {
-                cir.setReturnValue(FloraAndFaunaClient.getSeasonColor(world, new BlockPos(x, y, z), cir.getReturnValue()));
-            }
+        if (FloraAndFaunaClient.getCurrentSeason() != null && !world.getBlockState(x, y, z).isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
+            cir.setReturnValue(FloraAndFaunaClient.getSeasonColor(world, new BlockPos(x, y, z), cir.getReturnValue()));
         }
     }
 }

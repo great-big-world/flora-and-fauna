@@ -28,10 +28,8 @@ public abstract class ClientWorldMixin extends World {
 
     @Redirect(method = "calculateColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/ColorResolver;getColor(Lnet/minecraft/world/biome/Biome;DD)I"))
     private int gbw$modifyBlockColor(ColorResolver instance, Biome biome, double x, double z, @Local(argsOnly = true) BlockPos pos) {
-        if (!getBlockState(pos).isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
-            if (FloraAndFaunaClient.getCurrentSeason() != null) {
-                return FloraAndFaunaClient.getSeasonColor(this, pos, instance.getColor(biome, x, z));
-            }
+        if (FloraAndFaunaClient.getCurrentSeason() != null && !getBlockState(pos).isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
+            return FloraAndFaunaClient.getSeasonColor(this, pos, instance.getColor(biome, x, z));
         }
         return 0;
     }

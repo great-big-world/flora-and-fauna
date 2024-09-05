@@ -13,7 +13,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.ChunkSectionPos;
 
 public final class SodiumClientCompat {
-    public static void updateSeason(MinecraftClient client) {
+    public static void rebuildSeason(MinecraftClient client) {
         if (client.world != null) {
             RenderSectionManager renderSectionManager = ((SodiumWorldRendererAccessor) ((WorldRendererExtended) client.worldRenderer).sodium$getWorldRenderer()).gbw$getRenderSectionManager();
             ChunkTracker.forEachChunk(ChunkTrackerHolder.get(client.world).getReadyChunks(), (x, z) -> {

@@ -34,7 +34,6 @@ public class FloraAndFaunaClient implements ClientModInitializer {
             int season = payload.season();
             context.client().execute(() -> {
                 currentSeason = Season.values()[season];
-                System.out.println("client current season: " + currentSeason.name());
             });
         });
 
@@ -44,14 +43,8 @@ public class FloraAndFaunaClient implements ClientModInitializer {
             context.client().execute(() -> {
                 transitionContext = new TransitionContext(Season.values()[context1[0]], Season.values()[context1[1]], context1[2] / 100f);
                 if (SODIUM_LOADED) {
-                    SodiumClientCompat.updateSeason(context.client());
-                } else {
-                    updateSeason(context.client());
-                }
-
-                if (transitionContext.getNext() != null) {
-                    System.out.println("client percentage: " + transitionContext.getPercentage() + " between " + transitionContext.getCurrent().name() + "-" + transitionContext.getNext().name());
-                }
+                    SodiumClientCompat.rebuildSeason(context.client());
+                } else rebuildSeason(context.client());
             });
         });
     }
@@ -64,7 +57,7 @@ public class FloraAndFaunaClient implements ClientModInitializer {
         return transitionContext;
     }
 
-    public static void updateSeason(MinecraftClient client) {
+    public static void rebuildSeason(MinecraftClient client) {
         if (client.world != null && client.worldRenderer.chunks != null && client.player != null) {
             for (ChunkBuilder.BuiltChunk chunk : client.worldRenderer.chunks.chunks) {
                 if (chunk == null)

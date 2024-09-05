@@ -4,6 +4,10 @@ import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.Nullable;
 
 public class TransitionContext {
+    /**
+     * The current season is different than the {@link SeasonManager#currentSeason}.
+     * <p>This is the transitional current season, which stays the same for the entire transition. The {@link SeasonManager#currentSeason} changes halfway through the transition.</p>
+     */
     private Season current;
     private @Nullable Season next;
     private float percentage;
@@ -38,6 +42,9 @@ public class TransitionContext {
         this.percentage = percentage;
     }
 
+    /**
+     * @return an NbtCompound storing three integers, representing a TransitionContext that can be sent via packets.
+     */
     public NbtCompound writeNbt() {
         NbtCompound nbt = new NbtCompound();
         nbt.putInt("current_season", current.ordinal());

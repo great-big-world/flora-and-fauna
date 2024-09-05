@@ -70,21 +70,14 @@ public class SeasonManager extends PersistentState {
             if (seasonLength != world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH))
                 updateSeasonTime(world);
 
-            // increment time each tick
-            ++seasonTime;
-            System.out.println(seasonTime);
-
             // check for SEASON_TRANSITION_COUNT / 2 before transition occurs
-            if (seasonTime > seasonLength - (seasonTransitionLength / 2) || seasonTime <= (seasonTransitionLength / 2)) {
+            if (++seasonTime > seasonLength - (seasonTransitionLength / 2) || seasonTime <= (seasonTransitionLength / 2)) {
                 // begin transition
                 transitioning = true;
             } else if (transitioning) {
                 // end transition
                 context.setCurrent(currentSeason);
                 context.setNext(Season.getNextSeason(currentSeason));
-                System.out.println("current season context: " + context.getCurrent().name());
-                if (context.getNext() != null)
-                    System.out.println("previous season context: " + context.getNext().name());
                 context.setPercentage(0f);
                 transitioning = false;
                 syncSeasonTransition(server);
@@ -93,12 +86,12 @@ public class SeasonManager extends PersistentState {
             if (seasonTime >= seasonLength) {
                 seasonTime = 0;
                 currentSeason = Season.getNextSeason(currentSeason);
-                System.out.println("next season: " + currentSeason.name());
                 syncSeason(server);
             }
 
             // check for % of every increment
             if (transitioning && seasonTime % seasonTransitionIncrement == 0) {
+                // percentage is set at a flat rate 30 times per transition, rather than relative to a time
                 context.setPercentage(Math.min(1f, context.getPercentage() + ((float) seasonTransitionIncrement / seasonTransitionLength)));
                 syncSeasonTransition(server);
             }

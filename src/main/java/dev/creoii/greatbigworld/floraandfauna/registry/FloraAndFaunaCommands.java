@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.registry;
 
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
@@ -27,19 +28,26 @@ public final class FloraAndFaunaCommands {
                                 return builder.buildFuture();
                             })
                             .executes(context -> {
-                                String season = context.getArgument("season", String.class);
-                                SeasonManager manager = SeasonManager.getInstance(context.getSource().getServer());
-                                if (manager != null) {
-                                    manager.setCurrentSeason(context.getSource().getWorld(), Season.valueOf(season.toUpperCase()), false);
-                                } else {
-                                    context.getSource().sendError(Text.literal("An unexpected error occurred."));
-                                    return -1;
-                                }
-                                context.getSource().sendFeedback(() -> Text.literal("Set season to " + StringUtils.capitalize(season)), true);
-                                return 1;
+                                return executeSetSeason(context.getSource(), StringArgumentType.getString(context, "season"), false);
                             })
+                            .then(CommandManager.argument("preserveTime", BoolArgumentType.bool())
+                                    .executes(context -> {
+                                        return executeSetSeason(context.getSource(), StringArgumentType.getString(context, "season"), BoolArgumentType.getBool(context, "preserveTime"));
+                                    }))
                     )
             );
         });
+    }
+
+    private static int executeSetSeason(ServerCommandSource source, String season, boolean preserveTime) {
+        SeasonManager manager = SeasonManager.getInstance(source.getServer());
+        if (manager != null) {
+            manager.setCurrentSeason(source.getWorld(), Season.valueOf(season.toUpperCase()), preserveTime);
+        } else {
+            source.sendError(Text.literal("An unexpected error occurred."));
+            return -1;
+        }
+        source.sendFeedback(() -> Text.literal("Set season to " + StringUtils.capitalize(season)), true);
+        return 1;
     }
 }

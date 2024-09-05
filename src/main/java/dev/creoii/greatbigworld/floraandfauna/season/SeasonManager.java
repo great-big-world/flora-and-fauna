@@ -22,8 +22,9 @@ public class SeasonManager extends PersistentState {
     private Season currentSeason = Season.SUMMER;
     private TransitionContext context = new TransitionContext(currentSeason, Season.getNextSeason(currentSeason), 0f);
     private int seasonLength;
-    private int seasonTransitionIncrement;
     private int seasonTransitionLength;
+    private int seasonTransitionIncrement;
+    private float seasonTransitionIncrementAmount;
     private int seasonTime = -1;
     private boolean transitioning = false;
 
@@ -54,19 +55,17 @@ public class SeasonManager extends PersistentState {
         if (instance == null) {
             instance = getServerState(server);
 
-            if (currentSeason == null) {
+            if (currentSeason == null)
                 currentSeason = Season.SUMMER;
-            }
-            if (seasonTime == -1) {
+            if (seasonTime == -1)
                 seasonTime = 0;
-            }
-            if (context == null) {
+            if (context == null)
                 context = new TransitionContext(currentSeason, Season.getNextSeason(currentSeason), 0f);
-            }
+
             load(world);
         }
 
-        if (world.getRegistryKey() == World.OVERWORLD && world.getGameRules().getBoolean(FloraAndFaunaGameRules.DO_SEASON_CYCLE)) {
+        if (world.getGameRules().getBoolean(FloraAndFaunaGameRules.DO_SEASON_CYCLE)) {
             if (seasonLength != world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH))
                 updateSeasonTime(world);
 
@@ -76,8 +75,7 @@ public class SeasonManager extends PersistentState {
                 transitioning = true;
             } else if (transitioning) {
                 // end transition
-                context.setCurrent(currentSeason);
-                context.setNext(Season.getNextSeason(currentSeason));
+                context.setSeason(currentSeason, Season.getNextSeason(currentSeason));
                 context.setPercentage(0f);
                 transitioning = false;
                 syncSeasonTransition(server);
@@ -92,7 +90,7 @@ public class SeasonManager extends PersistentState {
             // check for % of every increment
             if (transitioning && seasonTime % seasonTransitionIncrement == 0) {
                 // percentage is set at a flat rate 30 times per transition, rather than relative to a time
-                context.setPercentage(Math.min(1f, context.getPercentage() + ((float) seasonTransitionIncrement / seasonTransitionLength)));
+                context.setPercentage(Math.min(1f, context.getPercentage() + seasonTransitionIncrementAmount));
                 syncSeasonTransition(server);
             }
         }
@@ -102,6 +100,7 @@ public class SeasonManager extends PersistentState {
         seasonLength = world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH);
         seasonTransitionLength = seasonLength / 3;
         seasonTransitionIncrement = seasonTransitionLength / SEASON_TRANSITION_COUNT;
+        seasonTransitionIncrementAmount = (float) seasonTransitionIncrement / seasonTransitionLength;
     }
 
     @Override

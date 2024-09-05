@@ -12,7 +12,7 @@ public class TransitionContext {
     private @Nullable Season next;
     private float percentage;
 
-    public TransitionContext(Season currentSeason, Season nextSeason, float percentage) {
+    public TransitionContext(Season currentSeason, @Nullable Season nextSeason, float percentage) {
         current = currentSeason;
         next = nextSeason;
         this.percentage = percentage;
@@ -30,11 +30,8 @@ public class TransitionContext {
         return percentage;
     }
 
-    public void setCurrent(Season current) {
+    public void setSeason(Season current, @Nullable Season next) {
         this.current = current;
-    }
-
-    public void setNext(@Nullable Season next) {
         this.next = next;
     }
 

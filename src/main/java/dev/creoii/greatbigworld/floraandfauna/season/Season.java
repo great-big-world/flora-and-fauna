@@ -37,9 +37,6 @@ public enum Season {
         };
     }
 
-    /**
-     * Unused for now. Will be used in Adventures' world start options.
-     */
     public String getTranslationKey() {
         return translationKey;
     }

@@ -2,33 +2,17 @@ package dev.creoii.greatbigworld.floraandfauna.util;
 
 public final class ColorHelper {
     public static int add(int color, int r, int g, int b) {
-        int red = red(color);
-        int green = green(color);
-        int blue = blue(color);
-
-        red = Math.min(red + r, 255);
-        green = Math.min(green + g, 255);
-        blue = Math.min(blue + b, 255);
-
-        return (red << 16) | (green << 8) | blue;
+        return (Math.min(red(color) + r, 255) << 16) | (Math.min(green(color) + g, 255) << 8) | Math.min(blue(color) + b, 255);
     }
 
     public static int interpolate(double delta, int color1, int color2) {
         delta = Math.max(Math.min(delta, 1f), 0f);
 
-        int deltaRed = red(color2) - red(color1);
-        int deltaGreen = green(color2) - green(color1);
-        int deltaBlue = blue(color2) - blue(color1);
+        int red = (int) (red(color1) + ((red(color2) - red(color1)) * delta));
+        int green = (int) (green(color1) + ((green(color2) - green(color1)) * delta));
+        int blue = (int) (blue(color1) + ((blue(color2) - blue(color1)) * delta));
 
-        int red = (int) (red(color1) + (deltaRed * delta));
-        int green = (int) (green(color1) + (deltaGreen * delta));
-        int blue = (int) (blue(color1) + (deltaBlue * delta));
-
-        red = Math.max(Math.min(red, 255), 0);
-        green = Math.max(Math.min(green, 255), 0);
-        blue = Math.max(Math.min(blue, 255), 0);
-
-        return red << 16 | green << 8 | blue;
+        return Math.max(Math.min(red, 255), 0) << 16 | Math.max(Math.min(green, 255), 0) << 8 | Math.max(Math.min(blue, 255), 0);
     }
 
     public static int red(int color) {

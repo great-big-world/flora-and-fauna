@@ -49,8 +49,6 @@ public final class FloraAndFaunaItems {
     public static final Item STRIPPED_HOLLOW_CRIMSON_STEM = new BlockItem(FloraAndFaunaBlocks.STRIPPED_HOLLOW_CRIMSON_STEM, new CreoItemSettings());
     public static final Item ALGAE = new PlaceableOnWaterItem(FloraAndFaunaBlocks.ALGAE, new CreoItemSettings());
 
-    public static final Item DUCK_SPAWN_EGG = new SpawnEggItem(FloraAndFaunaEntities.DUCK, 3637554, 16245884, new CreoItemSettings());
-
     public static void register() {
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "humus"), HUMUS);
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "moss_carpet"), MOSS_CARPET);
@@ -87,7 +85,6 @@ public final class FloraAndFaunaItems {
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "stripped_hollow_crimson_stem"), STRIPPED_HOLLOW_CRIMSON_STEM);
         Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "algae"), ALGAE);
 
-        Registry.register(Registries.ITEM, new Identifier(FloraAndFauna.NAMESPACE, "duck_spawn_egg"), DUCK_SPAWN_EGG);
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(entries -> {
             entries.addAfter(Items.PODZOL, HUMUS);
@@ -107,9 +104,6 @@ public final class FloraAndFaunaItems {
             entries.addAfter(Items.LILY_PAD, ALGAE);
             replaceMossCarpet(entries.getSearchTabStacks());
             replaceMossCarpet(entries.getDisplayStacks());
-        });
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(entries -> {
-            entries.addAfter(Items.DROWNED_SPAWN_EGG, DUCK_SPAWN_EGG);
         });
     }
 

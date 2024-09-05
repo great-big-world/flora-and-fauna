@@ -18,7 +18,6 @@ public final class FloraAndFaunaTags {
     public static final TagKey<Biome> NOT_AFFECTED_BY_WINTER = TagKey.of(RegistryKeys.BIOME, new Identifier(FloraAndFauna.NAMESPACE, "not_affected_by_winter"));
     public static final TagKey<Biome> NOT_AFFECTED_BY_SPRING = TagKey.of(RegistryKeys.BIOME, new Identifier(FloraAndFauna.NAMESPACE, "not_affected_by_spring"));
     public static final TagKey<Biome> NOT_AFFECTED_BY_SUMMER = TagKey.of(RegistryKeys.BIOME, new Identifier(FloraAndFauna.NAMESPACE, "not_affected_by_summer"));
-    public static final TagKey<Biome> DUCK_SPAWN_BIOMES = TagKey.of(RegistryKeys.BIOME, new Identifier(FloraAndFauna.NAMESPACE, "duck_spawn_biomes"));
 
     public static final TagKey<EntityType<?>> IGNORES_ALGAE = TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(FloraAndFauna.NAMESPACE, "ignores_algae"));
 

@@ -3,7 +3,6 @@ package dev.creoii.greatbigworld.floraandfauna.client;
 import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import dev.creoii.greatbigworld.floraandfauna.client.compat.SodiumClientCompat;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
-import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaEntities;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaItems;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
@@ -30,7 +29,6 @@ public class FloraAndFaunaClient implements ClientModInitializer {
     public void onInitializeClient() {
         FloraAndFaunaBlocks.registerClient();
         FloraAndFaunaItems.registerClient();
-        FloraAndFaunaEntities.registerClient();
 
         ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeason.PACKET_ID, (payload, context) -> {
             int season = payload.season();

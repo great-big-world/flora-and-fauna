@@ -19,7 +19,6 @@
     "block.TallPlantBlockMixin",
     "block.WallBlockMixin",
     "entity.AnimalEntityMixin",
-    "entity.ChickenEntityMixin",
     "entity.EscapeDangerGoalMixin",
     "entity.LivingEntityMixin",
     "world.BiomeMixin",

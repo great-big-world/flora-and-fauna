@@ -27,6 +27,9 @@ public class FloraAndFaunaClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        if (SODIUM_LOADED)
+            FloraAndFauna.LOGGER.log(Level.INFO, "Sodium detected, modifying season sync color rebuilds.");
+
         FloraAndFaunaBlocks.registerClient();
         FloraAndFaunaItems.registerClient();
 
@@ -42,7 +45,6 @@ public class FloraAndFaunaClient implements ClientModInitializer {
             context.client().execute(() -> {
                 transitionContext = new TransitionContext(Season.values()[context1[0]], Season.values()[context1[1]], context1[2] / 100f);
                 if (SODIUM_LOADED) {
-                    FloraAndFauna.LOGGER.log(Level.INFO, "Sodium detected, modifying season sync color rebuilds.");
                     SodiumClientCompat.rebuildSeason(context.client());
                 } else rebuildSeason(context.client());
             });

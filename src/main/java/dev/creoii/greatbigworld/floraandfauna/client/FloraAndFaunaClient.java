@@ -6,6 +6,7 @@ import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaItems;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
+import dev.creoii.greatbigworld.floraandfauna.season.TransitionContext;
 import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -22,8 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class FloraAndFaunaClient implements ClientModInitializer {
     private static final boolean SODIUM_LOADED = FabricLoader.getInstance().isModLoaded("sodium");
     @Nullable private static Season currentSeason;
-    private static int seasonColorTime;
-    private static int syncSeasonTime;
+    @Nullable private static TransitionContext transitionContext;
 
     @Override
     public void onInitializeClient() {
@@ -34,36 +34,34 @@ public class FloraAndFaunaClient implements ClientModInitializer {
             int season = payload.season();
             context.client().execute(() -> {
                 currentSeason = Season.values()[season];
+                System.out.println("client current season: " + currentSeason.name());
             });
         });
 
-        if (SODIUM_LOADED) {
-            FloraAndFauna.LOGGER.log(Level.INFO, "Sodium detected, modifying season sync color rebuilds.");
-            ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonColor.PACKET_ID, (payload, context) -> {
-                int syncTime = payload.syncSeasonTime();
-                int colorTime = payload.colorTime();
-                context.client().execute(() -> {
-                    syncSeasonTime = syncTime;
-                    seasonColorTime = colorTime;
+        FloraAndFauna.LOGGER.log(Level.INFO, "Sodium detected, modifying season sync color rebuilds.");
+        ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonColor.PACKET_ID, (payload, context) -> {
+            int[] context1 = payload.context();
+            context.client().execute(() -> {
+                transitionContext = new TransitionContext(Season.values()[context1[0]], Season.values()[context1[1]], context1[2] / 100f);
+                if (SODIUM_LOADED) {
                     SodiumClientCompat.updateSeason(context.client());
-                });
-            });
-        } else {
-            ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonColor.PACKET_ID, (payload, context) -> {
-                int syncTime = payload.syncSeasonTime();
-                int colorTime = payload.colorTime();
-                context.client().execute(() -> {
-                    syncSeasonTime = syncTime;
-                    seasonColorTime = colorTime;
+                } else {
                     updateSeason(context.client());
-                });
+                }
+
+                if (transitionContext.getNext() != null) {
+                    System.out.println("client percentage: " + transitionContext.getPercentage() + " between " + transitionContext.getCurrent().name() + "-" + transitionContext.getNext().name());
+                }
             });
-        }
+        });
     }
 
-    @Nullable
-    public static Season getCurrentSeason() {
+    public static @Nullable Season getCurrentSeason() {
         return currentSeason;
+    }
+
+    public static @Nullable TransitionContext getTransitionContext() {
+        return transitionContext;
     }
 
     public static void updateSeason(MinecraftClient client) {
@@ -77,7 +75,7 @@ public class FloraAndFaunaClient implements ClientModInitializer {
     }
 
     public static int getSeasonColor(BlockRenderView world, BlockPos pos, int color) {
-        if (world == null || currentSeason == null)
+        if (world == null || transitionContext == null)
             return color;
 
         RegistryEntry<Biome> biomeEntry = world.getBiomeFabric(pos);
@@ -86,13 +84,6 @@ public class FloraAndFaunaClient implements ClientModInitializer {
         }
 
         Season.Context context = new Season.Context(world, pos, color);
-        return ColorHelper.interpolate(getSeasonColorPercentage(), currentSeason.getColorChange().apply(context), Season.getNextSeason(currentSeason).getColorChange().apply(context));
-    }
-
-    private static float getSeasonColorPercentage() {
-        if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().player == null) {
-            return 1f;
-        }
-        return (float) seasonColorTime / syncSeasonTime;
+        return ColorHelper.interpolate(transitionContext.getPercentage(), transitionContext.getCurrent().getColorChange().apply(context), transitionContext.getNext() == null ? transitionContext.getCurrent().getColorChange().apply(context) : transitionContext.getNext().getColorChange().apply(context));
     }
 }

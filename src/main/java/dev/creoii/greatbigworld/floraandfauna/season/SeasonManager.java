@@ -17,13 +17,15 @@ import net.minecraft.world.*;
 public class SeasonManager extends PersistentState {
     private static final Type<SeasonManager> STATE_TYPE = new Type<>(SeasonManager::new, SeasonManager::createFromNbt, null);
     private static SeasonManager instance;
+    private static final int SEASON_TRANSITION_COUNT = 30;
     private MinecraftServer server;
     private Season currentSeason = Season.SUMMER;
-    private int syncSeasonTime;
-    private int syncSeasonColorTime;
-    private int syncSeasonColorTimeLength;
+    private TransitionContext context = new TransitionContext(currentSeason, Season.getNextSeason(currentSeason), 0f);
+    private int seasonLength;
+    private int seasonTransitionIncrement;
+    private int seasonTransitionLength;
     private int seasonTime = -1;
-    private int seasonColorTime = -1;
+    private boolean transitioning = false;
 
     public static SeasonManager getInstance(MinecraftServer server) {
         return instance == null ? instance = getServerState(server) : instance;
@@ -33,7 +35,6 @@ public class SeasonManager extends PersistentState {
         currentSeason = season;
         if (!preserveTime) {
             seasonTime = 0;
-            seasonColorTime = 0;
         }
         load(world);
     }
@@ -46,7 +47,7 @@ public class SeasonManager extends PersistentState {
         server = world.getServer();
         updateSeasonTime(world);
         syncSeason(server);
-        syncSeasonColor(server);
+        syncSeasonTransition(server);
     }
 
     public void tick(ServerWorld world) {
@@ -59,45 +60,63 @@ public class SeasonManager extends PersistentState {
             if (seasonTime == -1) {
                 seasonTime = 0;
             }
-            if (seasonColorTime == -1) {
-                seasonColorTime = 0;
+            if (context == null) {
+                context = new TransitionContext(currentSeason, Season.getNextSeason(currentSeason), 0f);
             }
             load(world);
         }
 
         if (world.getRegistryKey() == World.OVERWORLD && world.getGameRules().getBoolean(FloraAndFaunaGameRules.DO_SEASON_CYCLE)) {
-            if (syncSeasonTime != world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH))
+            if (seasonLength != world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH))
                 updateSeasonTime(world);
 
-            // change season
-            if (++seasonTime >= syncSeasonTime) {
-                currentSeason = Season.getNextSeason(instance.currentSeason);
-                syncSeason(server);
-                seasonTime = 0;
-                seasonColorTime = 0;
+            // increment time each tick
+            ++seasonTime;
+            System.out.println(seasonTime);
+
+            // check for SEASON_TRANSITION_COUNT / 2 before transition occurs
+            if (seasonTime > seasonLength - (seasonTransitionLength / 2) || seasonTime <= (seasonTransitionLength / 2)) {
+                // begin transition
+                transitioning = true;
+            } else if (transitioning) {
+                // end transition
+                context.setCurrent(currentSeason);
+                context.setNext(Season.getNextSeason(currentSeason));
+                System.out.println("current season context: " + context.getCurrent().name());
+                if (context.getNext() != null)
+                    System.out.println("previous season context: " + context.getNext().name());
+                context.setPercentage(0f);
+                transitioning = false;
+                syncSeasonTransition(server);
             }
 
-            // color transition
-            if (seasonTime >= syncSeasonColorTimeLength && seasonTime < syncSeasonColorTimeLength * 2) {
-                if (++seasonColorTime % syncSeasonColorTime == 0) {
-                    // 30 updates per transition
-                    syncSeasonColor(server);
-                }
+            if (seasonTime >= seasonLength) {
+                seasonTime = 0;
+                currentSeason = Season.getNextSeason(currentSeason);
+                System.out.println("next season: " + currentSeason.name());
+                syncSeason(server);
+            }
+
+            // check for % of every increment
+            if (transitioning && seasonTime % seasonTransitionIncrement == 0) {
+                context.setPercentage(Math.min(1f, context.getPercentage() + ((float) seasonTransitionIncrement / seasonTransitionLength)));
+                syncSeasonTransition(server);
             }
         }
     }
 
     private void updateSeasonTime(ServerWorld world) {
-        syncSeasonTime = world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH);
-        syncSeasonColorTimeLength = syncSeasonTime / 3;
-        syncSeasonColorTime = syncSeasonColorTimeLength / 30;
+        seasonLength = world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH);
+        seasonTransitionLength = seasonLength / 3;
+        seasonTransitionIncrement = seasonTransitionLength / SEASON_TRANSITION_COUNT;
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         nbt.putInt("season", currentSeason.ordinal());
         nbt.putInt("season_time", seasonTime);
-        nbt.putInt("season_color_time", seasonColorTime);
+        nbt.putBoolean("transitioning", transitioning);
+        nbt.put("context", context.writeNbt());
         return nbt;
     }
 
@@ -105,7 +124,8 @@ public class SeasonManager extends PersistentState {
         SeasonManager manager = new SeasonManager();
         manager.currentSeason = Season.values()[nbt.getInt("season")];
         manager.seasonTime = nbt.getInt("season_time");
-        manager.seasonColorTime = nbt.getInt("season_color_time");
+        manager.transitioning = nbt.getBoolean("transitioning");
+        manager.context = TransitionContext.readNbt(nbt.getCompound("context"));
         return manager;
     }
 
@@ -115,9 +135,9 @@ public class SeasonManager extends PersistentState {
         });
     }
 
-    private void syncSeasonColor(MinecraftServer server) {
+    private void syncSeasonTransition(MinecraftServer server) {
         PlayerLookup.all(server).forEach(serverPlayer -> {
-            ServerPlayNetworking.send(serverPlayer, new SyncSeasonColor(syncSeasonTime, seasonColorTime));
+            ServerPlayNetworking.send(serverPlayer, new SyncSeasonColor(new int[]{context.getCurrent().ordinal(), context.getNext() == null ? context.getCurrent().ordinal() : context.getNext().ordinal(), (int) (context.getPercentage() * 100)}));
         });
     }
 
@@ -146,17 +166,16 @@ public class SeasonManager extends PersistentState {
         }
     }
 
-    public record SyncSeasonColor(int syncSeasonTime, int colorTime) implements CustomPayload {
+    public record SyncSeasonColor(int[] context) implements CustomPayload {
         public static final CustomPayload.Id<SyncSeasonColor> PACKET_ID = new CustomPayload.Id<>(new Identifier(FloraAndFauna.NAMESPACE, "sync_season_color"));
         public static final PacketCodec<RegistryByteBuf, SyncSeasonColor> PACKET_CODEC = PacketCodec.of(SyncSeasonColor::write, SyncSeasonColor::new);
 
         public SyncSeasonColor(RegistryByteBuf buf) {
-            this(buf.readVarInt(), buf.readVarInt());
+            this(buf.readIntArray());
         }
 
         public void write(RegistryByteBuf buf) {
-            buf.writeVarInt(syncSeasonTime);
-            buf.writeVarInt(colorTime);
+            buf.writeIntArray(context);
         }
 
         @Override

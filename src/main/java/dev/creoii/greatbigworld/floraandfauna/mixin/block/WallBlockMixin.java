@@ -1,6 +1,8 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
 import com.google.common.collect.ImmutableMap;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.creoii.creoapi.api.block.CreoBlock;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
@@ -20,7 +22,6 @@ import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -35,14 +36,13 @@ public abstract class WallBlockMixin extends Block implements Waterloggable, Cre
         setDefaultState(getStateManager().getDefaultState().with(SnowyHelper.SNOW_LAYERS, 0));
     }
 
-    @SuppressWarnings("unchecked")
-    @Redirect(method = "getShapeMap", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;"))
-    private <K, V> ImmutableMap.Builder<BlockState, V> gbw$addSnowyPropertyToShapeMap(ImmutableMap.Builder<BlockState, V> instance, K key, V value) {
+    @WrapOperation(method = "getShapeMap", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;"))
+    private <K, V> ImmutableMap.Builder<BlockState, VoxelShape> gbw$fixWallShapeMap(ImmutableMap.Builder<BlockState, VoxelShape> instance, K key, V value, Operation<ImmutableMap.Builder<BlockState, VoxelShape>> original) {
         for (int i : SnowyHelper.SNOW_LAYERS.getValues()) {
             BlockState state = ((BlockState) key).with(SnowyHelper.SNOW_LAYERS, i);
             if (SnowyHelper.isSnowy(state)) {
-                instance.put(state, (V) VoxelShapes.union((VoxelShape) value, SnowyHelper.getSnowShape(state)));
-            } else instance.put(state, value);
+                instance.put(state, VoxelShapes.union((VoxelShape) value, SnowyHelper.getSnowShape(state)));
+            } else instance.put(state, (VoxelShape) value);
         }
         return instance;
     }

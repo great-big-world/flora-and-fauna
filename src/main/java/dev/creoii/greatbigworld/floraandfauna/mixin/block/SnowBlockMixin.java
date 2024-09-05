@@ -1,14 +1,12 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.SnowBlock;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -33,8 +31,7 @@ public abstract class SnowBlockMixin extends Block {
     @Inject(method = "getPlacementState", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
     private void gbw$layerSnow(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir, @Local BlockState blockState) {
         if (blockState.contains(SnowyHelper.SNOW_LAYERS)) {
-            int i = blockState.get(SnowyHelper.SNOW_LAYERS);
-            cir.setReturnValue(blockState.with(SnowyHelper.SNOW_LAYERS, Math.min(8, i + 1)));
+            cir.setReturnValue(blockState.with(SnowyHelper.SNOW_LAYERS, Math.min(8, blockState.get(SnowyHelper.SNOW_LAYERS) + 1)));
         }
     }
 
@@ -48,7 +45,8 @@ public abstract class SnowBlockMixin extends Block {
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
     private void gbw$meltInNonWinterSeason(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
-        if (world.getLightLevel(LightType.BLOCK, pos) > 11 || (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos))) {
+        SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
+        if (world.getLightLevel(LightType.BLOCK, pos) > 11 || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos))) {
             dropStacks(state, world, pos);
             world.removeBlock(pos, false);
             ci.cancel();

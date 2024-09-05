@@ -22,7 +22,7 @@ public class DefaultColorProvidersMixin {
         if (!world.getBlockState(x, y, z).isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
             Season season = FloraAndFaunaClient.getCurrentSeason();
             if (season != null) {
-                cir.setReturnValue(SeasonManager.getColor(world, new BlockPos(x, y, z), cir.getReturnValue()));
+                cir.setReturnValue(FloraAndFaunaClient.getSeasonColor(world, new BlockPos(x, y, z), cir.getReturnValue()));
             }
         }
     }

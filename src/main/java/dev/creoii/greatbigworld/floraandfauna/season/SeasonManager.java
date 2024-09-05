@@ -2,7 +2,6 @@ package dev.creoii.greatbigworld.floraandfauna.season;
 
 import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaGameRules;
-import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
@@ -10,17 +9,15 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.*;
-import net.minecraft.world.biome.Biome;
 
 public class SeasonManager extends PersistentState {
     private static final Type<SeasonManager> STATE_TYPE = new Type<>(SeasonManager::new, SeasonManager::createFromNbt, null);
     private static SeasonManager instance;
+    private MinecraftServer server;
     private Season currentSeason = Season.SUMMER;
     private int syncSeasonTime;
     private int syncSeasonColorTime;
@@ -45,36 +42,14 @@ public class SeasonManager extends PersistentState {
         return currentSeason;
     }
 
-    public static Season getNextSeason(Season season) {
-        return switch (season) {
-            case AUTUMN -> Season.WINTER;
-            case WINTER -> Season.SPRING;
-            case SPRING -> Season.SUMMER;
-            case SUMMER -> Season.AUTUMN;
-        };
-    }
-
-    public static int getColor(BlockRenderView world, BlockPos pos, int color) {
-        if (world == null || instance == null || instance.currentSeason == null)
-            return color;
-
-        RegistryEntry<Biome> biomeEntry = world.getBiomeFabric(pos);
-        if (biomeEntry == null || !biomeEntry.hasKeyAndValue()) {
-            return color;
-        }
-
-        Season.Context context = new Season.Context(world, pos, color);
-        return ColorHelper.interpolate(instance.getSeasonColorPercentage(), instance.currentSeason.getColorChange().apply(context), getNextSeason(instance.currentSeason).getColorChange().apply(context));
-    }
-
     public void load(ServerWorld world) {
-        syncSeason(world.getServer());
+        server = world.getServer();
         updateSeasonTime(world);
-        syncSeasonColor(world.getServer());
+        syncSeason(server);
+        syncSeasonColor(server);
     }
 
     public void tick(ServerWorld world) {
-        MinecraftServer server = world.getServer();
         if (instance == null) {
             instance = getServerState(server);
 
@@ -96,7 +71,7 @@ public class SeasonManager extends PersistentState {
 
             // change season
             if (++seasonTime >= syncSeasonTime) {
-                currentSeason = getNextSeason(instance.currentSeason);
+                currentSeason = Season.getNextSeason(instance.currentSeason);
                 syncSeason(server);
                 seasonTime = 0;
                 seasonColorTime = 0;
@@ -118,10 +93,6 @@ public class SeasonManager extends PersistentState {
         syncSeasonColorTime = syncSeasonColorTimeLength / 30;
     }
 
-    private float getSeasonColorPercentage() {
-        return (float) seasonColorTime / syncSeasonColorTimeLength;
-    }
-
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         nbt.putInt("season", currentSeason.ordinal());
@@ -139,18 +110,14 @@ public class SeasonManager extends PersistentState {
     }
 
     private void syncSeason(MinecraftServer server) {
-        server.execute(() -> {
-            PlayerLookup.all(server).forEach(serverPlayer -> {
-                ServerPlayNetworking.send(serverPlayer, new SyncSeason(currentSeason.ordinal()));
-            });
+        PlayerLookup.all(server).forEach(serverPlayer -> {
+            ServerPlayNetworking.send(serverPlayer, new SyncSeason(currentSeason.ordinal()));
         });
     }
 
     private void syncSeasonColor(MinecraftServer server) {
-        server.execute(() -> {
-            PlayerLookup.all(server).forEach(serverPlayer -> {
-                ServerPlayNetworking.send(serverPlayer, new SyncSeasonColor(syncSeasonTime, seasonColorTime));
-            });
+        PlayerLookup.all(server).forEach(serverPlayer -> {
+            ServerPlayNetworking.send(serverPlayer, new SyncSeasonColor(syncSeasonTime, seasonColorTime));
         });
     }
 

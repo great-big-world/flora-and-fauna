@@ -28,6 +28,15 @@ public enum Season {
         this.biomesNotAffectedBy = biomesNotAffectedBy;
     }
 
+    public static Season getNextSeason(Season season) {
+        return switch (season) {
+            case AUTUMN -> Season.WINTER;
+            case WINTER -> Season.SPRING;
+            case SPRING -> Season.SUMMER;
+            case SUMMER -> Season.AUTUMN;
+        };
+    }
+
     /**
      * Unused for now. Will be used in Adventures' world start options.
      */

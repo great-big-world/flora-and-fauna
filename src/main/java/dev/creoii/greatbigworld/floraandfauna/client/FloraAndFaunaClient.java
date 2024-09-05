@@ -88,7 +88,7 @@ public class FloraAndFaunaClient implements ClientModInitializer {
         }
 
         Season.Context context = new Season.Context(world, pos, color);
-        return ColorHelper.interpolate(getSeasonColorPercentage(), currentSeason.getColorChange().apply(context), SeasonManager.getNextSeason(currentSeason).getColorChange().apply(context));
+        return ColorHelper.interpolate(getSeasonColorPercentage(), currentSeason.getColorChange().apply(context), Season.getNextSeason(currentSeason).getColorChange().apply(context));
     }
 
     private static float getSeasonColorPercentage() {

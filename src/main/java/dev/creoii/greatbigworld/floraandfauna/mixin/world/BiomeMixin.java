@@ -18,11 +18,15 @@ import org.spongepowered.asm.mixin.injection.At;
 public class BiomeMixin {
     @WrapOperation(method = "canSetSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean gbw$modifyCanSetSnowForWinter(Biome instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) WorldView world) {
-        return original.call(instance, pos) && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && pos.getY() >= world.getBottomY() && pos.getY() < world.getTopY() && world.getLightLevel(LightType.BLOCK, pos) < 10);
+        if (world.isClient())
+            return original.call(instance, pos) && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && pos.getY() >= world.getBottomY() && pos.getY() < world.getTopY() && world.getLightLevel(LightType.BLOCK, pos) < 10);
+        return original.call(instance, pos);
     }
 
     @WrapOperation(method = "canSetIce(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Z)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean gbw$modifyCanSetIceForWinter(Biome instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) WorldView world) {
-        return original.call(instance, pos) && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
+        if (world.isClient())
+            return original.call(instance, pos) && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
+        return original.call(instance, pos);
     }
 }

@@ -2,6 +2,7 @@ package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
+import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IceBlock;
@@ -25,7 +26,8 @@ public abstract class IceBlockMixin {
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
     private void gbw$meltInNonWinterSeason(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
-        if (world.getLightLevel(LightType.BLOCK, pos) > 11 - state.getOpacity(world, pos) || (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos))) {
+        SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
+        if (world.getLightLevel(LightType.BLOCK, pos) > 11 - state.getOpacity(world, pos) || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos))) {
             melt(state, world, pos);
             ci.cancel();
         }

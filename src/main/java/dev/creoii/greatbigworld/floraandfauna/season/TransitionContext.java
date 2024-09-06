@@ -1,6 +1,11 @@
 package dev.creoii.greatbigworld.floraandfauna.season;
 
+import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
 public class TransitionContext {
@@ -52,5 +57,18 @@ public class TransitionContext {
 
     protected static TransitionContext readNbt(NbtCompound nbt) {
         return new TransitionContext(Season.values()[nbt.getInt("current_season")], Season.values()[nbt.getInt("next_season")], nbt.getFloat("percentage"));
+    }
+
+    public int getSeasonColor(BlockRenderView world, BlockPos pos, int color) {
+        if (world == null)
+            return color;
+
+        RegistryEntry<Biome> biomeEntry = world.getBiomeFabric(pos);
+        if (biomeEntry == null || !biomeEntry.hasKeyAndValue()) {
+            return color;
+        }
+
+        Season.Context context = new Season.Context(world, pos, color);
+        return ColorHelper.interpolate(getPercentage(), getCurrent().getColorChange().apply(context), getNext() == null ? getCurrent().getColorChange().apply(context) : getNext().getColorChange().apply(context));
     }
 }

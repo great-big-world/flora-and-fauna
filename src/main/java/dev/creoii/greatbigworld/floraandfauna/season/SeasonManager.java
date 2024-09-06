@@ -20,7 +20,7 @@ public class SeasonManager extends PersistentState {
     private static final int SEASON_TRANSITION_COUNT = 30;
     private MinecraftServer server;
     private Season currentSeason = Season.SUMMER;
-    private TransitionContext context = new TransitionContext(currentSeason, Season.getNextSeason(currentSeason), 0f);
+    private TransitionContext context = new TransitionContext(Season.SUMMER, Season.AUTUMN, 0f);
     private int seasonLength;
     private int seasonTransitionLength;
     private int seasonTransitionIncrement;
@@ -37,6 +37,7 @@ public class SeasonManager extends PersistentState {
         if (!preserveTime) {
             seasonTime = 0;
         }
+        context = new TransitionContext(currentSeason, Season.getNextSeason(currentSeason), 0f);
         load(world);
     }
 
@@ -44,11 +45,14 @@ public class SeasonManager extends PersistentState {
         return currentSeason;
     }
 
+    public TransitionContext getTransitionContext() {
+        return context;
+    }
+
     public void load(ServerWorld world) {
         server = world.getServer();
         updateSeasonTime(world);
-        syncSeason(server);
-        syncSeasonTransition(server);
+        syncAll(server);
     }
 
     public void tick(ServerWorld world) {
@@ -60,7 +64,7 @@ public class SeasonManager extends PersistentState {
             if (seasonTime == -1)
                 seasonTime = 0;
             if (context == null)
-                context = new TransitionContext(currentSeason, Season.getNextSeason(currentSeason), 0f);
+                context = new TransitionContext(Season.SUMMER, Season.AUTUMN, 0f);
 
             load(world);
         }
@@ -121,6 +125,13 @@ public class SeasonManager extends PersistentState {
         return manager;
     }
 
+    public void syncAll(MinecraftServer server) {
+        PlayerLookup.all(server).forEach(serverPlayer -> {
+            ServerPlayNetworking.send(serverPlayer, new SyncSeason(currentSeason.ordinal()));
+            ServerPlayNetworking.send(serverPlayer, new SyncSeasonTransition(context));
+        });
+    }
+
     private void syncSeason(MinecraftServer server) {
         PlayerLookup.all(server).forEach(serverPlayer -> {
             ServerPlayNetworking.send(serverPlayer, new SyncSeason(currentSeason.ordinal()));
@@ -129,7 +140,7 @@ public class SeasonManager extends PersistentState {
 
     private void syncSeasonTransition(MinecraftServer server) {
         PlayerLookup.all(server).forEach(serverPlayer -> {
-            ServerPlayNetworking.send(serverPlayer, new SyncSeasonColor(new int[]{context.getCurrent().ordinal(), context.getNext() == null ? context.getCurrent().ordinal() : context.getNext().ordinal(), (int) (context.getPercentage() * 100)}));
+            ServerPlayNetworking.send(serverPlayer, new SyncSeasonTransition(context));
         });
     }
 
@@ -157,11 +168,15 @@ public class SeasonManager extends PersistentState {
         }
     }
 
-    public record SyncSeasonColor(int[] context) implements CustomPayload {
-        public static final CustomPayload.Id<SyncSeasonColor> PACKET_ID = new CustomPayload.Id<>(new Identifier(FloraAndFauna.NAMESPACE, "sync_season_color"));
-        public static final PacketCodec<RegistryByteBuf, SyncSeasonColor> PACKET_CODEC = PacketCodec.of(SyncSeasonColor::write, SyncSeasonColor::new);
+    public record SyncSeasonTransition(int[] context) implements CustomPayload {
+        public static final CustomPayload.Id<SyncSeasonTransition> PACKET_ID = new CustomPayload.Id<>(new Identifier(FloraAndFauna.NAMESPACE, "sync_season_color"));
+        public static final PacketCodec<RegistryByteBuf, SyncSeasonTransition> PACKET_CODEC = PacketCodec.of(SyncSeasonTransition::write, SyncSeasonTransition::new);
 
-        public SyncSeasonColor(RegistryByteBuf buf) {
+        public SyncSeasonTransition(TransitionContext context) {
+            this(new int[]{context.getCurrent().ordinal(), context.getNext() == null ? context.getCurrent().ordinal() : context.getNext().ordinal(), (int) (context.getPercentage() * 100)});
+        }
+
+        public SyncSeasonTransition(RegistryByteBuf buf) {
             this(buf.readIntArray());
         }
 

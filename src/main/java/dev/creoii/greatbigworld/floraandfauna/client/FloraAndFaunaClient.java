@@ -7,18 +7,14 @@ import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaItems;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.season.TransitionContext;
-import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.chunk.ChunkBuilder;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.biome.Biome;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class FloraAndFaunaClient implements ClientModInitializer {
     private static final boolean SODIUM_LOADED = FabricLoader.getInstance().isModLoaded("sodium");
@@ -40,13 +36,21 @@ public class FloraAndFaunaClient implements ClientModInitializer {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonColor.PACKET_ID, (payload, context) -> {
+        ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonTransition.PACKET_ID, (payload, context) -> {
             int[] context1 = payload.context();
             context.client().execute(() -> {
                 transitionContext = new TransitionContext(Season.values()[context1[0]], Season.values()[context1[1]], context1[2] / 100f);
                 if (SODIUM_LOADED) {
                     SodiumClientCompat.rebuildSeason(context.client());
-                } else rebuildSeason(context.client());
+                } else {
+                    if (context.client().world != null && context.client().worldRenderer.chunks != null && context.client().player != null) {
+                        for (ChunkBuilder.BuiltChunk chunk : Objects.requireNonNull(context.client().worldRenderer.chunks).chunks) {
+                            if (chunk == null)
+                                continue;
+                            chunk.scheduleRebuild(true);
+                        }
+                    }
+                }
             });
         });
     }
@@ -57,28 +61,5 @@ public class FloraAndFaunaClient implements ClientModInitializer {
 
     public static @Nullable TransitionContext getTransitionContext() {
         return transitionContext;
-    }
-
-    public static void rebuildSeason(MinecraftClient client) {
-        if (client.world != null && client.worldRenderer.chunks != null && client.player != null) {
-            for (ChunkBuilder.BuiltChunk chunk : client.worldRenderer.chunks.chunks) {
-                if (chunk == null)
-                    continue;
-                chunk.scheduleRebuild(true);
-            }
-        }
-    }
-
-    public static int getSeasonColor(BlockRenderView world, BlockPos pos, int color) {
-        if (world == null || transitionContext == null)
-            return color;
-
-        RegistryEntry<Biome> biomeEntry = world.getBiomeFabric(pos);
-        if (biomeEntry == null || !biomeEntry.hasKeyAndValue()) {
-            return color;
-        }
-
-        Season.Context context = new Season.Context(world, pos, color);
-        return ColorHelper.interpolate(transitionContext.getPercentage(), transitionContext.getCurrent().getColorChange().apply(context), transitionContext.getNext() == null ? transitionContext.getCurrent().getColorChange().apply(context) : transitionContext.getNext().getColorChange().apply(context));
     }
 }

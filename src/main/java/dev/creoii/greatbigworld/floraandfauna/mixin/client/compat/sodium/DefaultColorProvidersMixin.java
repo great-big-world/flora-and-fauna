@@ -17,8 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class DefaultColorProvidersMixin {
     @Inject(method = "getColor", at = @At("RETURN"), cancellable = true, remap = false)
     private void gbw$modifyBlockColor(WorldSlice world, int x, int y, int z, CallbackInfoReturnable<Integer> cir) {
-        if (FloraAndFaunaClient.getCurrentSeason() != null && !world.getBlockState(x, y, z).isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
-            cir.setReturnValue(FloraAndFaunaClient.getSeasonColor(world, new BlockPos(x, y, z), cir.getReturnValue()));
+        if (FloraAndFaunaClient.getCurrentSeason() != null && !world.getBlockState(x, y, z).isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR) && FloraAndFaunaClient.getTransitionContext() != null) {
+            cir.setReturnValue(FloraAndFaunaClient.getTransitionContext().getSeasonColor(world, new BlockPos(x, y, z), cir.getReturnValue()));
         }
     }
 }

@@ -1,6 +1,7 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
-import com.google.common.collect.ImmutableMap;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.creoii.creoapi.api.block.CreoBlock;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
@@ -14,15 +15,15 @@ import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.LightType;
 import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Map;
 
 @Mixin(WallBlock.class)
 public abstract class WallBlockMixin extends Block implements Waterloggable, CreoBlock {
@@ -35,17 +36,26 @@ public abstract class WallBlockMixin extends Block implements Waterloggable, Cre
         setDefaultState(getStateManager().getDefaultState().with(SnowyHelper.SNOW_LAYERS, 0));
     }
 
-    @SuppressWarnings("unchecked")
-    @Redirect(method = "getShapeMap", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;"))
-    private <K, V> ImmutableMap.Builder<BlockState, V> gbw$addSnowyPropertyToShapeMap(ImmutableMap.Builder<BlockState, V> instance, K key, V value) {
+    @WrapOperation(method = "getShapeMap", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/WallBlock;getDefaultState()Lnet/minecraft/block/BlockState;"))
+    private BlockState gbw$fixShapeMapForSnowLayers(WallBlock instance, Operation<BlockState> original) {
+        return original.call(instance).with(SnowyHelper.SNOW_LAYERS, 0);
+    }
+
+    @WrapOperation(method = "getCollisionShape", at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"))
+    private <V> V gbw$modifyCollisionState(Map<BlockState, VoxelShape> instance, Object object, Operation<V> original) {
+        return original.call(instance, ((BlockState) object).with(SnowyHelper.SNOW_LAYERS, 0));
+    }
+
+    /*@Redirect(method = "getShapeMap", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;"), remap = false)
+    private <K, V> ImmutableMap.Builder<BlockState, VoxelShape> gbw$addSnowyPropertyToShapeMap(ImmutableMap.Builder<BlockState, VoxelShape> instance, K key, V value) {
         for (int i : SnowyHelper.SNOW_LAYERS.getValues()) {
             BlockState state = ((BlockState) key).with(SnowyHelper.SNOW_LAYERS, i);
             if (SnowyHelper.isSnowy(state)) {
-                instance.put(state, (V) VoxelShapes.union((VoxelShape) value, SnowyHelper.getSnowShape(state)));
-            } else instance.put(state, value);
+                instance.put(state, VoxelShapes.union((VoxelShape) value, SnowyHelper.getSnowShape(state)));
+            } else instance.put(state, (VoxelShape) value);
         }
         return instance;
-    }
+    }*/
 
     @Inject(method = "getPlacementState", at = @At("RETURN"), cancellable = true)
     private void gbw$applyFenceGateSnowPlacementState(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir) {

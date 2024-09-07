@@ -21,9 +21,9 @@ public class HollowLogBlock extends PillarBlock implements CreoBlock, Waterlogga
     private static final VoxelShape X_SHAPE = VoxelShapes.union(Block.createCuboidShape(0d, 0d, 0d, 16d, 16d, 3d), Block.createCuboidShape(0d, 13d, 0d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 13d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 0d, 16d, 3d, 16d));
     private static final VoxelShape Y_SHAPE = VoxelShapes.union(Block.createCuboidShape(0d, 0d, 0d, 16d, 16d, 3d), Block.createCuboidShape(0d, 0d, 0d, 3d, 16d, 16d), Block.createCuboidShape(0d, 0d, 13d, 16d, 16d, 16d), Block.createCuboidShape(13d, 0d, 0d, 16d, 16d, 16d));
     private static final VoxelShape Z_SHAPE = VoxelShapes.union(Block.createCuboidShape(13d, 0d, 0d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 0d, 3d, 16d, 16d), Block.createCuboidShape(0d, 13d, 0d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 0d, 16d, 3d, 16d));
-    private static final VoxelShape X_COLLISION_SHAPE = VoxelShapes.union(Block.createCuboidShape(0d, 0d, 0d, 16d, 16d, 2.25d), Block.createCuboidShape(0d, 13.75d, 0d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 13d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 0d, 16d, 2.25d, 16d));
+    private static final VoxelShape X_COLLISION_SHAPE = VoxelShapes.union(Block.createCuboidShape(0d, 0d, 0d, 16d, 16d, 2d), Block.createCuboidShape(0d, 13.75d, 0d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 14d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 0d, 16d, 2.25d, 16d));
     private static final VoxelShape Y_COLLISION_SHAPE = VoxelShapes.union(Block.createCuboidShape(0d, 0d, 0d, 16d, 16d, 2.25d), Block.createCuboidShape(0d, 0d, 0d, 2.25d, 16d, 16d), Block.createCuboidShape(0d, 0d, 13.75d, 16d, 16d, 16d), Block.createCuboidShape(13.75d, 0d, 0d, 16d, 16d, 16d));
-    private static final VoxelShape Z_COLLISION_SHAPE = VoxelShapes.union(Block.createCuboidShape(13.75d, 0d, 0d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 0d, 2.25d, 16d, 16d), Block.createCuboidShape(0d, 13.75d, 0d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 0d, 16d, 2.25d, 16d));
+    private static final VoxelShape Z_COLLISION_SHAPE = VoxelShapes.union(Block.createCuboidShape(14d, 0d, 0d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 0d, 2d, 16d, 16d), Block.createCuboidShape(0d, 13.75d, 0d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 0d, 16d, 2.25d, 16d));
     private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public HollowLogBlock(Settings settings) {
@@ -71,15 +71,15 @@ public class HollowLogBlock extends PillarBlock implements CreoBlock, Waterlogga
 
     @Override
     public boolean canEntityCollideAdjacent(Entity entity, BlockState state, BlockPos pos) {
-        if (entity.isInPose(EntityPose.SWIMMING) || !entity.isSprinting() || entity.hasPassengers())
+        if (entity.getWorld().isClient || entity.isInPose(EntityPose.SWIMMING) || !entity.isSprinting() || entity.hasPassengers())
             return false;
         BlockPos difference = pos.subtract(entity.getBlockPos());
         if (difference.getY() > .5d || difference.getY() < -.5d || difference.equals(BlockPos.ORIGIN))
             return false;
         Vec3i facingVec = entity.getHorizontalFacing().getVector();
         return switch (state.get(AXIS)) {
-            case X -> difference.getX() != 0d && difference.getX() == facingVec.getX() && difference.getZ() == 0d;
-            case Z -> difference.getZ() != 0d && difference.getZ() == facingVec.getZ() && difference.getX() == 0d;
+            case X -> difference.getX() != 0d && difference.getZ() == 0d && difference.getX() == facingVec.getX();
+            case Z -> difference.getZ() != 0d && difference.getX() == 0d && difference.getZ() == facingVec.getZ();
             case Y -> false;
         };
     }

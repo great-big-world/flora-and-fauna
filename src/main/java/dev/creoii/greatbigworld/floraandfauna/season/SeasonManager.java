@@ -106,9 +106,7 @@ public class SeasonManager extends PersistentState {
 
     public void addSeasonTime(int seasonTime) {
         if (server != null && !transitioning) {
-            System.out.println("prev: " + this.seasonTime);
             this.seasonTime = Math.min(this.seasonTime + seasonTime, seasonLength - (seasonTransitionLength / 2));
-            System.out.println("post: " + this.seasonTime);
             syncAll(server);
         }
     }

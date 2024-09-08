@@ -10,15 +10,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin({
-        DefaultColorProviders.FoliageColorProvider.class,
-        DefaultColorProviders.GrassColorProvider.class
-})
-public class DefaultColorProvidersMixin {
+@Mixin(DefaultColorProviders.FoliageColorProvider.class)
+public class FoliageColorProviderMixin {
     @Inject(method = "getColor", at = @At("RETURN"), cancellable = true, remap = false)
     private void gbw$modifyBlockColor(WorldSlice world, int x, int y, int z, CallbackInfoReturnable<Integer> cir) {
-        if (FloraAndFaunaClient.getCurrentSeason() != null && !world.getBlockState(x, y, z).isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR) && FloraAndFaunaClient.getTransitionContext() != null) {
-            cir.setReturnValue(FloraAndFaunaClient.getTransitionContext().getSeasonColor(world, new BlockPos(x, y, z), cir.getReturnValue()));
+        if (FloraAndFaunaClient.getCurrentSeason() != null && FloraAndFaunaClient.getTransitionContext() != null && !world.getBlockState(x, y, z).isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
+            cir.setReturnValue(FloraAndFaunaClient.getTransitionContext().getSeasonFoliageColor(world, new BlockPos(x, y, z), cir.getReturnValue()));
         }
     }
 }

@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.season;
 
+import dev.creoii.creoapi.api.worldgen.fastnoise.FastNoiseLite;
 import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -11,21 +12,28 @@ import net.minecraft.world.biome.Biome;
 import java.util.function.Function;
 
 public enum Season {
-    AUTUMN("season.autumn", Season::applyAutumnColorChange, Season::applyAutumnColorChangeParticle, FloraAndFaunaTags.NOT_AFFECTED_BY_AUTUMN),
+    AUTUMN("season.autumn", Season::applyAutumnColorChangeFoliage, Season::applyAutumnColorChangeGrass, Season::applyAutumnColorChangeParticle, FloraAndFaunaTags.NOT_AFFECTED_BY_AUTUMN),
     WINTER("season.winter", Season::applyWinterColorChange, Season::applyWinterColorChangeParticle, FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER),
     SPRING("season.spring", Season::applySpringColorChange, Season::applySpringColorChangeParticle, FloraAndFaunaTags.NOT_AFFECTED_BY_SPRING),
     SUMMER("season.summer", Season::applySummerColorChange, Season::applySummerColorChange, FloraAndFaunaTags.NOT_AFFECTED_BY_SUMMER);
 
+    private static final FastNoiseLite AUTUMN_COLOR_NOISE = new FastNoiseLite();
     private final String translationKey;
-    private final Function<Context, Integer> colorChange;
-    private final Function<Context, Integer> colorChangeParticle;
+    private final Function<Context, Integer> foliageColorChange;
+    private final Function<Context, Integer> grassColorChange;
+    private final Function<Context, Integer> particleColorChange;
     private final TagKey<Biome> biomesNotAffectedBy;
 
-    Season(String translationKey, Function<Context, Integer> colorChange, Function<Context, Integer> colorChangeParticle, TagKey<Biome> biomesNotAffectedBy) {
+    Season(String translationKey, Function<Context, Integer> foliageColorChange, Function<Context, Integer> grassColorChange, Function<Context, Integer> particleColorChange, TagKey<Biome> biomesNotAffectedBy) {
         this.translationKey = translationKey;
-        this.colorChange = colorChange;
-        this.colorChangeParticle = colorChangeParticle;
+        this.foliageColorChange = foliageColorChange;
+        this.grassColorChange = grassColorChange;
+        this.particleColorChange = particleColorChange;
         this.biomesNotAffectedBy = biomesNotAffectedBy;
+    }
+
+    Season(String translationKey, Function<Context, Integer> colorChange, Function<Context, Integer> particleColorChange, TagKey<Biome> biomesNotAffectedBy) {
+        this(translationKey, colorChange, colorChange, particleColorChange, biomesNotAffectedBy);
     }
 
     public static Season getNextSeason(Season season) {
@@ -41,19 +49,23 @@ public enum Season {
         return translationKey;
     }
 
-    public Function<Context, Integer> getColorChange() {
-        return colorChange;
+    public Function<Context, Integer> getGrassColorChange() {
+        return grassColorChange;
     }
 
-    public Function<Context, Integer> getColorChangeParticle() {
-        return colorChangeParticle;
+    public Function<Context, Integer> getFoliageColorChange() {
+        return foliageColorChange;
+    }
+
+    public Function<Context, Integer> getParticleColorChange() {
+        return particleColorChange;
     }
 
     public TagKey<Biome> getBiomesNotAffectedBy() {
         return biomesNotAffectedBy;
     }
 
-    private static int applyAutumnColorChange(Context context) {
+    private static int applyAutumnColorChangeGrass(Context context) {
         RegistryEntry<Biome> biomeEntry = context.world.getBiomeFabric(context.pos);
 
         if (biomeEntry == null || !biomeEntry.hasKeyAndValue() || biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_AUTUMN)) {
@@ -61,6 +73,21 @@ public enum Season {
         }
 
         return ColorHelper.add(context.defaultColor, 100, 0, 0);
+    }
+
+    private static int applyAutumnColorChangeFoliage(Context context) {
+        RegistryEntry<Biome> biomeEntry = context.world.getBiomeFabric(context.pos);
+
+        if (biomeEntry == null || !biomeEntry.hasKeyAndValue() || biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_AUTUMN)) {
+            return context.defaultColor;
+        }
+
+        double blend = (AUTUMN_COLOR_NOISE.getNoise(context.pos.getX() * 6f, context.pos.getZ() * 6f) + 1d) / 2d;
+        if (blend < .334d) {
+            return ColorHelper.interpolate(blend * 2d, ColorHelper.add(context.defaultColor, 255, 0, 0), ColorHelper.add(context.defaultColor, 255, 165, 0));
+        } else if (blend < .667d) {
+            return ColorHelper.interpolate((blend - .334d) * 2d, ColorHelper.add(context.defaultColor, 255, 165, 0), ColorHelper.add(context.defaultColor, 255, 255, 0));
+        } else return ColorHelper.interpolate((blend - .667d) * 2d, ColorHelper.add(context.defaultColor, 255, 255, 0), ColorHelper.add(context.defaultColor, 255, 0, 0));
     }
 
     private static int applyAutumnColorChangeParticle(Context context) {

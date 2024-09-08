@@ -59,7 +59,7 @@ public class TransitionContext {
         return new TransitionContext(Season.values()[nbt.getInt("current_season")], Season.values()[nbt.getInt("next_season")], nbt.getFloat("percentage"));
     }
 
-    public int getSeasonColor(BlockRenderView world, BlockPos pos, int color) {
+    public int getSeasonGrassColor(BlockRenderView world, BlockPos pos, int color) {
         if (world == null)
             return color;
 
@@ -69,6 +69,19 @@ public class TransitionContext {
         }
 
         Season.Context context = new Season.Context(world, pos, color);
-        return ColorHelper.interpolate(getPercentage(), getCurrent().getColorChange().apply(context), getNext() == null ? getCurrent().getColorChange().apply(context) : getNext().getColorChange().apply(context));
+        return ColorHelper.interpolate(getPercentage(), getCurrent().getGrassColorChange().apply(context), getNext() == null ? getCurrent().getGrassColorChange().apply(context) : getNext().getGrassColorChange().apply(context));
+    }
+
+    public int getSeasonFoliageColor(BlockRenderView world, BlockPos pos, int color) {
+        if (world == null)
+            return color;
+
+        RegistryEntry<Biome> biomeEntry = world.getBiomeFabric(pos);
+        if (biomeEntry == null || !biomeEntry.hasKeyAndValue()) {
+            return color;
+        }
+
+        Season.Context context = new Season.Context(world, pos, color);
+        return ColorHelper.interpolate(getPercentage(), getCurrent().getFoliageColorChange().apply(context), getNext() == null ? getCurrent().getFoliageColorChange().apply(context) : getNext().getFoliageColorChange().apply(context));
     }
 }

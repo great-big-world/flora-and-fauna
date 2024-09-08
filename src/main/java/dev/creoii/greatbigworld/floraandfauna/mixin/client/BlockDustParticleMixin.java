@@ -22,7 +22,7 @@ public class BlockDustParticleMixin {
         if (!state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
             Season season = FloraAndFaunaClient.getCurrentSeason();
             if (season != null && !world.getBiome(pos).isIn(season.getBiomesNotAffectedBy())) {
-                return season.getColorChangeParticle().apply(new Season.Context(world, pos, original.call(instance, state, world, pos, tintIndex)));
+                return season.getParticleColorChange().apply(new Season.Context(world, pos, original.call(instance, state, world, pos, tintIndex)));
             }
         }
         return original.call(instance, state, world, pos, tintIndex);

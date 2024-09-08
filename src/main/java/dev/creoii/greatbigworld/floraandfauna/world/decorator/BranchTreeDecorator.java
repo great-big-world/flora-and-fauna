@@ -49,11 +49,11 @@ public class BranchTreeDecorator extends TreeDecorator {
                 return 0;
             return logPos1.getY() - logPos2.getY();
         });
-        for (int i = 0; i < generator.getLogPositions().size(); ++i) {
+        for (int i = minHeight + generator.getRandom().nextInt(2); i < generator.getLogPositions().size(); i += 2) {
             BlockPos pos = generator.getLogPositions().get(i);
             Direction direction = Direction.Type.HORIZONTAL.random(generator.getRandom());
             BlockPos offset = pos.offset(direction);
-            if (isValidPosition(world, offset, minHeight, generator.getLogPositions().get(0).getY()) && generator.getRandom().nextFloat() <= .4f) {
+            if (world.testBlockState(offset, state -> state.isAir() || state.isReplaceable()) && generator.getRandom().nextFloat() <= .4f) {
                 if (world.testBlockState(offset.offset(direction), state -> state.isAir() || state.isReplaceable())) {
                     BlockState state = branchProvider.get(generator.getRandom(), offset);
 
@@ -87,14 +87,5 @@ public class BranchTreeDecorator extends TreeDecorator {
                 }
             }
         }
-    }
-
-    private boolean isValidPosition(TestableWorld world, BlockPos pos, int minHeight, int bottomY) {
-        int distance = pos.getY() - bottomY;
-        if (distance >= Math.max(0, minHeight)) {
-            return world.testBlockState(pos, state -> state.isAir() || state.isReplaceable());
-        }
-
-        return false;
     }
 }

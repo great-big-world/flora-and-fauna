@@ -14,7 +14,7 @@
         "probability": 0.25
       },
       {
-        "type": "minecraft:alter_ground",
+        "type": "great_big_world:alter_ground",
         "provider": {
           "type": "minecraft:simple_state_provider",
           "state": {

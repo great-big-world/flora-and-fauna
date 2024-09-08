@@ -4,10 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaTreeDecoratorTypes;
-import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
 import net.minecraft.block.*;
-import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.TestableWorld;
 import net.minecraft.world.gen.treedecorator.TreeDecorator;
@@ -44,42 +44,42 @@ public class MossTreeDecorator extends TreeDecorator {
             if (noise.getValue() > 0) {
                 blockPos = pos.west();
                 if (generator.isAir(blockPos) || world.testBlockState(blockPos, state -> state.isOf(Blocks.VINE))) {
-                    replaceWithMoss(generator, blockPos, ConnectingBlock.EAST);
+                    generator.replace(blockPos, FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(Properties.FACING, Direction.EAST));
                 }
             }
 
             if (noise.getValue() > 0) {
                 blockPos = pos.east();
                 if (generator.isAir(blockPos) || world.testBlockState(blockPos, state -> state.isOf(Blocks.VINE))) {
-                    replaceWithMoss(generator, blockPos, ConnectingBlock.WEST);
+                    generator.replace(blockPos, FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(Properties.FACING, Direction.WEST));
                 }
             }
 
             if (noise.getValue() > 0) {
                 blockPos = pos.north();
                 if (generator.isAir(blockPos) || world.testBlockState(blockPos, state -> state.isOf(Blocks.VINE))) {
-                    replaceWithMoss(generator, blockPos, ConnectingBlock.SOUTH);
+                    generator.replace(blockPos, FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(Properties.FACING, Direction.SOUTH));
                 }
             }
 
             if (noise.getValue() > 0) {
                 blockPos = pos.south();
                 if (generator.isAir(blockPos) || world.testBlockState(blockPos, state -> state.isOf(Blocks.VINE))) {
-                    replaceWithMoss(generator, blockPos, ConnectingBlock.NORTH);
+                    generator.replace(blockPos, FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(Properties.FACING, Direction.NORTH));
                 }
             }
 
             if (noise.getValue() > 0) {
                 blockPos = pos.up();
                 if (generator.isAir(blockPos) || world.testBlockState(blockPos, state -> state.isOf(Blocks.VINE))) {
-                    replaceWithMoss(generator, blockPos, ConnectingBlock.DOWN);
+                    generator.replace(blockPos, FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(Properties.FACING, Direction.DOWN));
                 }
             }
 
             if (noise.getValue() > 0) {
                 blockPos = pos.down();
                 if (generator.isAir(blockPos) || world.testBlockState(blockPos, state -> state.isOf(Blocks.VINE))) {
-                    replaceWithMoss(generator, blockPos, ConnectingBlock.UP);
+                    generator.replace(blockPos, FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(Properties.FACING, Direction.UP));
                 }
             }
 
@@ -89,28 +89,5 @@ public class MossTreeDecorator extends TreeDecorator {
                 noise.setValue(Math.min(noise.getValue() + 1, 2));
             }
         }
-    }
-
-    public void replaceWithMoss(TreeDecorator.Generator generator, BlockPos pos, BooleanProperty faceProperty) {
-        BlockState mossState = FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState();
-
-        TestableWorld world = generator.getWorld();
-        if (world.testBlockState(pos, state -> state == FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(ConnectingBlock.WEST, true)))
-            mossState = mossState.with(ConnectingBlock.WEST, true);
-        if (world.testBlockState(pos, state -> state == FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(ConnectingBlock.EAST, true)))
-            mossState = mossState.with(ConnectingBlock.EAST, true);
-        if (world.testBlockState(pos, state -> state == FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(ConnectingBlock.SOUTH, true)))
-            mossState = mossState.with(ConnectingBlock.SOUTH, true);
-        if (world.testBlockState(pos, state -> state == FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(ConnectingBlock.NORTH, true)))
-            mossState = mossState.with(ConnectingBlock.NORTH, true);
-        if (world.testBlockState(pos, state -> state == FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(ConnectingBlock.UP, true)))
-            mossState = mossState.with(ConnectingBlock.UP, true);
-        if (world.testBlockState(pos, state -> state == FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(ConnectingBlock.DOWN, true)))
-            mossState = mossState.with(ConnectingBlock.DOWN, true);
-
-        if (world.testBlockState(pos, state -> state.isOf(Blocks.SNOW)))
-            mossState = mossState.with(SnowyHelper.SNOW_LAYERS, 1);
-
-        generator.replace(pos, mossState.with(faceProperty, true));
     }
 }

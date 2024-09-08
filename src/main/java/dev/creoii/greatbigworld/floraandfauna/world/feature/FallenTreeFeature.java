@@ -1,7 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.world.feature;
 
 import com.mojang.serialization.Codec;
-import dev.creoii.greatbigworld.floraandfauna.block.MossCarpetBlock;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
@@ -98,7 +97,7 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
                     if ((offsetState.isAir() || offsetState.isReplaceable()) && !world.isWater(offset)) {
                         if (placeLeaves && i > placementPositions.size() / 2 && context.getRandom().nextFloat() < leafChance) {
                             world.setBlockState(offset, leafState.with(LeavesBlock.DISTANCE, 1), 19);
-                        } else if (context.getRandom().nextFloat() < mossChance) world.setBlockState(offset, FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(MossCarpetBlock.getProperty(direction1.getOpposite()), true).with(SnowyHelper.SNOW_LAYERS, world.getBlockState(offset).isOf(Blocks.SNOW) ? 1 : 0), 19);
+                        } else if (context.getRandom().nextFloat() < mossChance) world.setBlockState(offset, FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(Properties.FACING, direction1.getOpposite()).with(SnowyHelper.SNOW_LAYERS, world.getBlockState(offset).isOf(Blocks.SNOW) ? 1 : 0), 19);
                     }
                 }
             }

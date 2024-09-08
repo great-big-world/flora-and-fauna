@@ -1,6 +1,5 @@
 package dev.creoii.greatbigworld.floraandfauna.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
@@ -13,7 +12,10 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -22,22 +24,32 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
-public class MossCarpetBlock extends MultifaceGrowthBlock {
-    public static final MapCodec<MossCarpetBlock> CODEC = createCodec(MossCarpetBlock::new);
-    private final LichenGrower grower = new LichenGrower(this);
+public class MossCarpetBlock extends CarpetBlock {
+    protected static final VoxelShape UP_SHAPE = Block.createCuboidShape(0d, 15d, 0d, 16d, 16d, 16d);
+    protected static final VoxelShape EAST_SHAPE = Block.createCuboidShape(15d, 0d, 0d, 16d, 16d, 16d);
+    protected static final VoxelShape WEST_SHAPE = Block.createCuboidShape(0d, 0d, 0d, 1d, 16d, 16d);
+    protected static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0d, 0d, 0d, 16d, 16d, 1d);
+    protected static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0d, 0d, 15d, 16d, 16d, 16d);
 
     public MossCarpetBlock(Settings settings) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(Properties.NORTH, false).with(Properties.SOUTH, false).with(Properties.EAST, false).with(Properties.WEST, false).with(Properties.UP, false).with(Properties.DOWN, false).with(SnowyHelper.SNOW_LAYERS, 0));
+        setDefaultState(getStateManager().getDefaultState().with(Properties.FACING, Direction.DOWN).with(SnowyHelper.SNOW_LAYERS, 0));
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        VoxelShape shape = super.getOutlineShape(state, world, pos, context);
+        VoxelShape base = switch(state.get(Properties.FACING)) {
+            case UP -> UP_SHAPE;
+            case DOWN -> SHAPE;
+            case EAST -> EAST_SHAPE;
+            case WEST -> WEST_SHAPE;
+            case NORTH -> NORTH_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+        };
         if (SnowyHelper.isSnowy(state)) {
-            return VoxelShapes.union(shape, SnowyHelper.LAYERS_TO_SHAPE[state.get(SnowyHelper.SNOW_LAYERS) - 1]);
+            return VoxelShapes.union(base, SnowyHelper.LAYERS_TO_SHAPE[state.get(SnowyHelper.SNOW_LAYERS) - 1]);
         }
-        return shape;
+        return base;
     }
 
     @Override
@@ -71,28 +83,28 @@ public class MossCarpetBlock extends MultifaceGrowthBlock {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(SnowyHelper.SNOW_LAYERS);
+        builder.add(Properties.FACING, SnowyHelper.SNOW_LAYERS);
     }
 
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState placementState = super.getPlacementState(ctx);
-        BlockState state = ctx.getWorld().getBlockState(ctx.getBlockPos());
-        if (placementState != null && state.getBlock() instanceof SnowBlock) {
-            return placementState.with(SnowyHelper.SNOW_LAYERS, state.get(Properties.LAYERS));
+        for (Direction direction : ctx.getPlacementDirections()) {
+            BlockState state = getDefaultState().with(Properties.FACING, direction);
+            if (!state.canPlaceAt(ctx.getWorld(), ctx.getBlockPos()))
+                continue;
+            return state;
         }
-        return placementState;
+        return null;
     }
 
     @Override
-    protected MapCodec<? extends MultifaceGrowthBlock> getCodec() {
-        return CODEC;
+    protected BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(Properties.FACING, rotation.rotate(state.get(Properties.FACING)));
     }
 
     @Override
-    public LichenGrower getGrower() {
-        return grower;
+    protected BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation(state.get(Properties.FACING)));
     }
 }

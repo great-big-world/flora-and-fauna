@@ -3,11 +3,11 @@ package dev.creoii.greatbigworld.floraandfauna.mixin.world;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaGameRules;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -29,10 +29,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 @Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin extends World implements StructureWorldAccess, AttachmentTarget {
+public abstract class ServerWorldMixin extends World implements StructureWorldAccess {
     @Shadow @NotNull public abstract MinecraftServer getServer();
 
     protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
@@ -65,5 +66,14 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
     private Biome.Precipitation gbw$modifyTickIceAndSnowForWinter(Biome instance, BlockPos pos) {
         SeasonManager seasonManager = SeasonManager.getInstance(getServer());
         return seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) ? Biome.Precipitation.SNOW : instance.getPrecipitation(pos);
+    }
+
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;wakeSleepingPlayers()V"))
+    private void gbw$sleepingSkipsSeasonTime(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
+        if (getGameRules().getBoolean(FloraAndFaunaGameRules.DO_SEASON_CYCLE)) {
+            SeasonManager seasonManager = SeasonManager.getInstance(getServer());
+            int timeToSkip = 13000; // length of night in ticks, should be subtracted by how long into the night we are
+            seasonManager.addSeasonTime(timeToSkip);
+        }
     }
 }

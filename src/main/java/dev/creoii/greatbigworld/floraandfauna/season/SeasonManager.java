@@ -13,12 +13,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.*;
+import org.jetbrains.annotations.Nullable;
 
 public class SeasonManager extends PersistentState {
     private static final Type<SeasonManager> STATE_TYPE = new Type<>(SeasonManager::new, SeasonManager::createFromNbt, null);
     private static SeasonManager instance;
     private static final int SEASON_TRANSITION_COUNT = 30;
-    private MinecraftServer server;
+    @Nullable
+    private MinecraftServer server = null;
     private Season currentSeason = Season.SUMMER;
     private TransitionContext context = new TransitionContext(Season.SUMMER, Season.AUTUMN, 0f);
     private int seasonLength;
@@ -56,6 +58,8 @@ public class SeasonManager extends PersistentState {
     }
 
     public void tick(ServerWorld world) {
+        if (server == null)
+            server = world.getServer();
         if (instance == null) {
             instance = getServerState(server);
 
@@ -97,6 +101,15 @@ public class SeasonManager extends PersistentState {
                 context.setPercentage(Math.min(1f, context.getPercentage() + seasonTransitionIncrementAmount));
                 syncSeasonTransition(server);
             }
+        }
+    }
+
+    public void addSeasonTime(int seasonTime) {
+        if (server != null && !transitioning) {
+            System.out.println("prev: " + this.seasonTime);
+            this.seasonTime = Math.min(this.seasonTime + seasonTime, seasonLength - (seasonTransitionLength / 2));
+            System.out.println("post: " + this.seasonTime);
+            syncAll(server);
         }
     }
 

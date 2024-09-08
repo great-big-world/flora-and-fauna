@@ -29,8 +29,8 @@
     },
     "length": {
       "type": "minecraft:uniform",
-      "min_inclusive": 5,
-      "max_inclusive": 8
+      "min_inclusive": 4,
+      "max_inclusive": 7
     },
     "moss_chance": 40,
     "leaf_chance": 60

@@ -29,7 +29,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "isClimbing", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isIn(Lnet/minecraft/registry/tag/TagKey;)Z"), cancellable = true)
     private void gbw$livingClimbHollowLogs(CallbackInfoReturnable<Boolean> cir, @Local BlockPos blockPos, @Local BlockState blockState) {
         MutableBoolean canClimbHollowLog = new MutableBoolean(true);
-        BlockPos.stream(getDimensions(EntityPose.STANDING).getBoxAt(blockPos.toCenterPos()).contract(.5d)).forEach(pos -> {
+        BlockPos.stream(getDimensions(EntityPose.STANDING).getBoxAt(blockPos.toCenterPos())).forEach(pos -> {
             BlockState state = getWorld().getBlockState(pos);
             if (!state.isIn(FloraAndFaunaTags.HOLLOW_LOGS) || state.get(HollowLogBlock.AXIS) != Direction.Axis.Y) {
                 canClimbHollowLog.setFalse();

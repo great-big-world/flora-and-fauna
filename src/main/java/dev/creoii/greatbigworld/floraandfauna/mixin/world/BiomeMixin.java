@@ -5,8 +5,10 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
+import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.minecraft.block.Blocks;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.WorldView;
@@ -20,13 +22,23 @@ public class BiomeMixin {
     private boolean gbw$modifyCanSetSnowForWinter(Biome instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) WorldView world) {
         if (world.isClient())
             return original.call(instance, pos) && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && pos.getY() >= world.getBottomY() && pos.getY() < world.getTopY() && world.getLightLevel(LightType.BLOCK, pos) < 10);
-        return original.call(instance, pos);
+        else {
+            if (world instanceof ServerWorld serverWorld) {
+                SeasonManager seasonManager = SeasonManager.getInstance(serverWorld.getServer());
+                return original.call(instance, pos) && (seasonManager.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && pos.getY() >= world.getBottomY() && pos.getY() < world.getTopY() && world.getLightLevel(LightType.BLOCK, pos) < 10);
+            } else return original.call(instance, pos);
+        }
     }
 
     @WrapOperation(method = "canSetIce(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Z)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean gbw$modifyCanSetIceForWinter(Biome instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) WorldView world) {
         if (world.isClient())
             return original.call(instance, pos) && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
-        return original.call(instance, pos);
+        else {
+            if (world instanceof ServerWorld serverWorld) {
+                SeasonManager seasonManager = SeasonManager.getInstance(serverWorld.getServer());
+                return original.call(instance, pos) && (seasonManager.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
+            } else return original.call(instance, pos);
+        }
     }
 }

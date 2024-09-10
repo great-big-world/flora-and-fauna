@@ -2,9 +2,13 @@ package dev.creoii.greatbigworld.floraandfauna.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.World;
 
 public final class SnowyHelper {
     public static final IntProperty SNOW_LAYERS = IntProperty.of("snow_layers", 0, 8);
@@ -16,5 +20,17 @@ public final class SnowyHelper {
 
     public static VoxelShape getSnowShape(BlockState state) {
         return LAYERS_TO_SHAPE[state.get(SNOW_LAYERS)];
+    }
+
+    public static void tickSnowUnderLeaves(World world, BlockState state, BlockPos pos) {
+        System.out.println(state.getBlock().getTranslationKey());
+        if (state.get(SnowyHelper.SNOW_LAYERS) == 0) {
+            int i = state.get(SnowyHelper.SNOW_LAYERS);
+            if (i < Math.min(world.getGameRules().getInt(GameRules.SNOW_ACCUMULATION_HEIGHT), 8)) {
+                BlockState blockState2 = state.with(SnowyHelper.SNOW_LAYERS, i + 1);
+                Block.pushEntitiesUpBeforeBlockChange(state, blockState2, world, pos);
+                world.setBlockState(pos, blockState2);
+            }
+        }
     }
 }

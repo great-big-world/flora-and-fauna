@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;

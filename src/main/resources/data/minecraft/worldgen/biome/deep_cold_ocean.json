@@ -89,11 +89,13 @@
     ]
   },
   "spawn_costs": {},
-  "carvers": [
-    "minecraft:cave",
-    "minecraft:cave_extra_underground",
-    "minecraft:canyon"
-  ],
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ]
+  },
   "features": [
     [],
     [
@@ -122,6 +124,7 @@
       "minecraft:ore_lapis",
       "minecraft:ore_lapis_buried",
       "minecraft:underwater_magma",
+      "minecraft:ore_clay",
       "minecraft:disk_clay",
       "minecraft:disk_gravel"
     ],

@@ -1,23 +1,18 @@
 {
-  "temperature": 2,
-  "downfall": 0,
-  "has_precipitation": false,
+  "temperature": 0,
+  "downfall": 0.5,
+  "has_precipitation": true,
+  "temperature_modifier": "frozen",
   "effects": {
-    "sky_color": 7254527,
+    "sky_color": 8364543,
     "fog_color": 12638463,
-    "water_color": 3319192,
-    "water_fog_color": 3319192,
+    "water_color": 2453685,
+    "water_fog_color": 1526149,
     "mood_sound": {
       "sound": "minecraft:ambient.cave",
       "tick_delay": 6000,
       "block_search_extent": 8,
       "offset": 2
-    },
-    "music": {
-      "sound": "minecraft:music.overworld.desert",
-      "min_delay": 12000,
-      "max_delay": 24000,
-      "replace_current_music": false
     }
   },
   "spawners": {
@@ -32,10 +27,10 @@
     "axolotls": [],
     "creature": [
       {
-        "type": "minecraft:rabbit",
-        "weight": 4,
-        "minCount": 2,
-        "maxCount": 3
+        "type": "minecraft:polar_bear",
+        "weight": 1,
+        "minCount": 1,
+        "maxCount": 2
       }
     ],
     "misc": [],
@@ -48,7 +43,7 @@
       },
       {
         "type": "minecraft:zombie",
-        "weight": 19,
+        "weight": 95,
         "minCount": 4,
         "maxCount": 4
       },
@@ -71,40 +66,53 @@
         "maxCount": 4
       },
       {
-        "type": "minecraft:husk",
-        "weight": 80,
-        "minCount": 4,
-        "maxCount": 4
+        "type": "minecraft:drowned",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 1
       }
     ],
     "underground_water_creature": [],
-    "water_ambient": [],
-    "water_creature": []
-  },
-  "spawn_costs": {},
-  "carvers": {
-    "air": [
-      "minecraft:cave",
-      "minecraft:cave_extra_underground",
-      "minecraft:canyon"
+    "water_ambient": [
+      {
+        "type": "minecraft:salmon",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 5
+      }
+    ],
+    "water_creature": [
+      {
+        "type": "minecraft:squid",
+        "weight": 1,
+        "minCount": 1,
+        "maxCount": 4
+      }
     ]
   },
+  "spawn_costs": {},
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
   "features": [
     [],
     [
       "minecraft:lake_lava_underground",
       "minecraft:lake_lava_surface"
     ],
-    [],
     [
-      "minecraft:fossil_upper",
-      "minecraft:fossil_lower"
-    ],
-    [
-      "minecraft:desert_well"
+      "minecraft:iceberg_packed",
+      "minecraft:iceberg_blue"
     ],
     [],
     [
+      "minecraft:blue_ice"
+    ],
+    [],
+    [
+      "minecraft:ore_gravel",
       "minecraft:ore_coal_upper",
       "minecraft:ore_coal_lower",
       "minecraft:ore_iron_upper",
@@ -120,22 +128,21 @@
       "minecraft:ore_diamond_buried",
       "minecraft:ore_lapis",
       "minecraft:ore_lapis_buried",
-      "minecraft:ore_gravel",
       "minecraft:underwater_magma",
-      "minecraft:disk_sand",
       "minecraft:disk_clay",
       "minecraft:disk_gravel"
     ],
     [],
-    [],
     [
+      "minecraft:spring_water",
+      "minecraft:spring_lava"
+    ],
+    [
+      "minecraft:trees_water",
       "minecraft:flower_default",
       "minecraft:patch_grass_badlands",
-      "minecraft:patch_dead_bush_2",
       "minecraft:brown_mushroom_normal",
-      "minecraft:red_mushroom_normal",
-      "minecraft:patch_sugar_cane_desert",
-      "minecraft:patch_cactus_desert"
+      "minecraft:red_mushroom_normal"
     ],
     [
       "minecraft:freeze_top_layer"

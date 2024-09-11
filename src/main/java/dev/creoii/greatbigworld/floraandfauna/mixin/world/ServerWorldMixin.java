@@ -43,33 +43,41 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
     }
 
     @Inject(method = "tickIceAndSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z", ordinal = 2), cancellable = true)
-    private void gbw$tickSnowyBlocks(BlockPos pos, CallbackInfo ci, @Local(ordinal = 1) BlockPos blockPos, @Local Biome biome) {
+    private void gbw$tickSnowyBlocks(BlockPos pos, CallbackInfo ci, @Local(ordinal = 1) BlockPos blockPos) {
         BlockState state = getBlockState(blockPos);
         if (state.contains(SnowyHelper.SNOW_LAYERS)) {
             SnowyHelper.tickSnowUnderLeaves(this, state, blockPos);
             ci.cancel();
         }
+    }
 
-        BlockState downState = getBlockState(blockPos.down());
-        if (downState.isIn(BlockTags.LEAVES)) {
-            BlockPos top = getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, blockPos);
-            int i = getGameRules().getInt(GameRules.SNOW_ACCUMULATION_HEIGHT);
-            if (i > 0 && biome.canSetSnow(this, top)) {
-                BlockState blockState1 = getBlockState(top);
-                if (blockState1.isOf(Blocks.SNOW)) {
-                    int j = blockState1.get(SnowBlock.LAYERS);
-                    if (j < Math.min(i, 8)) {
-                        BlockState blockState2 = blockState1.with(SnowBlock.LAYERS, j + 1);
-                        Block.pushEntitiesUpBeforeBlockChange(blockState1, blockState2, this, top);
-                        setBlockState(top, blockState2);
-                    }
-                } else {
-                    setBlockState(top, Blocks.SNOW.getDefaultState());
-                    ci.cancel();
+    @Inject(method = "tickIceAndSnow", at = @At("TAIL"))
+    private void gbw$tickSnowyUnderTrees(BlockPos pos, CallbackInfo ci, @Local(ordinal = 1) BlockPos blockPos, @Local Biome biome) {
+        if (isRaining()) {
+            BlockState downState = getBlockState(blockPos.down());
+            if (downState.isIn(BlockTags.LEAVES)) {
+                BlockPos top = getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos);
+                BlockPos top2 = top.down();
+                Biome biome2 = getBiome(top).value();
+                if (biome2.canSetIce(this, top2)) {
+                    setBlockState(top2, Blocks.ICE.getDefaultState());
                 }
 
-                if (blockState1.contains(SnowyHelper.SNOW_LAYERS)) {
-                    SnowyHelper.tickSnowUnderLeaves(this, blockState1, top);
+                int i = getGameRules().getInt(GameRules.SNOW_ACCUMULATION_HEIGHT);
+                if (i > 0 && biome.canSetSnow(this, top)) {
+                    BlockState blockState1 = getBlockState(top);
+                    if (blockState1.isOf(Blocks.SNOW)) {
+                        int j = blockState1.get(SnowBlock.LAYERS);
+                        if (j < Math.min(i, 8)) {
+                            BlockState blockState2 = blockState1.with(SnowBlock.LAYERS, j + 1);
+                            Block.pushEntitiesUpBeforeBlockChange(blockState1, blockState2, this, top);
+                            setBlockState(top, blockState2);
+                        }
+                    } else {
+                        if (blockState1.contains(SnowyHelper.SNOW_LAYERS)) {
+                            SnowyHelper.tickSnowUnderLeaves(this, blockState1, top);
+                        } else setBlockState(top, Blocks.SNOW.getDefaultState());
+                    }
                 }
             }
         }

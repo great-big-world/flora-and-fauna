@@ -23,7 +23,6 @@ public final class SnowyHelper {
     }
 
     public static void tickSnowUnderLeaves(World world, BlockState state, BlockPos pos) {
-        System.out.println(state.getBlock().getTranslationKey());
         if (state.get(SnowyHelper.SNOW_LAYERS) == 0) {
             int i = state.get(SnowyHelper.SNOW_LAYERS);
             if (i < Math.min(world.getGameRules().getInt(GameRules.SNOW_ACCUMULATION_HEIGHT), 8)) {

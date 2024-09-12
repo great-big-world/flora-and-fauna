@@ -1,0 +1,186 @@
+{
+  "type": "minecraft:flower",
+  "config": {
+    "feature": {
+      "feature": {
+        "type": "minecraft:simple_block",
+        "config": {
+          "to_place": {
+            "type": "minecraft:dual_noise_provider",
+            "noise": {
+              "amplitudes": [
+                1.0
+              ],
+              "firstOctave": -3
+            },
+            "scale": 1.0,
+            "seed": 2345,
+            "slow_noise": {
+              "amplitudes": [
+                1.0
+              ],
+              "firstOctave": -10
+            },
+            "slow_scale": 1.0,
+            "states": [
+              {
+                "Name": "minecraft:tall_grass",
+                "Properties": {
+                  "half": "lower"
+                }
+              },
+              {
+                "Name": "minecraft:allium"
+              },
+              {
+                "Name": "minecraft:poppy"
+              },
+              {
+                "Name": "minecraft:azure_bluet"
+              },
+              {
+                "Name": "minecraft:dandelion"
+              },
+              {
+                "Name": "minecraft:cornflower"
+              },
+              {
+                "Name": "minecraft:oxeye_daisy"
+              },
+              {
+                "Name": "minecraft:short_grass"
+              },
+
+              {
+                "Name": "minecraft:allium",
+                "Properties": {
+                  "flowers": "2"
+                }
+              },
+              {
+                "Name": "minecraft:poppy",
+                "Properties": {
+                  "flowers": "2"
+                }
+              },
+              {
+                "Name": "minecraft:azure_bluet",
+                "Properties": {
+                  "flowers": "2"
+                }
+              },
+              {
+                "Name": "minecraft:dandelion",
+                "Properties": {
+                  "flowers": "2"
+                }
+              },
+              {
+                "Name": "minecraft:cornflower",
+                "Properties": {
+                  "flowers": "2"
+                }
+              },
+              {
+                "Name": "minecraft:oxeye_daisy",
+                "Properties": {
+                  "flowers": "2"
+                }
+              },
+
+              {
+                "Name": "minecraft:allium",
+                "Properties": {
+                  "flowers": "3"
+                }
+              },
+              {
+                "Name": "minecraft:poppy",
+                "Properties": {
+                  "flowers": "3"
+                }
+              },
+              {
+                "Name": "minecraft:azure_bluet",
+                "Properties": {
+                  "flowers": "3"
+                }
+              },
+              {
+                "Name": "minecraft:dandelion",
+                "Properties": {
+                  "flowers": "3"
+                }
+              },
+              {
+                "Name": "minecraft:cornflower",
+                "Properties": {
+                  "flowers": "3"
+                }
+              },
+              {
+                "Name": "minecraft:oxeye_daisy",
+                "Properties": {
+                  "flowers": "3"
+                }
+              },
+
+              {
+                "Name": "minecraft:allium",
+                "Properties": {
+                  "flowers": "4"
+                }
+              },
+              {
+                "Name": "minecraft:poppy",
+                "Properties": {
+                  "flowers": "4"
+                }
+              },
+              {
+                "Name": "minecraft:azure_bluet",
+                "Properties": {
+                  "flowers": "4"
+                }
+              },
+              {
+                "Name": "minecraft:dandelion",
+                "Properties": {
+                  "flowers": "4"
+                }
+              },
+              {
+                "Name": "minecraft:cornflower",
+                "Properties": {
+                  "flowers": "4"
+                }
+              },
+              {
+                "Name": "minecraft:oxeye_daisy",
+                "Properties": {
+                  "flowers": "4"
+                }
+              }
+            ],
+            "variety": [
+              1,
+              3
+            ]
+          }
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:matching_blocks",
+            "blocks": "minecraft:air"
+          }
+        }
+      ]
+    },
+    "tries": 96,
+    "xz_spread": 6,
+    "y_spread": 2
+  }
+}

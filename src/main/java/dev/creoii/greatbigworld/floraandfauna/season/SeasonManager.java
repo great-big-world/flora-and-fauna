@@ -142,14 +142,14 @@ public class SeasonManager extends PersistentState {
 
     public void syncAll(MinecraftServer server) {
         PlayerLookup.all(server).forEach(serverPlayer -> {
-            ServerPlayNetworking.send(serverPlayer, new SyncSeason(currentSeason.ordinal()));
+            ServerPlayNetworking.send(serverPlayer, new SyncSeason((byte) currentSeason.ordinal()));
             ServerPlayNetworking.send(serverPlayer, new SyncSeasonTransition(context));
         });
     }
 
     private void syncSeason(MinecraftServer server) {
         PlayerLookup.all(server).forEach(serverPlayer -> {
-            ServerPlayNetworking.send(serverPlayer, new SyncSeason(currentSeason.ordinal()));
+            ServerPlayNetworking.send(serverPlayer, new SyncSeason((byte) currentSeason.ordinal()));
         });
     }
 
@@ -165,16 +165,16 @@ public class SeasonManager extends PersistentState {
         return manager;
     }
 
-    public record SyncSeason(int season) implements CustomPayload {
+    public record SyncSeason(byte season) implements CustomPayload {
         public static final CustomPayload.Id<SyncSeason> PACKET_ID = new CustomPayload.Id<>(new Identifier(FloraAndFauna.NAMESPACE, "sync_season"));
         public static final PacketCodec<RegistryByteBuf, SyncSeason> PACKET_CODEC = PacketCodec.of(SyncSeason::write, SyncSeason::new);
 
         public SyncSeason(RegistryByteBuf buf) {
-            this(buf.readVarInt());
+            this(buf.readByte());
         }
 
         public void write(RegistryByteBuf buf) {
-            buf.writeVarInt(season);
+            buf.writeByte(season);
         }
 
         @Override
@@ -183,20 +183,20 @@ public class SeasonManager extends PersistentState {
         }
     }
 
-    public record SyncSeasonTransition(int[] context) implements CustomPayload {
+    public record SyncSeasonTransition(byte[] context) implements CustomPayload {
         public static final CustomPayload.Id<SyncSeasonTransition> PACKET_ID = new CustomPayload.Id<>(new Identifier(FloraAndFauna.NAMESPACE, "sync_season_color"));
         public static final PacketCodec<RegistryByteBuf, SyncSeasonTransition> PACKET_CODEC = PacketCodec.of(SyncSeasonTransition::write, SyncSeasonTransition::new);
 
         public SyncSeasonTransition(TransitionContext context) {
-            this(new int[]{context.getCurrent().ordinal(), context.getNext() == null ? context.getCurrent().ordinal() : context.getNext().ordinal(), (int) (context.getPercentage() * 100)});
+            this(new byte[]{(byte) context.getCurrent().ordinal(), (byte) (context.getNext() == null ? context.getCurrent().ordinal() : context.getNext().ordinal()), (byte) Math.min(127, context.getPercentage() * 100)});
         }
 
         public SyncSeasonTransition(RegistryByteBuf buf) {
-            this(buf.readIntArray());
+            this(buf.readByteArray());
         }
 
         public void write(RegistryByteBuf buf) {
-            buf.writeIntArray(context);
+            buf.writeByteArray(context);
         }
 
         @Override

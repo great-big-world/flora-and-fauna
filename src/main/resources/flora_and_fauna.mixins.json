@@ -29,6 +29,8 @@
     "client.BlockColorsMixin",
     "client.BlockDustParticleMixin",
     "client.ClientWorldMixin",
+    "client.GameOptionsMixin",
+    "client.VideoOptionsScreenMixin",
     "client.WorldRendererMixin",
     "client.compat.sodium.GrassColorProviderMixin",
     "client.compat.sodium.RenderSectionManagerAccessor",

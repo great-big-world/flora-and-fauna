@@ -18,11 +18,11 @@ import org.jetbrains.annotations.Nullable;
 public class SeasonManager extends PersistentState {
     private static final Type<SeasonManager> STATE_TYPE = new Type<>(SeasonManager::new, SeasonManager::createFromNbt, null);
     private static SeasonManager instance;
-    private static final int SEASON_TRANSITION_COUNT = 30;
     @Nullable
     private MinecraftServer server = null;
     private Season currentSeason = Season.SUMMER;
     private TransitionContext context = new TransitionContext(Season.SUMMER, Season.AUTUMN, 0f);
+    private int seasonTransitionQuality = 25;
     private int seasonLength;
     private int seasonTransitionLength;
     private int seasonTransitionIncrement;
@@ -49,6 +49,10 @@ public class SeasonManager extends PersistentState {
 
     public TransitionContext getTransitionContext() {
         return context;
+    }
+
+    public void setSeasonTransitionQuality(int seasonTransitionQuality) {
+        this.seasonTransitionQuality = seasonTransitionQuality;
     }
 
     public void load(ServerWorld world) {
@@ -111,10 +115,10 @@ public class SeasonManager extends PersistentState {
         }
     }
 
-    private void updateSeasonTime(ServerWorld world) {
+    public void updateSeasonTime(ServerWorld world) {
         seasonLength = world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH);
         seasonTransitionLength = seasonLength / 3;
-        seasonTransitionIncrement = seasonTransitionLength / SEASON_TRANSITION_COUNT;
+        seasonTransitionIncrement = seasonTransitionLength / seasonTransitionQuality;
         seasonTransitionIncrementAmount = (float) seasonTransitionIncrement / seasonTransitionLength;
     }
 

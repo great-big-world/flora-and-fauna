@@ -3,6 +3,7 @@ package dev.creoii.greatbigworld.floraandfauna;
 import dev.creoii.creoapi.api.modification.BlockModification;
 import dev.creoii.greatbigworld.floraandfauna.registry.*;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
+import dev.creoii.greatbigworld.floraandfauna.season.TransitionQuality;
 import dev.creoii.greatbigworld.floraandfauna.world.feature.FallenTreeFeature;
 import dev.creoii.greatbigworld.floraandfauna.world.feature.FallenTreeFeatureConfig;
 import dev.creoii.greatbigworld.floraandfauna.world.feature.FreezeTopLayerFeature;
@@ -41,6 +42,16 @@ public class FloraAndFauna implements ModInitializer {
 
         PayloadTypeRegistry.playS2C().register(SeasonManager.SyncSeason.PACKET_ID, SeasonManager.SyncSeason.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(SeasonManager.SyncSeasonTransition.PACKET_ID, SeasonManager.SyncSeasonTransition.PACKET_CODEC);
+        PayloadTypeRegistry.playC2S().register(TransitionQuality.SyncTransitionQuality.PACKET_ID, TransitionQuality.SyncTransitionQuality.PACKET_CODEC);
+
+        ServerPlayNetworking.registerGlobalReceiver(TransitionQuality.SyncTransitionQuality.PACKET_ID, (payload, context) -> {
+            int quality = payload.quality();
+            context.server().execute(() -> {
+                SeasonManager seasonManager = SeasonManager.getInstance(context.server());
+                seasonManager.setSeasonTransitionQuality(quality);
+                seasonManager.updateSeasonTime(context.server().getOverworld());
+            });
+        });
 
         ServerWorldEvents.LOAD.register((server, world) -> {
             if (world.getDimensionEntry().matches(key -> key == DimensionTypes.OVERWORLD)) {

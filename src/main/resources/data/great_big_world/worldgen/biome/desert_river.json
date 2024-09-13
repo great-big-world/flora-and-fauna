@@ -117,12 +117,6 @@
         "maxCount": 4,
         "minCount": 4,
         "weight": 80
-      },
-      {
-        "type": "minecraft:drowned",
-        "maxCount": 1,
-        "minCount": 1,
-        "weight": 100
       }
     ],
     "underground_water_creature": [

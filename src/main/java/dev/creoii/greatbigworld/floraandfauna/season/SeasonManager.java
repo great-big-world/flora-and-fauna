@@ -160,7 +160,7 @@ public class SeasonManager extends PersistentState {
     }
 
     private static SeasonManager getServerState(MinecraftServer server) {
-        SeasonManager manager = server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(STATE_TYPE, FloraAndFauna.NAMESPACE + ":season_data");
+        SeasonManager manager = server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(STATE_TYPE, "gbw_season_data");
         manager.markDirty();
         return manager;
     }

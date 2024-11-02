@@ -1,6 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
-import dev.creoii.creoapi.api.block.CreoBlock;
+import dev.creoii.greatbigworld.block.OverlayState;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TallPlantBlock.class)
-public abstract class TallPlantBlockMixin extends PlantBlock implements CreoBlock {
+public abstract class TallPlantBlockMixin extends PlantBlock implements OverlayState {
     @Shadow @Final public static EnumProperty<DoubleBlockHalf> HALF;
 
     protected TallPlantBlockMixin(Settings settings) {

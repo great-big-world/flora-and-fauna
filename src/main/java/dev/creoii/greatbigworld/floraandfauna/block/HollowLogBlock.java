@@ -1,6 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.block;
 
-import dev.creoii.creoapi.api.block.CreoBlock;
+import dev.creoii.greatbigworld.block.AdjacentCollision;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
@@ -17,7 +17,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-public class HollowLogBlock extends PillarBlock implements CreoBlock, Waterloggable {
+public class HollowLogBlock extends PillarBlock implements Waterloggable, AdjacentCollision {
     private static final VoxelShape X_SHAPE = VoxelShapes.union(Block.createCuboidShape(0d, 0d, 0d, 16d, 16d, 3d), Block.createCuboidShape(0d, 13d, 0d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 13d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 0d, 16d, 3d, 16d));
     private static final VoxelShape Y_SHAPE = VoxelShapes.union(Block.createCuboidShape(0d, 0d, 0d, 16d, 16d, 3d), Block.createCuboidShape(0d, 0d, 0d, 3d, 16d, 16d), Block.createCuboidShape(0d, 0d, 13d, 16d, 16d, 16d), Block.createCuboidShape(13d, 0d, 0d, 16d, 16d, 16d));
     private static final VoxelShape Z_SHAPE = VoxelShapes.union(Block.createCuboidShape(13d, 0d, 0d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 0d, 3d, 16d, 16d), Block.createCuboidShape(0d, 13d, 0d, 16d, 16d, 16d), Block.createCuboidShape(0d, 0d, 0d, 16d, 3d, 16d));

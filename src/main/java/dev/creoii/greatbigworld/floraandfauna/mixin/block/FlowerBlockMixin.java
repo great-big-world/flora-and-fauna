@@ -1,7 +1,7 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.creoii.creoapi.api.block.CreoBlock;
+import dev.creoii.greatbigworld.block.OverlayState;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(FlowerBlock.class)
-public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousStewIngredient, CreoBlock {
+public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousStewIngredient, OverlayState {
     @Unique
     private static final IntProperty FLOWERS = IntProperty.of("flowers", 1, 4);
     @Unique

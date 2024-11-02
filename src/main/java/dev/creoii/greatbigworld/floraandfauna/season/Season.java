@@ -1,8 +1,8 @@
 package dev.creoii.greatbigworld.floraandfauna.season;
 
-import dev.creoii.creoapi.api.worldgen.fastnoise.FastNoiseLite;
 import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
+import dev.creoii.greatbigworld.worldgen.FastNoiseLite;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.math.BlockPos;

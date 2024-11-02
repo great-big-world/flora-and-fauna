@@ -9,7 +9,7 @@
       "type": "minecraft:in_square"
     },
     {
-      "type": "creo:noise",
+      "type": "great_big_world:noise",
       "noise": "great_big_world:marsh_trees",
       "min_threshold": 0.5,
       "max_threshold": 2.0

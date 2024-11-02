@@ -1,6 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
-import dev.creoii.creoapi.api.block.CreoBlock;
+import dev.creoii.greatbigworld.block.OverlayState;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
         FenceBlock.class,
         PaneBlock.class
 })
-public abstract class FenceAndPaneBlockMixin extends HorizontalConnectingBlock implements CreoBlock {
+public abstract class FenceAndPaneBlockMixin extends HorizontalConnectingBlock implements OverlayState {
     protected FenceAndPaneBlockMixin(float radius1, float radius2, float boundingHeight1, float boundingHeight2, float collisionHeight, Settings settings) {
         super(radius1, radius2, boundingHeight1, boundingHeight2, collisionHeight, settings);
     }

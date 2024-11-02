@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.registry;
 
+import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import dev.creoii.greatbigworld.floraandfauna.block.AlgaeBlock;
 import dev.creoii.greatbigworld.floraandfauna.block.HollowLogBlock;
@@ -65,52 +66,52 @@ public final class FloraAndFaunaBlocks {
     public static final Block ALGAE = new AlgaeBlock(AbstractBlock.Settings.copy(Blocks.LILY_PAD));
 
     public static void register() {
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "humus"), HUMUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "moss_carpet"), MOSS_CARPET);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "humus"), HUMUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "moss_carpet"), MOSS_CARPET);
 
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "tropical_fern"), TROPICAL_FERN);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "large_tropical_fern"), LARGE_TROPICAL_FERN);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "potted_tropical_fern"), POTTED_TROPICAL_FERN);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "tropical_fern"), TROPICAL_FERN);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "large_tropical_fern"), LARGE_TROPICAL_FERN);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "potted_tropical_fern"), POTTED_TROPICAL_FERN);
 
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "red_hibiscus"), RED_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "orange_hibiscus"), ORANGE_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "yellow_hibiscus"), YELLOW_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "blue_hibiscus"), BLUE_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "pink_hibiscus"), PINK_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "purple_hibiscus"), PURPLE_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "black_hibiscus"), BLACK_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "white_hibiscus"), WHITE_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "potted_red_hibiscus"), POTTED_RED_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "potted_orange_hibiscus"), POTTED_ORANGE_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "potted_yellow_hibiscus"), POTTED_YELLOW_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "potted_blue_hibiscus"), POTTED_BLUE_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "potted_pink_hibiscus"), POTTED_PINK_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "potted_purple_hibiscus"), POTTED_PURPLE_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "potted_black_hibiscus"), POTTED_BLACK_HIBISCUS);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "potted_white_hibiscus"), POTTED_WHITE_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "red_hibiscus"), RED_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "orange_hibiscus"), ORANGE_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "yellow_hibiscus"), YELLOW_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "blue_hibiscus"), BLUE_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "pink_hibiscus"), PINK_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "purple_hibiscus"), PURPLE_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "black_hibiscus"), BLACK_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "white_hibiscus"), WHITE_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "potted_red_hibiscus"), POTTED_RED_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "potted_orange_hibiscus"), POTTED_ORANGE_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "potted_yellow_hibiscus"), POTTED_YELLOW_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "potted_blue_hibiscus"), POTTED_BLUE_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "potted_pink_hibiscus"), POTTED_PINK_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "potted_purple_hibiscus"), POTTED_PURPLE_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "potted_black_hibiscus"), POTTED_BLACK_HIBISCUS);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "potted_white_hibiscus"), POTTED_WHITE_HIBISCUS);
 
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "hollow_oak_log"), HOLLOW_OAK_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "hollow_spruce_log"), HOLLOW_SPRUCE_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "hollow_birch_log"), HOLLOW_BIRCH_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "hollow_jungle_log"), HOLLOW_JUNGLE_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "hollow_dark_oak_log"), HOLLOW_DARK_OAK_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "hollow_acacia_log"), HOLLOW_ACACIA_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "hollow_mangrove_log"), HOLLOW_MANGROVE_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "hollow_cherry_log"), HOLLOW_CHERRY_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "hollow_warped_stem"), HOLLOW_WARPED_STEM);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "hollow_crimson_stem"), HOLLOW_CRIMSON_STEM);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "stripped_hollow_oak_log"), STRIPPED_HOLLOW_OAK_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "stripped_hollow_spruce_log"), STRIPPED_HOLLOW_SPRUCE_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "stripped_hollow_birch_log"), STRIPPED_HOLLOW_BIRCH_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "stripped_hollow_jungle_log"), STRIPPED_HOLLOW_JUNGLE_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "stripped_hollow_dark_oak_log"), STRIPPED_HOLLOW_DARK_OAK_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "stripped_hollow_acacia_log"), STRIPPED_HOLLOW_ACACIA_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "stripped_hollow_mangrove_log"), STRIPPED_HOLLOW_MANGROVE_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "stripped_hollow_cherry_log"), STRIPPED_HOLLOW_CHERRY_LOG);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "stripped_hollow_warped_stem"), STRIPPED_HOLLOW_WARPED_STEM);
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "stripped_hollow_crimson_stem"), STRIPPED_HOLLOW_CRIMSON_STEM);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "hollow_oak_log"), HOLLOW_OAK_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "hollow_spruce_log"), HOLLOW_SPRUCE_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "hollow_birch_log"), HOLLOW_BIRCH_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "hollow_jungle_log"), HOLLOW_JUNGLE_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "hollow_dark_oak_log"), HOLLOW_DARK_OAK_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "hollow_acacia_log"), HOLLOW_ACACIA_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "hollow_mangrove_log"), HOLLOW_MANGROVE_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "hollow_cherry_log"), HOLLOW_CHERRY_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "hollow_warped_stem"), HOLLOW_WARPED_STEM);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "hollow_crimson_stem"), HOLLOW_CRIMSON_STEM);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "stripped_hollow_oak_log"), STRIPPED_HOLLOW_OAK_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "stripped_hollow_spruce_log"), STRIPPED_HOLLOW_SPRUCE_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "stripped_hollow_birch_log"), STRIPPED_HOLLOW_BIRCH_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "stripped_hollow_jungle_log"), STRIPPED_HOLLOW_JUNGLE_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "stripped_hollow_dark_oak_log"), STRIPPED_HOLLOW_DARK_OAK_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "stripped_hollow_acacia_log"), STRIPPED_HOLLOW_ACACIA_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "stripped_hollow_mangrove_log"), STRIPPED_HOLLOW_MANGROVE_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "stripped_hollow_cherry_log"), STRIPPED_HOLLOW_CHERRY_LOG);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "stripped_hollow_warped_stem"), STRIPPED_HOLLOW_WARPED_STEM);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "stripped_hollow_crimson_stem"), STRIPPED_HOLLOW_CRIMSON_STEM);
 
-        Registry.register(Registries.BLOCK, new Identifier(FloraAndFauna.NAMESPACE, "algae"), ALGAE);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "algae"), ALGAE);
 
         FlammableBlockRegistry.getDefaultInstance().add(TROPICAL_FERN, 60, 100);
         FlammableBlockRegistry.getDefaultInstance().add(LARGE_TROPICAL_FERN, 60, 100);

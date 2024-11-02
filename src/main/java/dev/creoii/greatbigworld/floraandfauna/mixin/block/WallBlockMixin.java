@@ -2,7 +2,7 @@ package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.creoii.creoapi.api.block.CreoBlock;
+import dev.creoii.greatbigworld.block.OverlayState;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Map;
 
 @Mixin(WallBlock.class)
-public abstract class WallBlockMixin extends Block implements Waterloggable, CreoBlock {
+public abstract class WallBlockMixin extends Block implements Waterloggable, OverlayState {
     public WallBlockMixin(Settings settings) {
         super(settings);
     }

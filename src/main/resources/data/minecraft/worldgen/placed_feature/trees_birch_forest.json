@@ -21,7 +21,7 @@
       "type": "minecraft:in_square"
     },
     {
-      "type": "creo:noise",
+      "type": "great_big_world:noise",
       "noise": "great_big_world:forest_trees",
       "min_threshold": -2.0,
       "max_threshold": 0.4

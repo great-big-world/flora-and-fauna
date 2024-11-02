@@ -1,6 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.client;
 
-import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
+import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.client.compat.SodiumClientCompat;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaItems;
@@ -24,7 +24,7 @@ public class FloraAndFaunaClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         if (SODIUM_LOADED)
-            FloraAndFauna.LOGGER.log(Level.INFO, "Sodium detected, modifying season sync color rebuilds.");
+            GreatBigWorld.LOGGER.log(Level.INFO, "Sodium detected, modifying season sync color rebuilds.");
 
         FloraAndFaunaBlocks.registerClient();
         FloraAndFaunaItems.registerClient();

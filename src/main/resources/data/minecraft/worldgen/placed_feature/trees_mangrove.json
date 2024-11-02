@@ -9,21 +9,21 @@
       "type": "minecraft:in_square"
     },
     {
-      "type": "creo:any_of",
+      "type": "great_big_world:any_of",
       "placements": [
         {
           "type": "minecraft:surface_water_depth_filter",
           "max_water_depth": 0
         },
         {
-          "type": "creo:all_of",
+          "type": "great_big_world:all_of",
           "placements": [
             {
               "type": "minecraft:surface_water_depth_filter",
               "max_water_depth": 5
             },
             {
-              "type": "creo:noise",
+              "type": "great_big_world:noise",
               "noise": "great_big_world:forest_trees",
               "min_threshold": -2.0,
               "max_threshold": 0.0

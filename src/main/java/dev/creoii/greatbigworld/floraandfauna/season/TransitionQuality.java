@@ -47,7 +47,7 @@ public enum TransitionQuality implements TranslatableOption, StringIdentifiable 
     }
 
     public record SyncTransitionQuality(byte quality) implements CustomPayload {
-        public static final CustomPayload.Id<SyncTransitionQuality> PACKET_ID = new CustomPayload.Id<>(new Identifier(GreatBigWorld.NAMESPACE, "sync_season_transition_quality"));
+        public static final CustomPayload.Id<SyncTransitionQuality> PACKET_ID = new CustomPayload.Id<>(Identifier.of(GreatBigWorld.NAMESPACE, "sync_season_transition_quality"));
         public static final PacketCodec<RegistryByteBuf, SyncTransitionQuality> PACKET_CODEC = PacketCodec.of(SyncTransitionQuality::write, SyncTransitionQuality::new);
 
         public SyncTransitionQuality(RegistryByteBuf buf) {

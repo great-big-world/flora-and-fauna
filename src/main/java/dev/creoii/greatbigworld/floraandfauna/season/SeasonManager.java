@@ -167,7 +167,7 @@ public class SeasonManager extends PersistentState {
     }
 
     public record SyncSeason(byte season) implements CustomPayload {
-        public static final CustomPayload.Id<SyncSeason> PACKET_ID = new CustomPayload.Id<>(new Identifier(GreatBigWorld.NAMESPACE, "sync_season"));
+        public static final CustomPayload.Id<SyncSeason> PACKET_ID = new CustomPayload.Id<>(Identifier.of(GreatBigWorld.NAMESPACE, "sync_season"));
         public static final PacketCodec<RegistryByteBuf, SyncSeason> PACKET_CODEC = PacketCodec.of(SyncSeason::write, SyncSeason::new);
 
         public SyncSeason(RegistryByteBuf buf) {
@@ -185,7 +185,7 @@ public class SeasonManager extends PersistentState {
     }
 
     public record SyncSeasonTransition(byte[] context) implements CustomPayload {
-        public static final CustomPayload.Id<SyncSeasonTransition> PACKET_ID = new CustomPayload.Id<>(new Identifier(GreatBigWorld.NAMESPACE, "sync_season_color"));
+        public static final CustomPayload.Id<SyncSeasonTransition> PACKET_ID = new CustomPayload.Id<>(Identifier.of(GreatBigWorld.NAMESPACE, "sync_season_color"));
         public static final PacketCodec<RegistryByteBuf, SyncSeasonTransition> PACKET_CODEC = PacketCodec.of(SyncSeasonTransition::write, SyncSeasonTransition::new);
 
         public SyncSeasonTransition(TransitionContext context) {

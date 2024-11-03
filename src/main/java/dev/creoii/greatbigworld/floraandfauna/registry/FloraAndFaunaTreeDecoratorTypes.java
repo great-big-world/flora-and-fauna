@@ -16,8 +16,8 @@ public final class FloraAndFaunaTreeDecoratorTypes {
     public static final TreeDecoratorType<AlterGroundTreeDecorator> ALTER_GROUND = new TreeDecoratorType<>(AlterGroundTreeDecorator.CODEC);
 
     public static void register() {
-        Registry.register(Registries.TREE_DECORATOR_TYPE, new Identifier(GreatBigWorld.NAMESPACE, "branch"), BRANCH);
-        Registry.register(Registries.TREE_DECORATOR_TYPE, new Identifier(GreatBigWorld.NAMESPACE, "moss"), MOSS);
-        Registry.register(Registries.TREE_DECORATOR_TYPE, new Identifier(GreatBigWorld.NAMESPACE, "alter_ground"), ALTER_GROUND);
+        Registry.register(Registries.TREE_DECORATOR_TYPE, Identifier.of(GreatBigWorld.NAMESPACE, "branch"), BRANCH);
+        Registry.register(Registries.TREE_DECORATOR_TYPE, Identifier.of(GreatBigWorld.NAMESPACE, "moss"), MOSS);
+        Registry.register(Registries.TREE_DECORATOR_TYPE, Identifier.of(GreatBigWorld.NAMESPACE, "alter_ground"), ALTER_GROUND);
     }
 }

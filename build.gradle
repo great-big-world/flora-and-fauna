@@ -21,7 +21,7 @@ configurations {
 }
 
 dependencies {
-    modCompileOnly "maven.modrinth:sodium:mc$project.minecraft_version-0.5.11"
-    modCompileOnly "maven.modrinth:visuality:0.7.4+1.20.5"
+    modCompileOnly "maven.modrinth:sodium:mc1.21.1-0.6.0-beta.4-fabric"
+    modCompileOnly "maven.modrinth:visuality:0.7.7+1.21"
     common(project(path: ':core', configuration: 'namedElements')) { transitive false }
 }

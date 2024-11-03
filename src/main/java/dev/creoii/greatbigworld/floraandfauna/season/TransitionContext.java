@@ -1,6 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.season;
 
-import dev.creoii.greatbigworld.floraandfauna.util.ColorHelper;
+import dev.creoii.greatbigworld.util.ColorHelper;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.BlockPos;

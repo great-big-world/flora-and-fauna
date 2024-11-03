@@ -1,9 +1,9 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium;
 
 import dev.creoii.greatbigworld.floraandfauna.util.RenderSectionManagerInvoker;
-import me.jellysquid.mods.sodium.client.render.chunk.RenderSection;
-import me.jellysquid.mods.sodium.client.render.chunk.RenderSectionManager;
-import me.jellysquid.mods.sodium.client.render.chunk.occlusion.GraphDirection;
+import net.caffeinemc.mods.sodium.client.render.chunk.RenderSection;
+import net.caffeinemc.mods.sodium.client.render.chunk.RenderSectionManager;
+import net.caffeinemc.mods.sodium.client.render.chunk.occlusion.GraphDirection;
 import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

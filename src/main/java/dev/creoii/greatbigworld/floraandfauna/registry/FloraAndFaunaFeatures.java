@@ -15,7 +15,7 @@ public class FloraAndFaunaFeatures {
     public static final Feature<FallenTreeFeatureConfig> FALLEN_TREE = new FallenTreeFeature(FallenTreeFeatureConfig.CODEC);
 
     public static void register() {
-        Registry.register(Registries.FEATURE, new Identifier(GreatBigWorld.NAMESPACE, "freeze_top_layer"), FREEZE_TOP_LAYER);
-        Registry.register(Registries.FEATURE, new Identifier(GreatBigWorld.NAMESPACE, "fallen_tree"), FALLEN_TREE);
+        Registry.register(Registries.FEATURE, Identifier.of(GreatBigWorld.NAMESPACE, "freeze_top_layer"), FREEZE_TOP_LAYER);
+        Registry.register(Registries.FEATURE, Identifier.of(GreatBigWorld.NAMESPACE, "fallen_tree"), FALLEN_TREE);
     }
 }

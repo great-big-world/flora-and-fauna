@@ -13,7 +13,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.dimension.DimensionTypes;
 
 public class FloraAndFauna implements ModInitializer {
-
     @Override
     public void onInitialize() {
         FloraAndFaunaBlocks.register();

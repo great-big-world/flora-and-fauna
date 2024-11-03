@@ -119,7 +119,7 @@ public class SeasonManager extends PersistentState {
     public void updateSeasonTime(ServerWorld world) {
         seasonLength = world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH);
         seasonTransitionLength = seasonLength / 3;
-        seasonTransitionIncrement = seasonTransitionLength / seasonTransitionQuality;
+        seasonTransitionIncrement = Math.max(1, seasonTransitionLength / seasonTransitionQuality);
         seasonTransitionIncrementAmount = (float) seasonTransitionIncrement / seasonTransitionLength;
     }
 

@@ -3,12 +3,14 @@ package dev.creoii.greatbigworld.floraandfauna;
 import dev.creoii.greatbigworld.floraandfauna.registry.*;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.season.TransitionQuality;
+import dev.creoii.greatbigworld.mixin.AbstractBlockStateAccessor;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.Blocks;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.dimension.DimensionTypes;
 
@@ -53,6 +55,6 @@ public class FloraAndFauna implements ModInitializer {
             }
         });
 
-        //BlockModification.INSTANCE.setLuminance(Blocks.BROWN_MUSHROOM, 0);
+        ((AbstractBlockStateAccessor) Blocks.BROWN_MUSHROOM.getDefaultState()).setLuminance(0);
     }
 }

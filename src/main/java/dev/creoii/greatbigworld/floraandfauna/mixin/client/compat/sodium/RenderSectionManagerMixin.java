@@ -4,7 +4,6 @@ import dev.creoii.greatbigworld.floraandfauna.util.RenderSectionManagerInvoker;
 import net.caffeinemc.mods.sodium.client.render.chunk.RenderSection;
 import net.caffeinemc.mods.sodium.client.render.chunk.RenderSectionManager;
 import net.caffeinemc.mods.sodium.client.render.chunk.occlusion.GraphDirection;
-import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -14,7 +13,7 @@ public abstract class RenderSectionManagerMixin implements RenderSectionManagerI
 
     @Override
     public void gbw$connectNeighborNodes(RenderSection render) {
-        for (int direction = 0; direction < Direction.values().length; ++direction) {
+        for (int direction = 0; direction < 6; ++direction) {
             RenderSection adjacent = getRenderSection(render.getChunkX() + GraphDirection.x(direction), render.getChunkY() + GraphDirection.y(direction), render.getChunkZ() + GraphDirection.z(direction));
             if (adjacent != null) {
                 adjacent.setAdjacentNode(GraphDirection.opposite(direction), render);

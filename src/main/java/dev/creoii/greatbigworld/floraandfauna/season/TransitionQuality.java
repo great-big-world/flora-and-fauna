@@ -14,9 +14,9 @@ import net.minecraft.util.TranslatableOption;
 
 @Environment(EnvType.CLIENT)
 public enum TransitionQuality implements TranslatableOption, StringIdentifiable {
-    HIGH(40, "options.seasonTransitionQuality.high"),
-    NORMAL(25, "options.seasonTransitionQuality.normal"),
-    LOW(10, "options.seasonTransitionQuality.low"),
+    HIGH(36, "options.seasonTransitionQuality.high"),
+    NORMAL(22, "options.seasonTransitionQuality.normal"),
+    LOW(8, "options.seasonTransitionQuality.low"),
     INSTANT(1, "options.seasonTransitionQuality.instant");
 
     public static final Codec<TransitionQuality> CODEC = StringIdentifiable.createCodec(TransitionQuality::values);
@@ -32,6 +32,7 @@ public enum TransitionQuality implements TranslatableOption, StringIdentifiable 
         return quality;
     }
 
+    @Override
     public String getTranslationKey() {
         return translationKey;
     }

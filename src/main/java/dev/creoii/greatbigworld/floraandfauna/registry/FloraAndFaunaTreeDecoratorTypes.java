@@ -1,7 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.registry;
 
 import dev.creoii.greatbigworld.GreatBigWorld;
-import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import dev.creoii.greatbigworld.floraandfauna.world.decorator.AlterGroundTreeDecorator;
 import dev.creoii.greatbigworld.floraandfauna.world.decorator.BranchTreeDecorator;
 import dev.creoii.greatbigworld.floraandfauna.world.decorator.MossTreeDecorator;

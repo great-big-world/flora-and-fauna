@@ -17,13 +17,9 @@ public abstract class GameOptionsMixin implements ExtendedGameOptions {
             "options.seasonTransitionQuality",
             SimpleOption.emptyTooltip(),
             SimpleOption.enumValueText(),
-            new SimpleOption.PotentialValuesBasedCallbacks<>(
-                    Arrays.asList(TransitionQuality.values()),
-                    TransitionQuality.CODEC
-            ),
+            new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(TransitionQuality.values()), TransitionQuality.CODEC),
             TransitionQuality.NORMAL,
-            value -> ClientPlayNetworking.send(new TransitionQuality.SyncTransitionQuality((byte) gbw$getSeasonTransitionQuality().getValue().getQuality()))
-    );
+            value -> ClientPlayNetworking.send(new TransitionQuality.SyncTransitionQuality((byte) gbw$getSeasonTransitionQuality().getValue().getQuality())));
 
     @Override
     public SimpleOption<TransitionQuality> gbw$getSeasonTransitionQuality() {

@@ -2,7 +2,6 @@ package dev.creoii.greatbigworld.floraandfauna.season;
 
 import com.mojang.serialization.Codec;
 import dev.creoii.greatbigworld.GreatBigWorld;
-import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.RegistryByteBuf;

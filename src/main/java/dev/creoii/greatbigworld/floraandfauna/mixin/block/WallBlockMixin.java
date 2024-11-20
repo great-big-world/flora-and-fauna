@@ -1,7 +1,5 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.creoii.greatbigworld.block.OverlayState;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
@@ -9,21 +7,18 @@ import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.Items;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.LightType;
 import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Map;
 
 @Mixin(WallBlock.class)
 public abstract class WallBlockMixin extends Block implements Waterloggable, OverlayState {
@@ -34,35 +29,6 @@ public abstract class WallBlockMixin extends Block implements Waterloggable, Ove
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gbw$setSnowyDefaultState(Settings settings, CallbackInfo ci) {
         setDefaultState(getStateManager().getDefaultState().with(SnowyHelper.SNOW_LAYERS, 0));
-    }
-
-    @WrapOperation(method = "getShapeMap", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/WallBlock;getDefaultState()Lnet/minecraft/block/BlockState;"))
-    private BlockState gbw$fixShapeMapForSnowLayers(WallBlock instance, Operation<BlockState> original) {
-        return original.call(instance).with(SnowyHelper.SNOW_LAYERS, 0);
-    }
-
-    @WrapOperation(method = "getCollisionShape", at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"))
-    private <V> V gbw$modifyCollisionState(Map<BlockState, VoxelShape> instance, Object object, Operation<V> original) {
-        return original.call(instance, ((BlockState) object).with(SnowyHelper.SNOW_LAYERS, 0));
-    }
-
-    /*@Redirect(method = "getShapeMap", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;"), remap = false)
-    private <K, V> ImmutableMap.Builder<BlockState, VoxelShape> gbw$addSnowyPropertyToShapeMap(ImmutableMap.Builder<BlockState, VoxelShape> instance, K key, V value) {
-        for (int i : SnowyHelper.SNOW_LAYERS.getValues()) {
-            BlockState state = ((BlockState) key).with(SnowyHelper.SNOW_LAYERS, i);
-            if (SnowyHelper.isSnowy(state)) {
-                instance.put(state, VoxelShapes.union((VoxelShape) value, SnowyHelper.getSnowShape(state)));
-            } else instance.put(state, (VoxelShape) value);
-        }
-        return instance;
-    }*/
-
-    @Inject(method = "getPlacementState", at = @At("RETURN"), cancellable = true)
-    private void gbw$applyFenceGateSnowPlacementState(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir) {
-        BlockState state = ctx.getWorld().getBlockState(ctx.getBlockPos());
-        if (state.isOf(Blocks.SNOW)) {
-            cir.setReturnValue(cir.getReturnValue().with(SnowyHelper.SNOW_LAYERS, state.get(SnowBlock.LAYERS)));
-        }
     }
 
     @Inject(method = "appendProperties", at = @At("TAIL"))
@@ -77,8 +43,13 @@ public abstract class WallBlockMixin extends Block implements Waterloggable, Ove
         if (world.getLightLevel(LightType.BLOCK, pos) > 11 || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos))) {
             if (state.get(SnowyHelper.SNOW_LAYERS) > 0)
                 dropStacks(Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS)), world, pos);
+
             world.setBlockState(pos, state.with(SnowyHelper.SNOW_LAYERS, 0));
         }
+    }
+
+    public boolean canReplace(BlockState state, ItemPlacementContext context) {
+        return (context.getStack().isOf(Items.SNOW) && state.get(SnowyHelper.SNOW_LAYERS) < 8) || super.canReplace(state, context);
     }
 
     @Override

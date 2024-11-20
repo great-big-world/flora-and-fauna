@@ -33,10 +33,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(FlowerBlock.class)
 public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousStewIngredient, OverlayState {
-    @Unique
-    private static final IntProperty FLOWERS = IntProperty.of("flowers", 1, 4);
-    @Unique
-    private static final VoxelShape LARGE_SHAPE = Block.createCuboidShape(3.5d, 0d, 3.5d, 12.5d, 10d, 12.5d);
+    @Unique private static final IntProperty FLOWERS = IntProperty.of("flowers", 1, 4);
+    @Unique private static final VoxelShape LARGE_SHAPE = Block.createCuboidShape(3.5d, 0d, 3.5d, 12.5d, 10d, 12.5d);
 
     protected FlowerBlockMixin(Settings settings) {
         super(settings);

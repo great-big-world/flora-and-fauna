@@ -23,10 +23,10 @@ public final class SnowyHelper {
     }
 
     public static void tickSnowUnderLeaves(World world, BlockState state, BlockPos pos) {
-        if (state.get(SnowyHelper.SNOW_LAYERS) == 0) {
-            int i = state.get(SnowyHelper.SNOW_LAYERS);
+        if (state.get(SNOW_LAYERS) == 0) {
+            int i = state.get(SNOW_LAYERS);
             if (i < Math.min(world.getGameRules().getInt(GameRules.SNOW_ACCUMULATION_HEIGHT), 8)) {
-                BlockState blockState2 = state.with(SnowyHelper.SNOW_LAYERS, i + 1);
+                BlockState blockState2 = state.with(SNOW_LAYERS, i + 1);
                 Block.pushEntitiesUpBeforeBlockChange(state, blockState2, world, pos);
                 world.setBlockState(pos, blockState2);
             }

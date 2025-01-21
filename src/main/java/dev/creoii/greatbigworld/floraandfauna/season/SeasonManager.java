@@ -59,7 +59,7 @@ public class SeasonManager extends PersistentState {
     public void load(ServerWorld world) {
         server = world.getServer();
         updateSeasonTime(world);
-        syncAll(server);
+        syncWorld(world);
     }
 
     public void tick(ServerWorld world) {
@@ -143,6 +143,13 @@ public class SeasonManager extends PersistentState {
 
     public void syncAll(MinecraftServer server) {
         PlayerLookup.all(server).forEach(serverPlayer -> {
+            ServerPlayNetworking.send(serverPlayer, new SyncSeason((byte) currentSeason.ordinal()));
+            ServerPlayNetworking.send(serverPlayer, new SyncSeasonTransition(context));
+        });
+    }
+
+    public void syncWorld(ServerWorld world) {
+        PlayerLookup.world(world).forEach(serverPlayer -> {
             ServerPlayNetworking.send(serverPlayer, new SyncSeason((byte) currentSeason.ordinal()));
             ServerPlayNetworking.send(serverPlayer, new SyncSeasonTransition(context));
         });

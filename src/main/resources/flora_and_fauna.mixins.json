@@ -16,7 +16,6 @@
     "block.SnowBlockMixin",
     "block.SnowyBlockMixin",
     "block.TallPlantBlockMixin",
-    "block.WallBlockMixin",
     "entity.AnimalEntityMixin",
     "entity.EscapeDangerGoalMixin",
     "entity.LivingEntityMixin",

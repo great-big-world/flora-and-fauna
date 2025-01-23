@@ -11,11 +11,13 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -83,6 +85,22 @@ public abstract class TallPlantBlockMixin extends PlantBlock implements OverlayS
                 dropStacks(Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS)), world, pos);
             world.setBlockState(pos, state.with(SnowyHelper.SNOW_LAYERS, 0));
         }
+    }
+
+    @Override
+    public boolean canReplace(BlockState state, ItemPlacementContext context) {
+        int i = state.get(SnowyHelper.SNOW_LAYERS);
+        BlockState down = context.getWorld().getBlockState(context.getBlockPos().down());
+        if (state.get(HALF) == DoubleBlockHalf.LOWER) {
+            if (context.getStack().isOf(Items.SNOW) && i < 8) {
+                return true;
+            } else return i == 1;
+        } else if (down.isOf(this) && down.get(SnowyHelper.SNOW_LAYERS) == 8) {
+            if (context.getStack().isOf(Items.SNOW) && i < 8) {
+                return true;
+            } else return i == 1;
+        }
+        return false;
     }
 
     @Override

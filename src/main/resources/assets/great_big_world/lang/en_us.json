@@ -50,6 +50,11 @@
   "gamerule.doSeasonCycle": "Advance seasons",
   "gamerule.seasonLength": "Length of seasons in ticks",
 
+  "season.autumn": "Autumn",
+  "season.winter": "Winter",
+  "season.spring": "Spring",
+  "season.summer": "Summer",
+
   "options.seasonTransitionQuality": "Season Change Quality",
   "options.seasonTransitionQuality.high": "High",
   "options.seasonTransitionQuality.normal": "Normal",

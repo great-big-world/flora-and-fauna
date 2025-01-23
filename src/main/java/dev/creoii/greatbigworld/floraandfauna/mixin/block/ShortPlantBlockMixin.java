@@ -68,9 +68,12 @@ public abstract class ShortPlantBlockMixin extends PlantBlock implements Fertili
     @Override
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
         int i = state.get(SnowyHelper.SNOW_LAYERS);
-        if (context.getStack().isOf(Items.SNOW) && i < 8) {
-            return true;
-        } else return i == 1;
+        if (i > 0) {
+            if (context.getStack().isOf(Items.SNOW) && i < 8) {
+                return true;
+            } else return i == 1;
+        }
+        return super.canReplace(state, context);
     }
 
     @Override

@@ -90,17 +90,19 @@ public abstract class TallPlantBlockMixin extends PlantBlock implements OverlayS
     @Override
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
         int i = state.get(SnowyHelper.SNOW_LAYERS);
-        BlockState down = context.getWorld().getBlockState(context.getBlockPos().down());
-        if (state.get(HALF) == DoubleBlockHalf.LOWER) {
-            if (context.getStack().isOf(Items.SNOW) && i < 8) {
-                return true;
-            } else return i == 1;
-        } else if (down.isOf(this) && down.get(SnowyHelper.SNOW_LAYERS) == 8) {
-            if (context.getStack().isOf(Items.SNOW) && i < 8) {
-                return true;
-            } else return i == 1;
+        if (i > 0) {
+            BlockState down = context.getWorld().getBlockState(context.getBlockPos().down());
+            if (state.get(HALF) == DoubleBlockHalf.LOWER) {
+                if (context.getStack().isOf(Items.SNOW) && i < 8) {
+                    return true;
+                } else return i == 1;
+            } else if (down.isOf(this) && down.get(SnowyHelper.SNOW_LAYERS) == 8) {
+                if (context.getStack().isOf(Items.SNOW) && i < 8) {
+                    return true;
+                } else return i == 1;
+            }
         }
-        return false;
+        return super.canReplace(state, context);
     }
 
     @Override

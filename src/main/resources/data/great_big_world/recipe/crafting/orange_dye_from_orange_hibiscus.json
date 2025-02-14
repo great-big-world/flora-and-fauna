@@ -3,9 +3,7 @@
   "category": "misc",
   "group": "orange_dye",
   "ingredients": [
-    {
-      "item": "great_big_world:orange_hibiscus"
-    }
+    "great_big_world:orange_hibiscus"
   ],
   "result": {
     "id": "minecraft:orange_dye"

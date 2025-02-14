@@ -3,9 +3,7 @@
   "category": "building",
   "group": "planks",
   "ingredients": [
-    {
-      "tag": "great_big_world:hollow_mangrove_logs"
-    }
+    "#great_big_world:hollow_mangrove_logs"
   ],
   "result": {
     "id": "minecraft:mangrove_planks",

@@ -3,9 +3,7 @@
   "category": "building",
   "group": "planks",
   "ingredients": [
-    {
-      "tag": "great_big_world:hollow_warped_stems"
-    }
+    "#great_big_world:hollow_warped_stems"
   ],
   "result": {
     "id": "minecraft:warped_planks",

@@ -3,9 +3,7 @@
   "category": "building",
   "group": "planks",
   "ingredients": [
-    {
-      "tag": "great_big_world:hollow_crimson_stems"
-    }
+    "#great_big_world:hollow_crimson_stems"
   ],
   "result": {
     "id": "minecraft:crimson_planks",

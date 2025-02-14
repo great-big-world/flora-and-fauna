@@ -3,10 +3,10 @@
   "category": "building",
   "group": "planks",
   "ingredients": [
-    "#great_big_world:hollow_cherry_logs"
+    "#great_big_world:hollow_pale_oak_logs"
   ],
   "result": {
-    "id": "minecraft:oak_planks",
+    "id": "minecraft:pale_oak_planks",
     "count": 2
   }
 }

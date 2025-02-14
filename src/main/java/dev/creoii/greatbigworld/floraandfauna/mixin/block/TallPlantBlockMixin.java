@@ -48,7 +48,10 @@ public abstract class TallPlantBlockMixin extends PlantBlock implements OverlayS
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gbw$setSnowyDefaultState(Settings settings, CallbackInfo ci) {
-        setDefaultState(stateManager.getDefaultState().with(HALF, DoubleBlockHalf.LOWER).with(SnowyHelper.SNOW_LAYERS, 0));
+        BlockState defaultState = getStateManager().getDefaultState().with(HALF, DoubleBlockHalf.LOWER);
+        if (defaultState.contains(SnowyHelper.SNOW_LAYERS))
+            setDefaultState(defaultState.with(SnowyHelper.SNOW_LAYERS, 0));
+        else setDefaultState(defaultState);
     }
 
     @Inject(method = "getPlacementState", at = @At("RETURN"), cancellable = true)

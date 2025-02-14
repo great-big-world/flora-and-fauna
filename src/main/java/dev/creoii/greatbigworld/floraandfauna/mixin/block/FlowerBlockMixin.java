@@ -47,7 +47,10 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
 
     @Inject(method = "<init>(Lnet/minecraft/component/type/SuspiciousStewEffectsComponent;Lnet/minecraft/block/AbstractBlock$Settings;)V", at = @At("TAIL"))
     private void gbw$setSnowyDefaultState(SuspiciousStewEffectsComponent stewEffects, Settings settings, CallbackInfo ci) {
-        setDefaultState(getStateManager().getDefaultState().with(FLOWERS, 1).with(SnowyHelper.SNOW_LAYERS, 0));
+        BlockState defaultState = getStateManager().getDefaultState().with(FLOWERS, 1);
+        if (defaultState.contains(SnowyHelper.SNOW_LAYERS))
+            setDefaultState(defaultState.with(SnowyHelper.SNOW_LAYERS, 0));
+        else setDefaultState(defaultState);
     }
 
     @Inject(method = "getOutlineShape", at = @At("RETURN"), cancellable = true)

@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import dev.creoii.greatbigworld.block.OverlayState;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
+import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaProperties;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
 import net.minecraft.block.*;
@@ -14,7 +15,6 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -33,7 +33,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(FlowerBlock.class)
 public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousStewIngredient, OverlayState {
-    @Unique private static final IntProperty FLOWERS = IntProperty.of("flowers", 1, 4);
     @Unique private static final VoxelShape LARGE_SHAPE = Block.createCuboidShape(3.5d, 0d, 3.5d, 12.5d, 10d, 12.5d);
 
     protected FlowerBlockMixin(Settings settings) {
@@ -50,8 +49,8 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
         BlockState defaultState = getStateManager().getDefaultState();
         if (defaultState.contains(SnowyHelper.SNOW_LAYERS))
             defaultState = defaultState.with(SnowyHelper.SNOW_LAYERS, 0);
-        if (defaultState.contains(FLOWERS))
-            defaultState = defaultState.with(FLOWERS, 1);
+        if (defaultState.contains(FloraAndFaunaProperties.FLOWERS))
+            defaultState = defaultState.with(FloraAndFaunaProperties.FLOWERS, 1);
         setDefaultState(defaultState);
     }
 
@@ -61,7 +60,7 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
         if (SnowyHelper.isSnowy(state)) {
             snowShape = SnowyHelper.getSnowShape(state);
         }
-        cir.setReturnValue(VoxelShapes.union(state.get(FLOWERS) > 2 ? LARGE_SHAPE.offset(vec3d.x, vec3d.y, vec3d.z) : cir.getReturnValue(), snowShape));
+        cir.setReturnValue(VoxelShapes.union(state.get(FloraAndFaunaProperties.FLOWERS) > 2 ? LARGE_SHAPE.offset(vec3d.x, vec3d.y, vec3d.z) : cir.getReturnValue(), snowShape));
     }
 
     public boolean canPathfindThrough(BlockState state, NavigationType type) {
@@ -108,7 +107,7 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FLOWERS, SnowyHelper.SNOW_LAYERS);
+        builder.add(FloraAndFaunaProperties.FLOWERS, SnowyHelper.SNOW_LAYERS);
     }
 
     @Nullable
@@ -118,13 +117,13 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
         if (state.isOf(Blocks.SNOW)) {
             return getDefaultState().with(SnowyHelper.SNOW_LAYERS, state.get(SnowBlock.LAYERS));
         } else if (state.isOf(this)) {
-            return state.with(FLOWERS, Math.min(4, state.get(FLOWERS) + 1));
+            return state.with(FloraAndFaunaProperties.FLOWERS, Math.min(4, state.get(FloraAndFaunaProperties.FLOWERS) + 1));
         }
         return super.getPlacementState(ctx);
     }
 
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
-        return !context.shouldCancelInteraction() && ((context.getStack().isOf(asItem()) && state.get(FLOWERS) < 4) || (context.getStack().isOf(Items.SNOW) && state.get(SnowyHelper.SNOW_LAYERS) < 8)) || super.canReplace(state, context);
+        return !context.shouldCancelInteraction() && ((context.getStack().isOf(asItem()) && state.get(FloraAndFaunaProperties.FLOWERS) < 4) || (context.getStack().isOf(Items.SNOW) && state.get(SnowyHelper.SNOW_LAYERS) < 8)) || super.canReplace(state, context);
     }
 
     @Override

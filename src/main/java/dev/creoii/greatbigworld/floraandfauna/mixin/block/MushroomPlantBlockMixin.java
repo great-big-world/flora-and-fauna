@@ -3,6 +3,7 @@ package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 import dev.creoii.greatbigworld.block.OverlayState;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
+import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaProperties;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
 import net.minecraft.block.*;
@@ -13,7 +14,6 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
@@ -33,8 +33,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(MushroomPlantBlock.class)
 public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fertilizable, OverlayState {
     @Unique
-    private static final IntProperty MUSHROOMS = IntProperty.of("mushrooms", 1, 4);
-    @Unique
     private static final VoxelShape LARGE_SHAPE = Block.createCuboidShape(3.5d, 0d, 3.5d, 12.5d, 10d, 12.5d);
 
     protected MushroomPlantBlockMixin(Settings settings) {
@@ -46,8 +44,8 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         BlockState defaultState = getStateManager().getDefaultState();
         if (defaultState.contains(SnowyHelper.SNOW_LAYERS))
             defaultState = defaultState.with(SnowyHelper.SNOW_LAYERS, 0);
-        if (defaultState.contains(MUSHROOMS))
-            defaultState = defaultState.with(MUSHROOMS, 1);
+        if (defaultState.contains(FloraAndFaunaProperties.MUSHROOMS))
+            defaultState = defaultState.with(FloraAndFaunaProperties.MUSHROOMS, 1);
         setDefaultState(defaultState);
     }
 
@@ -57,7 +55,7 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         if (SnowyHelper.isSnowy(state)) {
             snowShape = SnowyHelper.getSnowShape(state);
         }
-        cir.setReturnValue(VoxelShapes.union(state.get(MUSHROOMS) > 2 ? LARGE_SHAPE : cir.getReturnValue(), snowShape));
+        cir.setReturnValue(VoxelShapes.union(state.get(FloraAndFaunaProperties.MUSHROOMS) > 2 ? LARGE_SHAPE : cir.getReturnValue(), snowShape));
     }
 
     @Override
@@ -109,7 +107,7 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(MUSHROOMS, SnowyHelper.SNOW_LAYERS);
+        builder.add(FloraAndFaunaProperties.MUSHROOMS, SnowyHelper.SNOW_LAYERS);
     }
 
     @Nullable
@@ -119,14 +117,14 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
         if (state.isOf(Blocks.SNOW)) {
             return getDefaultState().with(SnowyHelper.SNOW_LAYERS, state.get(SnowBlock.LAYERS));
         } else if (state.isOf(this)) {
-            return state.with(MUSHROOMS, Math.min(4, state.get(MUSHROOMS) + 1));
+            return state.with(FloraAndFaunaProperties.MUSHROOMS, Math.min(4, state.get(FloraAndFaunaProperties.MUSHROOMS) + 1));
         }
         return super.getPlacementState(ctx);
     }
 
     @Override
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
-        return !context.shouldCancelInteraction() && ((context.getStack().isOf(asItem()) && state.get(MUSHROOMS) < 4) || (context.getStack().isOf(Items.SNOW) && state.get(SnowyHelper.SNOW_LAYERS) < 8)) || super.canReplace(state, context);
+        return !context.shouldCancelInteraction() && ((context.getStack().isOf(asItem()) && state.get(FloraAndFaunaProperties.MUSHROOMS) < 4) || (context.getStack().isOf(Items.SNOW) && state.get(SnowyHelper.SNOW_LAYERS) < 8)) || super.canReplace(state, context);
     }
 
     @Override

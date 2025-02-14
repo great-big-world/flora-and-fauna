@@ -2,6 +2,7 @@ package dev.creoii.greatbigworld.floraandfauna.world.feature;
 
 import com.mojang.serialization.Codec;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
+import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaProperties;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
 import net.minecraft.block.Block;
@@ -81,6 +82,18 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
             BlockPos pos = placementPositions.get(i);
 
             world.setBlockState(pos, state, Block.NOTIFY_ALL);
+
+            if (context.getRandom().nextFloat() > .075f) {
+                BlockState mushroomState = context.getRandom().nextBoolean() ? Blocks.RED_MUSHROOM.getDefaultState() : Blocks.BROWN_MUSHROOM.getDefaultState();
+
+                int count = 1;
+                for (int j = 0; j < 3; ++j) {
+                    if (context.getRandom().nextBoolean())
+                        ++count;
+                }
+
+                world.setBlockState(pos.up(), mushroomState.with(FloraAndFaunaProperties.MUSHROOMS, count), Block.NOTIFY_ALL);
+            }
 
             if (context.getRandom().nextFloat() > mossChance)
                 placeMoss = false;

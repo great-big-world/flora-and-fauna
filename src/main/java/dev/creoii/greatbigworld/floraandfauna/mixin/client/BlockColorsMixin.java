@@ -1,12 +1,13 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.client;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,19 +24,23 @@ public class BlockColorsMixin {
         }
     }
 
-    @Redirect(method = "method_1695", at = @At("RETURN"))
-    private static int gbw$modifySpruceColor(@Local(argsOnly = true) BlockState state, @Local(argsOnly = true) BlockRenderView world, @Local(argsOnly = true) BlockPos pos) {
-        if (FloraAndFaunaClient.getCurrentSeason() != null && FloraAndFaunaClient.getTransitionContext() != null && !state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
-            return FloraAndFaunaClient.getTransitionContext().getSeasonGrassColor(world, pos, -10380959);
-        }
-        return -10380959;
+    @Redirect(method = "create", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/color/block/BlockColors;registerColorProvider(Lnet/minecraft/client/color/block/BlockColorProvider;[Lnet/minecraft/block/Block;)V", ordinal = 3))
+    private static void gbw$modifySpruceColor(BlockColors instance, BlockColorProvider provider, Block[] blocks) {
+        instance.registerColorProvider((state, world, pos, tintIndex) -> {
+            if (FloraAndFaunaClient.getCurrentSeason() != null && FloraAndFaunaClient.getTransitionContext() != null && !state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
+                return FloraAndFaunaClient.getTransitionContext().getSeasonGrassColor(world, pos, -10380959);
+            }
+            return -10380959;
+        }, Blocks.SPRUCE_LEAVES);
     }
 
-    @Redirect(method = "method_1687", at = @At("RETURN"))
-    private static int gbw$modifyBirchColor(@Local(argsOnly = true) BlockState state, @Local(argsOnly = true) BlockRenderView world, @Local(argsOnly = true) BlockPos pos) {
-        if (FloraAndFaunaClient.getCurrentSeason() != null && FloraAndFaunaClient.getTransitionContext() != null && !state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
-            return FloraAndFaunaClient.getTransitionContext().getSeasonGrassColor(world, pos, -8345771);
-        }
-        return -8345771;
+    @Redirect(method = "create", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/color/block/BlockColors;registerColorProvider(Lnet/minecraft/client/color/block/BlockColorProvider;[Lnet/minecraft/block/Block;)V", ordinal = 4))
+    private static void gbw$modifyBirchColor(BlockColors instance, BlockColorProvider provider, Block[] blocks) {
+        instance.registerColorProvider((state, world, pos, tintIndex) -> {
+            if (FloraAndFaunaClient.getCurrentSeason() != null && FloraAndFaunaClient.getTransitionContext() != null && !state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
+                return FloraAndFaunaClient.getTransitionContext().getSeasonGrassColor(world, pos, -8345771);
+            }
+            return -8345771;
+        }, Blocks.BIRCH_LEAVES);
     }
 }

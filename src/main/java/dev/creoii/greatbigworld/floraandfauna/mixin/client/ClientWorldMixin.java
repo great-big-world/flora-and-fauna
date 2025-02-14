@@ -22,8 +22,8 @@ import java.util.function.Supplier;
 
 @Mixin(ClientWorld.class)
 public abstract class ClientWorldMixin extends World {
-    protected ClientWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
-        super(properties, registryRef, registryManager, dimensionEntry, profiler, isClient, debugWorld, biomeAccess, maxChainedNeighborUpdates);
+    protected ClientWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
+        super(properties, registryRef, registryManager, dimensionEntry, isClient, debugWorld, seed, maxChainedNeighborUpdates);
     }
 
     @Redirect(method = "calculateColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/ColorResolver;getColor(Lnet/minecraft/world/biome/Biome;DD)I"))

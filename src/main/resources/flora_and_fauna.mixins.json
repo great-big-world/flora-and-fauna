@@ -30,7 +30,7 @@
     "client.ClientWorldMixin",
     "client.GameOptionsMixin",
     "client.VideoOptionsScreenMixin",
-    "client.WorldRendererMixin",
+    "client.WeatherRenderingMixin",
     "client.compat.sodium.RenderSectionManagerAccessor",
     "client.compat.sodium.RenderSectionManagerMixin",
     "client.compat.sodium.SodiumWorldRendererAccessor",

@@ -97,8 +97,8 @@ public class FreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
     }
 
     public boolean canSetSnow(Biome biome, WorldView world, BlockPos pos) {
-        if (biome.doesNotSnow(pos)) {
+        if (biome.doesNotSnow(pos, world.getSeaLevel())) {
             return false;
-        } else return pos.getY() >= world.getBottomY() && pos.getY() < world.getTopY() && world.getLightLevel(LightType.BLOCK, pos) < 10;
+        } else return world.isInHeightLimit(pos.getY()) && world.getLightLevel(LightType.BLOCK, pos) < 10;
     }
 }

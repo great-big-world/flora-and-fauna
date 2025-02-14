@@ -22,7 +22,7 @@ public final class SnowyHelper {
         return LAYERS_TO_SHAPE[state.get(SNOW_LAYERS)];
     }
 
-    public static void tickSnowUnderLeaves(World world, BlockState state, BlockPos pos) {
+    public static void tickSnowUnderLeaves(ServerWorld world, BlockState state, BlockPos pos) {
         if (state.get(SNOW_LAYERS) == 0) {
             int i = state.get(SNOW_LAYERS);
             if (i < Math.min(world.getGameRules().getInt(GameRules.SNOW_ACCUMULATION_HEIGHT), 8)) {

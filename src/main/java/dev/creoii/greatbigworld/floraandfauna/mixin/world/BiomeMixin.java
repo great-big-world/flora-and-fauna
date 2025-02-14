@@ -18,27 +18,27 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Biome.class)
 public class BiomeMixin {
-    @WrapOperation(method = "canSetSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean gbw$modifyCanSetSnowForWinter(Biome instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) WorldView world) {
+    @WrapOperation(method = "canSetSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;I)Z"))
+    private boolean gbw$modifyCanSetSnowForWinter(Biome instance, BlockPos pos, int seaLevel, Operation<Boolean> original, @Local(argsOnly = true) WorldView world) {
         if (world.isClient())
-            return original.call(instance, pos) && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && pos.getY() >= world.getBottomY() && pos.getY() < world.getTopY() && world.getLightLevel(LightType.BLOCK, pos) < 10);
+            return original.call(instance, pos, seaLevel) && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && world.isInHeightLimit(pos.getY()) && world.getLightLevel(LightType.BLOCK, pos) < 10);
         else {
             if (world instanceof ServerWorld serverWorld) {
                 SeasonManager seasonManager = SeasonManager.getInstance(serverWorld.getServer());
-                return original.call(instance, pos) && (seasonManager.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && pos.getY() >= world.getBottomY() && pos.getY() < world.getTopY() && world.getLightLevel(LightType.BLOCK, pos) < 10);
-            } else return original.call(instance, pos);
+                return original.call(instance, pos, seaLevel) && (seasonManager.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && world.isInHeightLimit(pos.getY()) && world.getLightLevel(LightType.BLOCK, pos) < 10);
+            } else return original.call(instance, pos, seaLevel);
         }
     }
 
-    @WrapOperation(method = "canSetIce(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Z)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean gbw$modifyCanSetIceForWinter(Biome instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) WorldView world) {
+    @WrapOperation(method = "canSetIce(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Z)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;I)Z"))
+    private boolean gbw$modifyCanSetIceForWinter(Biome instance, BlockPos pos, int seaLevel, Operation<Boolean> original, @Local(argsOnly = true) WorldView world) {
         if (world.isClient())
-            return original.call(instance, pos) && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
+            return original.call(instance, pos, seaLevel) && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
         else {
             if (world instanceof ServerWorld serverWorld) {
                 SeasonManager seasonManager = SeasonManager.getInstance(serverWorld.getServer());
-                return original.call(instance, pos) && (seasonManager.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
-            } else return original.call(instance, pos);
+                return original.call(instance, pos, seaLevel) && (seasonManager.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
+            } else return original.call(instance, pos, seaLevel);
         }
     }
 }

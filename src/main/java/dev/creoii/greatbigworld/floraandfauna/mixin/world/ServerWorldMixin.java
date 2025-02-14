@@ -37,16 +37,17 @@ import java.util.function.Supplier;
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin extends World implements StructureWorldAccess {
     @Shadow @NotNull public abstract MinecraftServer getServer();
+    @Shadow public abstract GameRules getGameRules();
 
-    protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
-        super(properties, registryRef, registryManager, dimensionEntry, profiler, isClient, debugWorld, biomeAccess, maxChainedNeighborUpdates);
+    protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
+        super(properties, registryRef, registryManager, dimensionEntry, isClient, debugWorld, seed, maxChainedNeighborUpdates);
     }
 
     @Inject(method = "tickIceAndSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z", ordinal = 2), cancellable = true)
     private void gbw$tickSnowyBlocks(BlockPos pos, CallbackInfo ci, @Local(ordinal = 1) BlockPos blockPos) {
         BlockState state = getBlockState(blockPos);
         if (state.contains(SnowyHelper.SNOW_LAYERS)) {
-            SnowyHelper.tickSnowUnderLeaves(this, state, blockPos);
+            SnowyHelper.tickSnowUnderLeaves((ServerWorld) (Object) this, state, blockPos);
             ci.cancel();
         }
     }
@@ -75,7 +76,7 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
                         }
                     } else {
                         if (blockState1.contains(SnowyHelper.SNOW_LAYERS)) {
-                            SnowyHelper.tickSnowUnderLeaves(this, blockState1, top);
+                            SnowyHelper.tickSnowUnderLeaves((ServerWorld) (Object) this, blockState1, top);
                         } else setBlockState(top, Blocks.SNOW.getDefaultState());
                     }
                 }
@@ -86,13 +87,13 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
     @WrapOperation(method = "tickIceAndSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;canSetSnow(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean gbw$modifyCanSetIceForWinter(Biome instance, WorldView world, BlockPos pos, Operation<Boolean> original) {
         SeasonManager seasonManager = SeasonManager.getInstance(getServer());
-        return original.call(instance, world, pos) || (seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && pos.getY() >= world.getBottomY() && pos.getY() < world.getTopY() && world.getLightLevel(LightType.BLOCK, pos) < 10);
+        return original.call(instance, world, pos) || (seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && world.isInHeightLimit(pos.getY()) && world.getLightLevel(LightType.BLOCK, pos) < 10);
     }
 
-    @Redirect(method = "tickIceAndSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;"))
-    private Biome.Precipitation gbw$modifyTickIceAndSnowForWinter(Biome instance, BlockPos pos) {
+    @Redirect(method = "tickIceAndSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;I)Lnet/minecraft/world/biome/Biome$Precipitation;"))
+    private Biome.Precipitation gbw$modifyTickIceAndSnowForWinter(Biome instance, BlockPos pos, int seaLevel) {
         SeasonManager seasonManager = SeasonManager.getInstance(getServer());
-        return seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) ? Biome.Precipitation.SNOW : instance.getPrecipitation(pos);
+        return seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) ? Biome.Precipitation.SNOW : instance.getPrecipitation(pos, seaLevel);
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;wakeSleepingPlayers()V"))

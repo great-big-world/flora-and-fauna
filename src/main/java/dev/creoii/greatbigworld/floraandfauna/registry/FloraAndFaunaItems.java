@@ -114,11 +114,11 @@ public final class FloraAndFaunaItems {
 
     @Environment(EnvType.CLIENT)
     public static void registerClient() {
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
+        /*ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
             return ColorHelper.add(GrassColors.getColor(.5d, 1d), 50, 50, 0);
         }, TROPICAL_FERN, LARGE_TROPICAL_FERN);
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
             return ColorHelper.add(ColorProviderRegistry.ITEM.get(Items.SHORT_GRASS).getColor(stack, tintIndex), 50, 50, 0);
-        }, TROPICAL_FERN, LARGE_TROPICAL_FERN);
+        }, TROPICAL_FERN, LARGE_TROPICAL_FERN);*/
     }
 }

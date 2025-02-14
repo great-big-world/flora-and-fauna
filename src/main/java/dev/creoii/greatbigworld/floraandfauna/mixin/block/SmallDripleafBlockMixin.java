@@ -5,7 +5,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(SmallDripleafBlock.class)
 public abstract class SmallDripleafBlockMixin extends TallPlantBlock implements Fertilizable, Waterloggable {
     @Shadow @Final private static BooleanProperty WATERLOGGED;
-    @Shadow @Final public static DirectionProperty FACING;
+    @Shadow @Final public static EnumProperty<Direction> FACING;
 
     public SmallDripleafBlockMixin(Settings settings) {
         super(settings);

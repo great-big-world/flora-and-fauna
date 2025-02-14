@@ -43,7 +43,12 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gbw$setSnowyDefaultState(RegistryKey<ConfiguredFeature<?, ?>> featureKey, Settings settings, CallbackInfo ci) {
-        setDefaultState(getStateManager().getDefaultState().with(MUSHROOMS, 1).with(SnowyHelper.SNOW_LAYERS, 0));
+        BlockState defaultState = getStateManager().getDefaultState();
+        if (defaultState.contains(SnowyHelper.SNOW_LAYERS))
+            defaultState = defaultState.with(SnowyHelper.SNOW_LAYERS, 0);
+        if (defaultState.contains(MUSHROOMS))
+            defaultState = defaultState.with(MUSHROOMS, 1);
+        setDefaultState(defaultState);
     }
 
     @Inject(method = "getOutlineShape", at = @At("RETURN"), cancellable = true)

@@ -17,7 +17,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -48,7 +47,10 @@ public abstract class TallPlantBlockMixin extends PlantBlock implements OverlayS
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gbw$setSnowyDefaultState(Settings settings, CallbackInfo ci) {
-        setDefaultState(stateManager.getDefaultState().with(HALF, DoubleBlockHalf.LOWER).with(SnowyHelper.SNOW_LAYERS, 0));
+        BlockState defaultState = getStateManager().getDefaultState().with(HALF, DoubleBlockHalf.LOWER);
+        if (defaultState.contains(SnowyHelper.SNOW_LAYERS))
+            defaultState = defaultState.with(SnowyHelper.SNOW_LAYERS, 0);
+        setDefaultState(defaultState);
     }
 
     @Inject(method = "getPlacementState", at = @At("RETURN"), cancellable = true)

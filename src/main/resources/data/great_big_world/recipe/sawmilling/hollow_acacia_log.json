@@ -9,9 +9,7 @@
   ],
   "type": "great_big_world:sawmilling",
   "count": 1,
-  "ingredient": {
-    "item": "minecraft:acacia_log"
-  },
+  "ingredient": "minecraft:acacia_log",
   "result": {
     "id": "great_big_world:hollow_acacia_log"
   }

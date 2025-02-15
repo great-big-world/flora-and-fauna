@@ -9,9 +9,7 @@
   ],
   "type": "great_big_world:sawmilling",
   "count": 1,
-  "ingredient": {
-    "item": "minecraft:warped_stem"
-  },
+  "ingredient": "minecraft:warped_stem",
   "result": {
     "id": "great_big_world:hollow_warped_stem"
   }

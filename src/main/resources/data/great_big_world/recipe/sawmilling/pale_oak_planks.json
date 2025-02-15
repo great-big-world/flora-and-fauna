@@ -9,9 +9,7 @@
   ],
   "type": "great_big_world:sawmilling",
   "count": 2,
-  "ingredient": {
-    "tag": "great_big_world:hollow_pale_oak_logs"
-  },
+  "ingredient": "#great_big_world:hollow_pale_oak_logs",
   "result": {
     "id": "minecraft:pale_oak_planks"
   }

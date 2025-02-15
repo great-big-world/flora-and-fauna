@@ -9,9 +9,7 @@
   ],
   "type": "great_big_world:sawmilling",
   "count": 2,
-  "ingredient": {
-    "tag": "great_big_world:hollow_spruce_logs"
-  },
+  "ingredient": "#great_big_world:hollow_spruce_logs",
   "result": {
     "id": "minecraft:spruce_planks"
   }

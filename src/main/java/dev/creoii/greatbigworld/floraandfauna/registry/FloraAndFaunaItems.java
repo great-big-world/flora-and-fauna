@@ -96,6 +96,7 @@ public final class FloraAndFaunaItems {
             entries.addAfter(Items.ACACIA_LOG, HOLLOW_ACACIA_LOG, STRIPPED_HOLLOW_ACACIA_LOG);
             entries.addAfter(Items.MANGROVE_LOG, HOLLOW_MANGROVE_LOG, STRIPPED_HOLLOW_MANGROVE_LOG);
             entries.addAfter(Items.CHERRY_LOG, HOLLOW_CHERRY_LOG, STRIPPED_HOLLOW_CHERRY_LOG);
+            entries.addAfter(Items.PALE_OAK_LOG, HOLLOW_PALE_OAK_LOG, STRIPPED_HOLLOW_PALE_OAK_LOG);
             entries.addAfter(Items.WARPED_STEM, HOLLOW_WARPED_STEM, STRIPPED_HOLLOW_WARPED_STEM);
             entries.addAfter(Items.CRIMSON_STEM, HOLLOW_CRIMSON_STEM, STRIPPED_HOLLOW_CRIMSON_STEM);
             entries.addAfter(Items.LILY_PAD, ALGAE);

@@ -136,6 +136,7 @@ public final class FloraAndFaunaBlocks {
         FlammableBlockRegistry.getDefaultInstance().add(HOLLOW_ACACIA_LOG, 5, 5);
         FlammableBlockRegistry.getDefaultInstance().add(HOLLOW_MANGROVE_LOG, 5, 5);
         FlammableBlockRegistry.getDefaultInstance().add(HOLLOW_CHERRY_LOG, 5, 5);
+        FlammableBlockRegistry.getDefaultInstance().add(HOLLOW_PALE_OAK_LOG, 5, 5);
         FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_HOLLOW_OAK_LOG, 5, 5);
         FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_HOLLOW_SPRUCE_LOG, 5, 5);
         FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_HOLLOW_BIRCH_LOG, 5, 5);
@@ -144,6 +145,7 @@ public final class FloraAndFaunaBlocks {
         FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_HOLLOW_ACACIA_LOG, 5, 5);
         FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_HOLLOW_MANGROVE_LOG, 5, 5);
         FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_HOLLOW_CHERRY_LOG, 5, 5);
+        FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_HOLLOW_PALE_OAK_LOG, 5, 5);
 
         StrippableBlockRegistry.register(HOLLOW_OAK_LOG, STRIPPED_HOLLOW_OAK_LOG);
         StrippableBlockRegistry.register(HOLLOW_SPRUCE_LOG, STRIPPED_HOLLOW_SPRUCE_LOG);
@@ -153,6 +155,7 @@ public final class FloraAndFaunaBlocks {
         StrippableBlockRegistry.register(HOLLOW_DARK_OAK_LOG, STRIPPED_HOLLOW_DARK_OAK_LOG);
         StrippableBlockRegistry.register(HOLLOW_MANGROVE_LOG, STRIPPED_HOLLOW_MANGROVE_LOG);
         StrippableBlockRegistry.register(HOLLOW_CHERRY_LOG, STRIPPED_HOLLOW_CHERRY_LOG);
+        StrippableBlockRegistry.register(HOLLOW_PALE_OAK_LOG, STRIPPED_HOLLOW_PALE_OAK_LOG);
         StrippableBlockRegistry.register(HOLLOW_WARPED_STEM, STRIPPED_HOLLOW_WARPED_STEM);
         StrippableBlockRegistry.register(HOLLOW_CRIMSON_STEM, STRIPPED_HOLLOW_CRIMSON_STEM);
     }

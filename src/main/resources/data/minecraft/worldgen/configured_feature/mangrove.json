@@ -40,10 +40,6 @@
       {
         "type": "minecraft:beehive",
         "probability": 0.01
-      },
-      {
-        "type": "great_big_world:moss",
-        "probability": 0.2
       }
     ],
     "dirt_provider": {

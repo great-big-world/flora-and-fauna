@@ -22,10 +22,6 @@
         }
       },
       {
-        "type": "great_big_world:moss",
-        "probability": 0.2
-      },
-      {
         "type": "great_big_world:branch",
         "branch_count": {
           "type": "minecraft:uniform",

@@ -1,15 +1,10 @@
 package dev.creoii.greatbigworld.floraandfauna.registry;
 
 import dev.creoii.greatbigworld.GreatBigWorld;
-import dev.creoii.greatbigworld.util.ColorHelper;
 import dev.creoii.greatbigworld.util.RegistryHelper;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.GrassColors;
 
 public final class FloraAndFaunaItems {
     public static Item HUMUS;
@@ -101,15 +96,5 @@ public final class FloraAndFaunaItems {
             entries.addAfter(Items.CRIMSON_STEM, HOLLOW_CRIMSON_STEM, STRIPPED_HOLLOW_CRIMSON_STEM);
             entries.addAfter(Items.LILY_PAD, ALGAE);
         });
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static void registerClient() {
-        /*ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
-            return ColorHelper.add(GrassColors.getColor(.5d, 1d), 50, 50, 0);
-        }, TROPICAL_FERN, LARGE_TROPICAL_FERN);
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
-            return ColorHelper.add(ColorProviderRegistry.ITEM.get(Items.SHORT_GRASS).getColor(stack, tintIndex), 50, 50, 0);
-        }, TROPICAL_FERN, LARGE_TROPICAL_FERN);*/
     }
 }

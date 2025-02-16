@@ -27,7 +27,6 @@ public class FloraAndFaunaClient implements ClientModInitializer {
             GreatBigWorld.LOGGER.log(Level.INFO, "Sodium detected, modifying season sync color rebuilds.");
 
         FloraAndFaunaBlocks.registerClient();
-        FloraAndFaunaItems.registerClient();
 
         ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeason.PACKET_ID, (payload, context) -> {
             byte season = payload.season();

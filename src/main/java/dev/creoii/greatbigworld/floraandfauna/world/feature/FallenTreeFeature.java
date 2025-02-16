@@ -1,10 +1,8 @@
 package dev.creoii.greatbigworld.floraandfauna.world.feature;
 
 import com.mojang.serialization.Codec;
-import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaProperties;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
-import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -34,7 +32,6 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
         BlockState state = config.state().get(context.getRandom(), origin);
         @Nullable BlockState leafState = config.leafState().isPresent() ? config.leafState().get().get(context.getRandom(), origin) : null;
         int length = config.length().get(context.getRandom());
-        float mossChance = config.mossChance().get(context.getRandom()) / 100f;
         float leafChance = config.leafChance().isPresent() ? config.leafChance().get().get(context.getRandom()) / 100f : -1f;
 
         Direction direction = Direction.Type.HORIZONTAL.random(context.getRandom());
@@ -95,12 +92,10 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
                 world.setBlockState(pos.up(), mushroomState.with(FloraAndFaunaProperties.MUSHROOMS, count), Block.NOTIFY_ALL);
             }
 
-            if (context.getRandom().nextFloat() > mossChance)
-                placeMoss = false;
             if (leafChance == -1f || context.getRandom().nextFloat() > leafChance || leafState == null)
                 placeLeaves = false;
 
-            if (placeMoss || placeLeaves) {
+            if (placeLeaves) {
                 for (Direction direction1 : Direction.values()) {
                     if (direction1.getAxis() == direction.getAxis())
                         continue;
@@ -108,9 +103,9 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
                     BlockPos offset = pos.offset(direction1);
                     BlockState offsetState = world.getBlockState(offset);
                     if ((offsetState.isAir() || offsetState.isReplaceable()) && !world.isWater(offset)) {
-                        if (placeLeaves && i > placementPositions.size() / 2 && context.getRandom().nextFloat() < leafChance) {
+                        if (i > placementPositions.size() / 2 && context.getRandom().nextFloat() < leafChance) {
                             world.setBlockState(offset, leafState.with(LeavesBlock.DISTANCE, 1), 19);
-                        } else if (context.getRandom().nextFloat() < mossChance) world.setBlockState(offset, FloraAndFaunaBlocks.MOSS_CARPET.getDefaultState().with(Properties.FACING, direction1.getOpposite()).with(SnowyHelper.SNOW_LAYERS, world.getBlockState(offset).isOf(Blocks.SNOW) ? 1 : 0), 19);
+                        }
                     }
                 }
             }

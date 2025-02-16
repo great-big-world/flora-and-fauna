@@ -26,19 +26,6 @@
       "min_inclusive": 6,
       "max_inclusive": 9
     },
-    "moss_chance": {
-      "type": "minecraft:weighted_list",
-      "distribution": [
-        {
-          "weight": 6,
-          "data": 40
-        },
-        {
-          "weight": 1,
-          "data": 90
-        }
-      ]
-    },
     "leaf_chance": 65
   }
 }

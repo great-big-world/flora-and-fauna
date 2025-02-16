@@ -9,7 +9,7 @@ import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 import java.util.Optional;
 
-public record FallenTreeFeatureConfig(BlockStateProvider state, Optional<BlockStateProvider> leafState, IntProvider length, IntProvider mossChance, Optional<IntProvider> leafChance) implements FeatureConfig {
+public record FallenTreeFeatureConfig(BlockStateProvider state, Optional<BlockStateProvider> leafState, IntProvider length, Optional<IntProvider> leafChance) implements FeatureConfig {
     public static final Codec<FallenTreeFeatureConfig> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(BlockStateProvider.TYPE_CODEC.fieldOf("state").forGetter(config -> {
             return config.state;
@@ -17,8 +17,6 @@ public record FallenTreeFeatureConfig(BlockStateProvider state, Optional<BlockSt
             return Optional.ofNullable(config.state);
         }), IntProvider.createValidatingCodec(1, 16).fieldOf("length").forGetter(config -> {
             return config.length;
-        }), IntProvider.createValidatingCodec(0, 100).fieldOf("moss_chance").orElse(ConstantIntProvider.create(0)).forGetter(config -> {
-            return config.mossChance;
         }), IntProvider.createValidatingCodec(0, 100).optionalFieldOf("leaf_chance").orElse(Optional.ofNullable(ConstantIntProvider.create(0))).forGetter(config -> {
             return config.leafChance;
         })).apply(instance, FallenTreeFeatureConfig::new);

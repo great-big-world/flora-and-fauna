@@ -3,7 +3,6 @@ package dev.creoii.greatbigworld.floraandfauna.registry;
 import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.block.AlgaeBlock;
 import dev.creoii.greatbigworld.floraandfauna.block.HollowLogBlock;
-import dev.creoii.greatbigworld.floraandfauna.block.MossCarpetBlock;
 import dev.creoii.greatbigworld.util.ColorHelper;
 import dev.creoii.greatbigworld.util.RegistryHelper;
 import net.fabricmc.api.EnvType;
@@ -22,7 +21,6 @@ import net.minecraft.world.biome.GrassColors;
 
 public final class FloraAndFaunaBlocks {
     public static Block HUMUS;
-    public static Block MOSS_CARPET;
     public static Block TROPICAL_FERN;
     public static Block LARGE_TROPICAL_FERN;
     public static Block POTTED_TROPICAL_FERN;
@@ -68,7 +66,6 @@ public final class FloraAndFaunaBlocks {
 
     public static void register() {
         HUMUS = RegistryHelper.registerBlock(Identifier.of(GreatBigWorld.NAMESPACE, "humus"), SnowyBlock::new, AbstractBlock.Settings.copy(Blocks.GRASS_BLOCK).mapColor(MapColor.TERRACOTTA_BROWN));
-        MOSS_CARPET = RegistryHelper.registerBlock(Identifier.of(GreatBigWorld.NAMESPACE, "moss_carpet"), MossCarpetBlock::new, AbstractBlock.Settings.copy(Blocks.MOSS_CARPET));
 
         TROPICAL_FERN = RegistryHelper.registerBlock(Identifier.of(GreatBigWorld.NAMESPACE, "tropical_fern"), ShortPlantBlock::new, AbstractBlock.Settings.copy(Blocks.FERN));
         LARGE_TROPICAL_FERN = RegistryHelper.registerBlock(Identifier.of(GreatBigWorld.NAMESPACE, "large_tropical_fern"), TallFlowerBlock::new, AbstractBlock.Settings.copy(Blocks.LARGE_FERN));

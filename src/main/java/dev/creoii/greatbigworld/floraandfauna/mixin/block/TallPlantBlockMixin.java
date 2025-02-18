@@ -68,7 +68,7 @@ public abstract class TallPlantBlockMixin extends PlantBlock implements OverlayS
 
     @Inject(method = "onPlaced", at = @At("HEAD"), cancellable = true)
     private void gbw$fixSnowPlacementBug(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack, CallbackInfo ci) {
-        if (SnowyHelper.isSnowy(state)) {
+        if (SnowyHelper.isSnowy(state) && state.get(HALF) == DoubleBlockHalf.UPPER) {
             ci.cancel();
         }
     }
@@ -86,6 +86,11 @@ public abstract class TallPlantBlockMixin extends PlantBlock implements OverlayS
             if (state.get(SnowyHelper.SNOW_LAYERS) > 0)
                 dropStacks(Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS)), world, pos);
             world.setBlockState(pos, state.with(SnowyHelper.SNOW_LAYERS, 0));
+
+            BlockState up = world.getBlockState(pos.up());
+            if (state.get(HALF) == DoubleBlockHalf.LOWER && SnowyHelper.isSnowy(up)) {
+                world.setBlockState(pos.up(), up.with(SnowyHelper.SNOW_LAYERS, 0));
+            }
         }
     }
 

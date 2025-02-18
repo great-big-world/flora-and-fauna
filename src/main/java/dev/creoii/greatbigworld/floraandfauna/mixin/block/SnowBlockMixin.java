@@ -8,9 +8,11 @@ import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SnowBlock;
+import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LightType;
@@ -31,6 +33,14 @@ public abstract class SnowBlockMixin extends Block {
     @Inject(method = "getPlacementState", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
     private void gbw$layerSnow(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir, @Local BlockState blockState) {
         if (blockState.contains(SnowyHelper.SNOW_LAYERS)) {
+            BlockState down = ctx.getWorld().getBlockState(ctx.getBlockPos().down());
+            if (blockState.contains(Properties.DOUBLE_BLOCK_HALF) && down.contains(Properties.DOUBLE_BLOCK_HALF) && down.contains(SnowyHelper.SNOW_LAYERS)) {
+                if (blockState.get(Properties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER && down.get(SnowyHelper.SNOW_LAYERS) != 8) {
+                    return;
+                }
+            }
+
+            System.out.println("place");
             cir.setReturnValue(blockState.with(SnowyHelper.SNOW_LAYERS, Math.min(8, blockState.get(SnowyHelper.SNOW_LAYERS) + 1)));
         }
     }

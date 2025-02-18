@@ -15,6 +15,7 @@
     "block.SmallDripleafBlockMixin",
     "block.SnowBlockMixin",
     "block.SnowyBlockMixin",
+    "block.SugarCaneBlockMixin",
     "block.TallPlantBlockMixin",
     "entity.AnimalEntityMixin",
     "entity.EscapeDangerGoalMixin",

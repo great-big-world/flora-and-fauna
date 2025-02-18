@@ -17,6 +17,7 @@
     "block.SnowyBlockMixin",
     "block.SugarCaneBlockMixin",
     "block.TallPlantBlockMixin",
+    "client.compat.particlerain.WeatherParticleSpawnerMixin",
     "entity.AnimalEntityMixin",
     "entity.EscapeDangerGoalMixin",
     "entity.LivingEntityMixin",

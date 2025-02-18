@@ -19,8 +19,8 @@ import visuality.event.CirclesOnWaterEvent;
 public class CirclesOnWaterEventMixin {
     @Shadow static AbstractClientPlayerEntity player;
 
-    @WrapOperation(method = "onTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;)Z"))
-    private static boolean gbw$noRainSplashDuringSnow(Biome instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) ClientWorld var0) {
-        return original.call(instance, pos) && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || var0.getBiome(player.getSteppingPos()).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
+    @WrapOperation(method = "onTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;doesNotSnow(Lnet/minecraft/util/math/BlockPos;I)Z"))
+    private static boolean gbw$noRainSplashDuringSnow(Biome instance, BlockPos pos, int seaLevel, Operation<Boolean> original, @Local(argsOnly = true) ClientWorld var0) {
+        return original.call(instance, pos, seaLevel) && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || var0.getBiome(player.getSteppingPos()).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
     }
 }

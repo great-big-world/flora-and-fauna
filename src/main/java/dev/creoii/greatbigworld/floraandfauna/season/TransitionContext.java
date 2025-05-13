@@ -1,7 +1,8 @@
 package dev.creoii.greatbigworld.floraandfauna.season;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.creoii.greatbigworld.util.ColorHelper;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
@@ -9,6 +10,16 @@ import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
 public class TransitionContext {
+    public static final Codec<TransitionContext> CODEC = RecordCodecBuilder.create(instance -> {
+        return instance.group(Codec.INT.optionalFieldOf("current_season", 3).forGetter(manager -> {
+            return manager.current.ordinal();
+        }), Codec.INT.optionalFieldOf("next_season", 0).forGetter(manager -> {
+            return manager.next == null ? manager.current.ordinal() : manager.next.ordinal();
+        }), Codec.FLOAT.optionalFieldOf("percentage", 0f).forGetter(manager -> {
+            return manager.percentage;
+        })).apply(instance, TransitionContext::new);
+    });
+
     /**
      * The current season is different than the {@link SeasonManager#currentSeason}.
      * <p>This is the transitional current season, which stays the same for the entire transition. The {@link SeasonManager#currentSeason} changes halfway through the transition.</p>
@@ -16,6 +27,10 @@ public class TransitionContext {
     private Season current;
     private @Nullable Season next;
     private float percentage;
+
+    public TransitionContext(int currentSeason, int nextSeason, float percentage) {
+        this(Season.values()[currentSeason], Season.values()[nextSeason], percentage);
+    }
 
     public TransitionContext(Season currentSeason, @Nullable Season nextSeason, float percentage) {
         current = currentSeason;
@@ -42,21 +57,6 @@ public class TransitionContext {
 
     public void setPercentage(float percentage) {
         this.percentage = percentage;
-    }
-
-    /**
-     * @return an NbtCompound storing three integers, representing a TransitionContext that can be sent via packets.
-     */
-    public NbtCompound writeNbt() {
-        NbtCompound nbt = new NbtCompound();
-        nbt.putInt("current_season", current.ordinal());
-        nbt.putInt("next_season", next == null ? current.ordinal() : next.ordinal());
-        nbt.putFloat("percentage", percentage);
-        return nbt;
-    }
-
-    protected static TransitionContext readNbt(NbtCompound nbt) {
-        return new TransitionContext(Season.values()[nbt.getInt("current_season", 3)], Season.values()[nbt.getInt("next_season", 0)], nbt.getFloat("percentage", 0f));
     }
 
     public int getSeasonGrassColor(BlockRenderView world, BlockPos pos, int color) {

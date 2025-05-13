@@ -1,15 +1,14 @@
 package dev.creoii.greatbigworld.floraandfauna.season;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaGameRules;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -17,7 +16,24 @@ import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
 public class SeasonManager extends PersistentState {
-    private static final Codec<SeasonManager> CODEC = Codec.unit(new SeasonManager());
+    public static final Codec<SeasonManager> CODEC = RecordCodecBuilder.create(instance -> {
+        return instance.group(Codec.INT.optionalFieldOf("season", 3).forGetter(manager -> {
+            return manager.currentSeason.ordinal();
+        }), Codec.INT.optionalFieldOf("season_time", 0).forGetter(manager -> {
+            return manager.seasonTime;
+        }), Codec.BOOL.optionalFieldOf("transitioning", false).forGetter(manager -> {
+            return manager.transitioning;
+        }), TransitionContext.CODEC.fieldOf("context").forGetter(manager -> {
+            return manager.context;
+        })).apply(instance, (season, seasonTime, transitioning, context) -> {
+            SeasonManager manager = new SeasonManager();
+            manager.currentSeason = Season.values()[season];
+            manager.seasonTime = seasonTime;
+            manager.transitioning = transitioning;
+            manager.context = context;
+            return manager;
+        });
+    });
 
     private static final PersistentStateType<SeasonManager> STATE_TYPE = new PersistentStateType<>("gbw_seasons", SeasonManager::new, CODEC, null);
     private static SeasonManager instance;
@@ -123,23 +139,6 @@ public class SeasonManager extends PersistentState {
         seasonTransitionLength = seasonLength / 3;
         seasonTransitionIncrement = Math.max(1, seasonTransitionLength / seasonTransitionQuality);
         seasonTransitionIncrementAmount = (float) seasonTransitionIncrement / seasonTransitionLength;
-    }
-
-    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        nbt.putInt("season", currentSeason.ordinal());
-        nbt.putInt("season_time", seasonTime);
-        nbt.putBoolean("transitioning", transitioning);
-        nbt.put("context", context.writeNbt());
-        return nbt;
-    }
-
-    private SeasonManager createFromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup lookup) {
-        SeasonManager manager = new SeasonManager();
-        manager.currentSeason = Season.values()[nbt.getInt("season", 3)];
-        manager.seasonTime = nbt.getInt("season_time", 0);
-        manager.transitioning = nbt.getBoolean("transitioning", false);
-        manager.context = TransitionContext.readNbt(nbt.getCompoundOrEmpty("context"));
-        return manager;
     }
 
     public void syncAll(MinecraftServer server) {

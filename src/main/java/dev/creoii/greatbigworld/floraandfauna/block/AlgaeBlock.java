@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
@@ -35,7 +36,7 @@ public class AlgaeBlock extends PlantBlock {
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
         int maxDensity = state.get(MAX_DENSITY);
         int density = state.get(DENSITY);
         if (!entity.getType().isIn(FloraAndFaunaTags.IGNORES_ALGAE)) {

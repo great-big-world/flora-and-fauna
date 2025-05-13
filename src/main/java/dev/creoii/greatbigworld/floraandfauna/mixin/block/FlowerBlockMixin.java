@@ -1,6 +1,5 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import dev.creoii.greatbigworld.block.OverlayState;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
@@ -16,7 +15,6 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -55,12 +53,12 @@ public abstract class FlowerBlockMixin extends PlantBlock implements SuspiciousS
     }
 
     @Inject(method = "getOutlineShape", at = @At("RETURN"), cancellable = true)
-    private void gbw$mergeSnowShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir, @Local Vec3d vec3d) {
+    private void gbw$mergeSnowShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
         VoxelShape snowShape = VoxelShapes.empty();
         if (SnowyHelper.isSnowy(state)) {
             snowShape = SnowyHelper.getSnowShape(state);
         }
-        cir.setReturnValue(VoxelShapes.union(state.get(FloraAndFaunaProperties.FLOWERS) > 2 ? LARGE_SHAPE.offset(vec3d.x, vec3d.y, vec3d.z) : cir.getReturnValue(), snowShape));
+        cir.setReturnValue(VoxelShapes.union(state.get(FloraAndFaunaProperties.FLOWERS) > 2 ? LARGE_SHAPE.offset(state.getModelOffset(pos)) : cir.getReturnValue(), snowShape));
     }
 
     public boolean canPathfindThrough(BlockState state, NavigationType type) {

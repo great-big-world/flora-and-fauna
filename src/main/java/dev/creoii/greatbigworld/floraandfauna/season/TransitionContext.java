@@ -56,7 +56,7 @@ public class TransitionContext {
     }
 
     protected static TransitionContext readNbt(NbtCompound nbt) {
-        return new TransitionContext(Season.values()[nbt.getInt("current_season")], Season.values()[nbt.getInt("next_season")], nbt.getFloat("percentage"));
+        return new TransitionContext(Season.values()[nbt.getInt("current_season", 3)], Season.values()[nbt.getInt("next_season", 0)], nbt.getFloat("percentage", 0f));
     }
 
     public int getSeasonGrassColor(BlockRenderView world, BlockPos pos, int color) {

@@ -1,7 +1,7 @@
 package dev.creoii.greatbigworld.floraandfauna.season;
 
+import com.mojang.serialization.Codec;
 import dev.creoii.greatbigworld.GreatBigWorld;
-import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaGameRules;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -17,11 +17,13 @@ import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
 public class SeasonManager extends PersistentState {
-    private static final Type<SeasonManager> STATE_TYPE = new Type<>(SeasonManager::new, SeasonManager::createFromNbt, null);
+    private static final Codec<SeasonManager> CODEC = Codec.unit(new SeasonManager());
+
+    private static final PersistentStateType<SeasonManager> STATE_TYPE = new PersistentStateType<>("gbw_seasons", SeasonManager::new, CODEC, null);
     private static SeasonManager instance;
     @Nullable
     private MinecraftServer server = null;
-    private Season currentSeason = Season.SUMMER;
+    protected Season currentSeason = Season.SUMMER;
     private TransitionContext context = new TransitionContext(Season.SUMMER, Season.AUTUMN, 0f);
     private int seasonTransitionQuality = 25;
     private int seasonLength;
@@ -123,7 +125,6 @@ public class SeasonManager extends PersistentState {
         seasonTransitionIncrementAmount = (float) seasonTransitionIncrement / seasonTransitionLength;
     }
 
-    @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         nbt.putInt("season", currentSeason.ordinal());
         nbt.putInt("season_time", seasonTime);
@@ -132,12 +133,12 @@ public class SeasonManager extends PersistentState {
         return nbt;
     }
 
-    private static SeasonManager createFromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup lookup) {
+    private SeasonManager createFromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup lookup) {
         SeasonManager manager = new SeasonManager();
-        manager.currentSeason = Season.values()[nbt.getInt("season")];
-        manager.seasonTime = nbt.getInt("season_time");
-        manager.transitioning = nbt.getBoolean("transitioning");
-        manager.context = TransitionContext.readNbt(nbt.getCompound("context"));
+        manager.currentSeason = Season.values()[nbt.getInt("season", 3)];
+        manager.seasonTime = nbt.getInt("season_time", 0);
+        manager.transitioning = nbt.getBoolean("transitioning", false);
+        manager.context = TransitionContext.readNbt(nbt.getCompoundOrEmpty("context"));
         return manager;
     }
 
@@ -168,7 +169,7 @@ public class SeasonManager extends PersistentState {
     }
 
     private static SeasonManager getServerState(MinecraftServer server) {
-        SeasonManager manager = server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(STATE_TYPE, "gbw_seasons");
+        SeasonManager manager = server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(STATE_TYPE);
         manager.markDirty();
         return manager;
     }

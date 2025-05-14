@@ -3,5 +3,8 @@ accessible class net/minecraft/client/render/chunk/ChunkBuilder$BuiltChunk$Rebui
 accessible class net/minecraft/block/entity/BeehiveBlockEntity$Bee
 
 accessible field net/minecraft/client/render/WorldRenderer chunks Lnet/minecraft/client/render/BuiltChunkStorage;
+accessible field net/minecraft/block/entity/ChestBlockEntity lidAnimator Lnet/minecraft/block/entity/ChestLidAnimator;
+accessible field net/minecraft/block/entity/ChestLidAnimator open Z
+accessible field net/minecraft/block/entity/ChestLidAnimator progress F
 
 accessible method net/minecraft/client/render/WeatherRendering getPrecipitationAt (Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;

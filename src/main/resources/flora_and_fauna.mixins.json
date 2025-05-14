@@ -6,6 +6,7 @@
   "plugin": "dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaMixinPlugin",
   "mixins": [
     "block.BeehiveBlockEntityMixin",
+    "block.ChestBlockEntityMixin",
     "block.FenceAndPaneBlockMixin",
     "block.FenceGateBlockMixin",
     "block.FlowerBlockMixin",

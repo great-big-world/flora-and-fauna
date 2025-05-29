@@ -44,16 +44,16 @@ public final class FloraAndFaunaItems {
 
     public static void register() {
         HUMUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "humus"), FloraAndFaunaBlocks.HUMUS, new Item.Settings());
-        TROPICAL_FERN = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "tropical_fern"), FloraAndFaunaBlocks.HUMUS, new Item.Settings());
-        LARGE_TROPICAL_FERN = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "large_tropical_fern"), FloraAndFaunaBlocks.HUMUS, new Item.Settings());
-        RED_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "red_hibiscus"), FloraAndFaunaBlocks.HUMUS, new Item.Settings());
-        ORANGE_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "orange_hibiscus"), FloraAndFaunaBlocks.HUMUS, new Item.Settings());
-        YELLOW_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "yellow_hibiscus"), FloraAndFaunaBlocks.HUMUS, new Item.Settings());
-        BLUE_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "blue_hibiscus"), FloraAndFaunaBlocks.HUMUS, new Item.Settings());
-        PINK_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "pink_hibiscus"), FloraAndFaunaBlocks.HUMUS, new Item.Settings());
-        PURPLE_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "purple_hibiscus"), FloraAndFaunaBlocks.HUMUS, new Item.Settings());
-        BLACK_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "black_hibiscus"), FloraAndFaunaBlocks.HUMUS, new Item.Settings());
-        WHITE_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "white_hibiscus"), FloraAndFaunaBlocks.HUMUS, new Item.Settings());
+        TROPICAL_FERN = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "tropical_fern"), FloraAndFaunaBlocks.TROPICAL_FERN, new Item.Settings());
+        LARGE_TROPICAL_FERN = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "large_tropical_fern"), FloraAndFaunaBlocks.LARGE_TROPICAL_FERN, new Item.Settings());
+        RED_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "red_hibiscus"), FloraAndFaunaBlocks.RED_HIBISCUS, new Item.Settings());
+        ORANGE_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "orange_hibiscus"), FloraAndFaunaBlocks.ORANGE_HIBISCUS, new Item.Settings());
+        YELLOW_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "yellow_hibiscus"), FloraAndFaunaBlocks.YELLOW_HIBISCUS, new Item.Settings());
+        BLUE_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "blue_hibiscus"), FloraAndFaunaBlocks.BLUE_HIBISCUS, new Item.Settings());
+        PINK_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "pink_hibiscus"), FloraAndFaunaBlocks.PINK_HIBISCUS, new Item.Settings());
+        PURPLE_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "purple_hibiscus"), FloraAndFaunaBlocks.PURPLE_HIBISCUS, new Item.Settings());
+        BLACK_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "black_hibiscus"), FloraAndFaunaBlocks.BLACK_HIBISCUS, new Item.Settings());
+        WHITE_HIBISCUS = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "white_hibiscus"), FloraAndFaunaBlocks.WHITE_HIBISCUS, new Item.Settings());
         HOLLOW_OAK_LOG = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "hollow_oak_log"), FloraAndFaunaBlocks.HOLLOW_OAK_LOG, new Item.Settings());
         HOLLOW_SPRUCE_LOG = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "hollow_spruce_log"), FloraAndFaunaBlocks.HOLLOW_SPRUCE_LOG, new Item.Settings());
         HOLLOW_BIRCH_LOG = RegistryHelper.registerBlockItem(Identifier.of(GreatBigWorld.NAMESPACE, "hollow_birch_log"), FloraAndFaunaBlocks.HOLLOW_BIRCH_LOG, new Item.Settings());

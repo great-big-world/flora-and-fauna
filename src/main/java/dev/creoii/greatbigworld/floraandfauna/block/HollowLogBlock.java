@@ -93,12 +93,7 @@ public class HollowLogBlock extends PillarBlock implements Waterloggable, Adjace
         if (!entity.getWorld().isClient) {
             Vec3d targetPos = pos.toBottomCenterPos();
             Vec3d direction = entity.getPos().subtract(targetPos).normalize().multiply(.5d);
-            entity.teleportTo(new TeleportTarget((ServerWorld) entity.getWorld(), targetPos.add(direction.x, .2d, direction.z), entity.getVelocity(), entity.getYaw(), entity.getPitch(), new TeleportTarget.PostDimensionTransition() {
-                @Override
-                public void onTransition(Entity entity) {
-
-                }
-            }));
+            entity.teleportTo(new TeleportTarget((ServerWorld) entity.getWorld(), targetPos.add(direction.x, .2d, direction.z), entity.getVelocity(), entity.getYaw(), entity.getPitch(), entity1 -> {}));
         }
     }
 }

@@ -40,7 +40,6 @@ public abstract class SnowBlockMixin extends Block {
                 }
             }
 
-            System.out.println("place");
             cir.setReturnValue(blockState.with(SnowyHelper.SNOW_LAYERS, Math.min(8, blockState.get(SnowyHelper.SNOW_LAYERS) + 1)));
         }
     }

@@ -3,6 +3,7 @@ package dev.creoii.greatbigworld.floraandfauna.mixin.world;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
@@ -25,6 +26,8 @@ public class BiomeMixin {
         else {
             if (world instanceof ServerWorld serverWorld) {
                 SeasonManager seasonManager = SeasonManager.getInstance(serverWorld.getServer());
+                if (seasonManager == null || !serverWorld.getRegistryKey().equals(GreatBigWorld.ALTERWORLD_KEY))
+                    return original.call(instance, pos, seaLevel);
                 return original.call(instance, pos, seaLevel) && (seasonManager.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && world.isInHeightLimit(pos.getY()) && world.getLightLevel(LightType.BLOCK, pos) < 10);
             } else return original.call(instance, pos, seaLevel);
         }
@@ -37,6 +40,8 @@ public class BiomeMixin {
         else {
             if (world instanceof ServerWorld serverWorld) {
                 SeasonManager seasonManager = SeasonManager.getInstance(serverWorld.getServer());
+                if (seasonManager == null || !serverWorld.getRegistryKey().equals(GreatBigWorld.ALTERWORLD_KEY))
+                    return original.call(instance, pos, seaLevel);
                 return original.call(instance, pos, seaLevel) && (seasonManager.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
             } else return original.call(instance, pos, seaLevel);
         }

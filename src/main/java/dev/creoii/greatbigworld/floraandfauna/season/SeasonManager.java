@@ -85,6 +85,8 @@ public class SeasonManager extends PersistentState {
             server = world.getServer();
         if (instance == null) {
             instance = getServerState(server);
+            if (instance == null)
+                return;
 
             if (currentSeason == null)
                 currentSeason = Season.SUMMER;
@@ -167,8 +169,12 @@ public class SeasonManager extends PersistentState {
         });
     }
 
+    @Nullable
     private static SeasonManager getServerState(MinecraftServer server) {
-        SeasonManager manager = server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(STATE_TYPE);
+        ServerWorld serverWorld = server.getWorld(GreatBigWorld.ALTERWORLD_KEY);
+        if (serverWorld == null)
+            return null;
+        SeasonManager manager = serverWorld.getPersistentStateManager().getOrCreate(STATE_TYPE);
         manager.markDirty();
         return manager;
     }

@@ -17,7 +17,12 @@ public final class FloraAndFaunaCommands {
             dispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("season")
                     .requires(source -> source.hasPermissionLevel(2))
                     .executes(context -> {
-                        context.getSource().sendFeedback(() -> Text.literal("The current season is " + StringUtils.capitalize(SeasonManager.getInstance(context.getSource().getServer()).getCurrentSeason().name().toLowerCase())), false);
+                        SeasonManager seasonManager = SeasonManager.getInstance(context.getSource().getServer());
+                        if (seasonManager == null) {
+                            context.getSource().sendError(Text.literal("An unexpected error occurred"));
+                            return -1;
+                        }
+                        context.getSource().sendFeedback(() -> Text.literal("The current season is " + StringUtils.capitalize(seasonManager.getCurrentSeason().name().toLowerCase())), false);
                         return 1;
                     })
                     .then(CommandManager.argument("season", StringArgumentType.string())
@@ -44,7 +49,7 @@ public final class FloraAndFaunaCommands {
         if (manager != null) {
             manager.setCurrentSeason(source.getWorld(), Season.valueOf(season.toUpperCase()), preserveTime);
         } else {
-            source.sendError(Text.literal("An unexpected error occurred."));
+            source.sendError(Text.literal("An unexpected error occurred"));
             return -1;
         }
         source.sendFeedback(() -> Text.literal("Set season to " + StringUtils.capitalize(season)), true);

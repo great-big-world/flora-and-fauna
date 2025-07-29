@@ -87,12 +87,18 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
     @WrapOperation(method = "tickIceAndSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;canSetSnow(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean gbw$modifyCanSetIceForWinter(Biome instance, WorldView world, BlockPos pos, Operation<Boolean> original) {
         SeasonManager seasonManager = SeasonManager.getInstance(getServer());
+        if (seasonManager == null) {
+            return original.call(instance, world, pos);
+        }
         return original.call(instance, world, pos) || (seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && world.isInHeightLimit(pos.getY()) && world.getLightLevel(LightType.BLOCK, pos) < 10);
     }
 
     @Redirect(method = "tickIceAndSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;I)Lnet/minecraft/world/biome/Biome$Precipitation;"))
     private Biome.Precipitation gbw$modifyTickIceAndSnowForWinter(Biome instance, BlockPos pos, int seaLevel) {
         SeasonManager seasonManager = SeasonManager.getInstance(getServer());
+        if (seasonManager == null) {
+            return instance.getPrecipitation(pos, seaLevel);
+        }
         return seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) ? Biome.Precipitation.SNOW : instance.getPrecipitation(pos, seaLevel);
     }
 
@@ -100,6 +106,8 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
     private void gbw$sleepingSkipsSeasonTime(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
         if (getGameRules().getBoolean(FloraAndFaunaGameRules.DO_SEASON_CYCLE)) {
             SeasonManager seasonManager = SeasonManager.getInstance(getServer());
+            if (seasonManager == null)
+                return;
             int timeToSkip = 13000; // length of night in ticks, should be subtracted by how long into the night we are
             seasonManager.addSeasonTime(timeToSkip);
         }

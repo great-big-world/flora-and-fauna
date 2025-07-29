@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
+import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import net.minecraft.block.BlockState;
@@ -21,8 +22,11 @@ public class BeehiveBlockEntityMixin {
     @Inject(method = "releaseBee", at = @At("HEAD"), cancellable = true)
     private static void gbw$dontReleaseBeeDuringWinter(World world, BlockPos pos, BlockState state, BeehiveBlockEntity.BeeData bee, List<Entity> entities, BeehiveBlockEntity.BeeState beeState, BlockPos flowerPos, CallbackInfoReturnable<Boolean> cir) {
         if (!world.isClient) {
-            if (SeasonManager.getInstance(((ServerWorld) world).getServer()).getCurrentSeason() == Season.WINTER && beeState != BeehiveBlockEntity.BeeState.EMERGENCY)
-                cir.setReturnValue(false);
+            if (world.getRegistryKey().equals(GreatBigWorld.ALTERWORLD_KEY)) {
+                SeasonManager manager = SeasonManager.getInstance(((ServerWorld) world).getServer());
+                if (manager != null && manager.getCurrentSeason() == Season.WINTER && beeState != BeehiveBlockEntity.BeeState.EMERGENCY)
+                    cir.setReturnValue(false);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
+import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.block.OverlayState;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
@@ -62,7 +63,7 @@ public abstract class ShortPlantBlockMixin extends PlantBlock implements Fertili
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
         SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
-        if (world.getLightLevel(LightType.BLOCK, pos) > 11 || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos, world.getSeaLevel()))) {
+        if (seasonManager != null && world.getRegistryKey().equals(GreatBigWorld.ALTERWORLD_KEY) && world.getLightLevel(LightType.BLOCK, pos) > 11 || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos, world.getSeaLevel()))) {
             dropStacks(state, world, pos);
             world.setBlockState(pos, state.with(SnowyHelper.SNOW_LAYERS, 0));
         }
@@ -126,7 +127,7 @@ public abstract class ShortPlantBlockMixin extends PlantBlock implements Fertili
     }
 
     @Override
-    public BlockState getOverlayState(BlockState state, BlockPos pos, Random random) {
+    public BlockState gbw$getOverlayState(BlockState state, BlockPos pos, Random random) {
         if (SnowyHelper.isSnowy(state)) {
             return Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS));
         }

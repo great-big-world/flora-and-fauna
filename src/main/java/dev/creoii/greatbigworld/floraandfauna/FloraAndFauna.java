@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna;
 
+import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.registry.*;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.season.TransitionQuality;
@@ -12,7 +13,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.dimension.DimensionTypes;
+import net.minecraft.server.world.ServerWorld;
 
 public class FloraAndFauna implements ModInitializer {
     @Override
@@ -20,7 +21,6 @@ public class FloraAndFauna implements ModInitializer {
         FloraAndFaunaBlocks.register();
         FloraAndFaunaItems.register();
         FloraAndFaunaFeatures.register();
-        FloraAndFaunaTreeDecoratorTypes.register();
         FloraAndFaunaCommands.register();
         FloraAndFaunaGameRules.register();
 
@@ -32,26 +32,36 @@ public class FloraAndFauna implements ModInitializer {
             int quality = payload.quality();
             context.server().execute(() -> {
                 SeasonManager seasonManager = SeasonManager.getInstance(context.server());
+                if (seasonManager == null)
+                    return;
                 seasonManager.setSeasonTransitionQuality(quality);
-                seasonManager.updateSeasonTime(context.server().getOverworld());
+                ServerWorld alterworld = context.server().getWorld(GreatBigWorld.ALTERWORLD_KEY);
+                if (alterworld != null)
+                    seasonManager.updateSeasonTime(alterworld);
             });
         });
 
         ServerWorldEvents.LOAD.register((server, world) -> {
-            if (world.getDimensionEntry().matches(key -> key == DimensionTypes.OVERWORLD)) {
-                SeasonManager.getInstance(server).load(world);
+            if (world.getRegistryKey() == GreatBigWorld.ALTERWORLD_KEY) {
+                SeasonManager manager = SeasonManager.getInstance(server);
+                if (manager != null)
+                    manager.load(world);
             }
         });
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-            if (entity instanceof ServerPlayerEntity serverPlayer) {
+            if (world.getRegistryKey() == GreatBigWorld.ALTERWORLD_KEY && entity instanceof ServerPlayerEntity serverPlayer) {
                 SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
-                ServerPlayNetworking.send(serverPlayer, new SeasonManager.SyncSeason((byte) seasonManager.getCurrentSeason().ordinal()));
-                ServerPlayNetworking.send(serverPlayer, new SeasonManager.SyncSeasonTransition(seasonManager.getTransitionContext()));
+                if (seasonManager != null) {
+                    ServerPlayNetworking.send(serverPlayer, new SeasonManager.SyncSeason((byte) seasonManager.getCurrentSeason().ordinal()));
+                    ServerPlayNetworking.send(serverPlayer, new SeasonManager.SyncSeasonTransition(seasonManager.getTransitionContext()));
+                }
             }
         });
         ServerTickEvents.END_WORLD_TICK.register(world -> {
-            if (world.getDimensionEntry().matches(key -> key == DimensionTypes.OVERWORLD) && world.getTickManager().shouldTick()) {
-                SeasonManager.getInstance(world.getServer()).tick(world);
+            if (world.getRegistryKey() == GreatBigWorld.ALTERWORLD_KEY && world.getTickManager().shouldTick()) {
+                SeasonManager manager = SeasonManager.getInstance(world.getServer());
+                if (manager != null)
+                    manager.tick(world);
             }
         });
 

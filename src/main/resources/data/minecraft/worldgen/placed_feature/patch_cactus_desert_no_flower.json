@@ -1,0 +1,25 @@
+{
+  "feature": "great_big_world:patch_cactus_no_flower",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 4
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "great_big_world:noise",
+      "noise": "great_big_world:forest_trees",
+      "min_threshold": 0.0,
+      "max_threshold": 0.75
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

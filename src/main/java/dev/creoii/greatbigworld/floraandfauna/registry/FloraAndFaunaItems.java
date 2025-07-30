@@ -83,17 +83,17 @@ public final class FloraAndFaunaItems {
             entries.addAfter(Items.FERN, TROPICAL_FERN);
             entries.addAfter(Items.LARGE_FERN, LARGE_TROPICAL_FERN);
             entries.addAfter(Items.LILY_OF_THE_VALLEY, RED_HIBISCUS, ORANGE_HIBISCUS, YELLOW_HIBISCUS, BLUE_HIBISCUS, PINK_HIBISCUS, PURPLE_HIBISCUS, BLACK_HIBISCUS, WHITE_HIBISCUS);
-            entries.addAfter(Items.OAK_LOG, HOLLOW_OAK_LOG, STRIPPED_HOLLOW_OAK_LOG);
-            entries.addAfter(Items.SPRUCE_LOG, HOLLOW_SPRUCE_LOG, STRIPPED_HOLLOW_SPRUCE_LOG);
-            entries.addAfter(Items.BIRCH_LOG, HOLLOW_BIRCH_LOG, STRIPPED_HOLLOW_BIRCH_LOG);
-            entries.addAfter(Items.JUNGLE_LOG, HOLLOW_JUNGLE_LOG, STRIPPED_HOLLOW_JUNGLE_LOG);
-            entries.addAfter(Items.DARK_OAK_LOG, HOLLOW_DARK_OAK_LOG, STRIPPED_HOLLOW_DARK_OAK_LOG);
-            entries.addAfter(Items.ACACIA_LOG, HOLLOW_ACACIA_LOG, STRIPPED_HOLLOW_ACACIA_LOG);
-            entries.addAfter(Items.MANGROVE_LOG, HOLLOW_MANGROVE_LOG, STRIPPED_HOLLOW_MANGROVE_LOG);
-            entries.addAfter(Items.CHERRY_LOG, HOLLOW_CHERRY_LOG, STRIPPED_HOLLOW_CHERRY_LOG);
-            entries.addAfter(Items.PALE_OAK_LOG, HOLLOW_PALE_OAK_LOG, STRIPPED_HOLLOW_PALE_OAK_LOG);
-            entries.addAfter(Items.WARPED_STEM, HOLLOW_WARPED_STEM, STRIPPED_HOLLOW_WARPED_STEM);
-            entries.addAfter(Items.CRIMSON_STEM, HOLLOW_CRIMSON_STEM, STRIPPED_HOLLOW_CRIMSON_STEM);
+            entries.addAfter(Items.OAK_LOG, HOLLOW_OAK_LOG);
+            entries.addAfter(Items.SPRUCE_LOG, HOLLOW_SPRUCE_LOG);
+            entries.addAfter(Items.BIRCH_LOG, HOLLOW_BIRCH_LOG);
+            entries.addAfter(Items.JUNGLE_LOG, HOLLOW_JUNGLE_LOG);
+            entries.addAfter(Items.DARK_OAK_LOG, HOLLOW_DARK_OAK_LOG);
+            entries.addAfter(Items.ACACIA_LOG, HOLLOW_ACACIA_LOG);
+            entries.addAfter(Items.MANGROVE_LOG, HOLLOW_MANGROVE_LOG);
+            entries.addAfter(Items.CHERRY_LOG, HOLLOW_CHERRY_LOG);
+            entries.addAfter(Items.PALE_OAK_LOG, HOLLOW_PALE_OAK_LOG);
+            entries.addAfter(Items.WARPED_STEM, HOLLOW_WARPED_STEM);
+            entries.addAfter(Items.CRIMSON_STEM, HOLLOW_CRIMSON_STEM);
             entries.addAfter(Items.LILY_PAD, ALGAE);
         });
     }

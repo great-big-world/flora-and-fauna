@@ -1,21 +1,21 @@
 {
   "values": [
-    "minecraft:jungle",
+    "great_big_world:alter_jungle",
     "great_big_world:jungle_river",
     "minecraft:bamboo_jungle",
     "minecraft:sparse_jungle",
     "minecraft:ice_spikes",
     "minecraft:mushroom_fields",
-    "minecraft:taiga",
-    "minecraft:snowy_taiga",
+    "great_big_world:alter_taiga",
+    "great_big_world:alter_snowy_taiga",
     "minecraft:old_growth_spruce_taiga",
     "minecraft:old_growth_pine_taiga",
-    "minecraft:grove",
-    "minecraft:snowy_plains",
-    "minecraft:swamp",
+    "great_big_world:alter_grove",
+    "great_big_world:alter_snowy_plains",
+    "great_big_world:alter_swamp",
     "minecraft:mangrove_swamp",
-    "great_big_world:swamp_river",
-    "minecraft:frozen_river",
+    "great_big_world:alter_swamp_river",
+    "great_big_world:alter_frozen_river",
     "minecraft:lush_caves"
   ]
 }

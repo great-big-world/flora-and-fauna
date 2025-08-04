@@ -137,7 +137,8 @@
     [
       "minecraft:patch_tall_grass_2",
       "minecraft:trees_plains",
-      "minecraft:flower_plains",
+      "great_big_world:flower/dandelion",
+      "great_big_world:flower/poppy",
       "minecraft:patch_grass_plain",
       "minecraft:patch_pumpkin"
     ],

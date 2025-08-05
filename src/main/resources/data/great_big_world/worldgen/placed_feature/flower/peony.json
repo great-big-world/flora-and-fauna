@@ -1,15 +1,15 @@
 {
-  "feature": "great_big_world:flower/blue_orchid",
+  "feature": "great_big_world:flower/peony",
   "placement": [
     {
       "type": "minecraft:noise_threshold_count",
       "noise_level": -0.8,
       "below_noise": 15,
-      "above_noise": 2
+      "above_noise": 4
     },
     {
       "type": "minecraft:rarity_filter",
-      "chance": 8
+      "chance": 32
     },
     {
       "type": "minecraft:in_square"

@@ -1,5 +1,5 @@
 {
-  "feature": "great_big_world:flower/blue_orchid",
+  "feature": "great_big_world:flower/cornflower",
   "placement": [
     {
       "type": "minecraft:noise_threshold_count",
@@ -9,7 +9,7 @@
     },
     {
       "type": "minecraft:rarity_filter",
-      "chance": 8
+      "chance": 36
     },
     {
       "type": "minecraft:in_square"

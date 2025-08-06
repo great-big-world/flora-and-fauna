@@ -3,7 +3,7 @@ package dev.creoii.greatbigworld.floraandfauna.season;
 import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.util.ColorHelper;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
-import dev.creoii.greatbigworld.worldgen.fastnoise.FastNoiseLite;
+import dev.creoii.greatbigworld.world.fastnoise.FastNoiseLite;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;

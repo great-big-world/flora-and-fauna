@@ -7,14 +7,14 @@ import dev.creoii.greatbigworld.util.ColorHelper;
 import dev.creoii.greatbigworld.util.RegistryHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.GrassColors;
@@ -159,7 +159,7 @@ public final class FloraAndFaunaBlocks {
 
     @Environment(EnvType.CLIENT)
     public static void registerClient() {
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
+        BlockRenderLayerMap.putBlocks(BlockRenderLayer.CUTOUT,
                 TROPICAL_FERN, LARGE_TROPICAL_FERN, POTTED_TROPICAL_FERN,
                 RED_HIBISCUS, ORANGE_HIBISCUS, YELLOW_HIBISCUS, BLUE_HIBISCUS, PINK_HIBISCUS, PURPLE_HIBISCUS, BLACK_HIBISCUS, WHITE_HIBISCUS,
                 POTTED_RED_HIBISCUS, POTTED_ORANGE_HIBISCUS, POTTED_YELLOW_HIBISCUS, POTTED_BLUE_HIBISCUS, POTTED_PINK_HIBISCUS, POTTED_PURPLE_HIBISCUS, POTTED_BLACK_HIBISCUS, POTTED_WHITE_HIBISCUS,

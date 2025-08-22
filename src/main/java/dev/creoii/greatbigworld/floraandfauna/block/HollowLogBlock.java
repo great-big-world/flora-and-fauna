@@ -78,7 +78,6 @@ public class HollowLogBlock extends PillarBlock implements Waterloggable, Adjace
         if (Math.abs(difference.getY()) > .15d || difference.equals(BlockPos.ORIGIN))
             return;
         Vec3d vecDifference = pos.toBottomCenterPos().subtract(entity.getPos());
-        System.out.println(vecDifference.getZ());
         boolean canEnter = switch (state.get(AXIS)) {
             case Y -> false;
             case X -> Math.abs(vecDifference.getZ()) < .1d && difference.getX() == entity.getHorizontalFacing().getOffsetX();

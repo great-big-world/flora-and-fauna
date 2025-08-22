@@ -71,22 +71,21 @@ public class HollowLogBlock extends PillarBlock implements Waterloggable, Adjace
     }
 
     @Override
-    public boolean canEntityCollideAdjacent(Entity entity, BlockState state, BlockPos pos) {
+    public void onAdjacentEntityCollision(Entity entity, BlockState state, BlockPos pos) {
         if (!entity.isSprinting() || entity.hasPassengers() || entity.hasVehicle() || entity.isCrawling())
-            return false;
+            return;
         BlockPos difference = pos.subtract(entity.getBlockPos());
         if (Math.abs(difference.getY()) > .15d || difference.equals(BlockPos.ORIGIN))
-            return false;
-        return switch (state.get(AXIS)) {
+            return;
+        Vec3d vecDifference = pos.toBottomCenterPos().subtract(entity.getPos());
+        System.out.println(vecDifference.getZ());
+        boolean canEnter = switch (state.get(AXIS)) {
             case Y -> false;
-            case X -> difference.getX() != 0d && difference.getZ() == 0d && difference.getX() == entity.getHorizontalFacing().getOffsetX();
-            case Z -> difference.getZ() != 0d && difference.getX() == 0d && difference.getZ() == entity.getHorizontalFacing().getOffsetZ();
+            case X -> Math.abs(vecDifference.getZ()) < .1d && difference.getX() == entity.getHorizontalFacing().getOffsetX();
+            case Z -> Math.abs(vecDifference.getX()) < .1d && difference.getZ() == entity.getHorizontalFacing().getOffsetZ();
         };
-    }
 
-    @Override
-    public void onAdjacentEntityCollision(Entity entity, BlockState state, BlockPos pos) {
-        if (entity instanceof LivingEntity living) {
+        if (canEnter && entity instanceof LivingEntity living) {
             living.setPose(EntityPose.SWIMMING);
             living.setSwimming(true);
 

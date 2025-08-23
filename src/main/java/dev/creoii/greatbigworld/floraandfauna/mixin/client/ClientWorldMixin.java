@@ -31,6 +31,6 @@ public abstract class ClientWorldMixin extends World {
         if (FloraAndFaunaClient.getCurrentSeason() != null && FloraAndFaunaClient.getTransitionContext() != null && !getBlockState(pos).isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
             return FloraAndFaunaClient.getTransitionContext().getSeasonGrassColor(this, pos, instance.getColor(biome, x, z));
         }
-        return 0;
+        return instance.getColor(biome, x, z);
     }
 }

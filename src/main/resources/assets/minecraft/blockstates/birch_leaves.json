@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "snowy=false": {
+      "model": "minecraft:block/birch_leaves"
+    },
+    "snowy=true": {
+      "model": "great_big_world:block/snowy_birch_leaves"
+    }
+  }
+}

@@ -12,6 +12,7 @@
     "block.FenceGateBlockMixin",
     "block.FlowerBlockMixin",
     "block.IceBlockMixin",
+    "block.LeavesBlockMixin",
     "block.MushroomPlantBlockMixin",
     "block.ShortPlantBlockMixin",
     "block.SmallDripleafBlockMixin",

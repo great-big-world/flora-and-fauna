@@ -2,12 +2,13 @@ package dev.creoii.greatbigworld.floraandfauna.world.feature;
 
 import com.mojang.serialization.Codec;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SnowyBlock;
+import net.minecraft.block.TallPlantBlock;
+import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.LightType;
 import net.minecraft.world.StructureWorldAccess;
@@ -27,67 +28,40 @@ public class FreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
         StructureWorldAccess world = context.getWorld();
         BlockPos pos = context.getOrigin();
         BlockPos.Mutable top = new BlockPos.Mutable();
-        BlockPos.Mutable topDown = new BlockPos.Mutable();
         BlockPos.Mutable bottom = new BlockPos.Mutable();
-        BlockPos.Mutable bottomDown = new BlockPos.Mutable();
         for (int i = 0; i < 16; ++i) {
             int k = pos.getX() + i;
             for (int j = 0; j < 16; ++j) {
                 int l = pos.getZ() + j;
                 int m = world.getTopY(Heightmap.Type.MOTION_BLOCKING, k, l);
                 int m1 = world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, k, l);
-                top.set(k, m, l);
-                topDown.set(top).move(Direction.DOWN);
-                bottom.set(k, m1, l);
-                bottomDown.set(bottom).move(Direction.DOWN);
-                Biome topBiome = world.getBiome(top).value();
-                Biome bottomBiome = world.getBiome(bottom).value();
 
-                if (topBiome.canSetIce(world, topDown, false)) {
-                    world.setBlockState(topDown, Blocks.ICE.getDefaultState(), Block.NOTIFY_LISTENERS);
-                }
+                for (int y = m; y >= m1; --y) {
+                    top.set(k, y, l);
+                    bottom.set(k, y - 1, l);
+                    Biome biome = world.getBiome(top).value();
 
-                if (topBiome.canSetSnow(world, top)) {
-                    BlockState blockState = world.getBlockState(topDown);
-                    if (world.setBlockState(top, Blocks.SNOW.getDefaultState(), Block.NOTIFY_LISTENERS) && blockState.contains(SnowyBlock.SNOWY))
-                        world.setBlockState(topDown, blockState.with(SnowyBlock.SNOWY, true), Block.NOTIFY_LISTENERS);
-                }
+                    if (biome.canSetIce(world, bottom, false)) {
+                        world.setBlockState(bottom, Blocks.ICE.getDefaultState(), 2);
+                    } else {
+                        if (biome.canSetSnow(world, top)) {
+                            world.setBlockState(top, Blocks.SNOW.getDefaultState(), 2);
 
-                if (canSetSnow(topBiome, world, top)) {
-                    BlockState blockState = world.getBlockState(top);
-                    if (blockState.contains(SnowyHelper.SNOW_LAYERS)) {
-                        BlockState blockState1 = world.getBlockState(topDown);
-                        if (world.setBlockState(top, blockState.with(SnowyHelper.SNOW_LAYERS, 1), Block.NOTIFY_LISTENERS) && blockState1.contains(SnowyBlock.SNOWY))
-                            world.setBlockState(topDown, blockState1.with(SnowyBlock.SNOWY, true), Block.NOTIFY_LISTENERS);
+                            BlockState bottomState = world.getBlockState(bottom);
+                            if (bottomState.contains(SnowyBlock.SNOWY))
+                                world.setBlockState(bottom, bottomState.with(SnowyBlock.SNOWY, true), 2);
+                        } else if (canSetSnow(biome, world, top)) {
+                            BlockState topState = world.getBlockState(top);
 
-                        if (world.getBlockState(topDown).isOf(Blocks.GRASS_BLOCK) && world.getBlockState(topDown).get(SnowyBlock.SNOWY) && (world.getBlockState(top).isOf(Blocks.AIR) || world.getBlockState(top).isOf(Blocks.TALL_GRASS) || world.getBlockState(top).isOf(Blocks.SHORT_GRASS) && (!SnowyHelper.isSnowy(world.getBlockState(top)) || world.getBlockState(top).isOf(Blocks.SNOW)))) {
-                            //System.out.println("bad snowy at: " + topDown.toShortString());
-                        }
-                    }
-                }
+                            if (topState.contains(SnowyHelper.SNOW_LAYERS)) {
+                                if (!(topState.contains(Properties.DOUBLE_BLOCK_HALF) && topState.get(Properties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)) {
+                                    world.setBlockState(top, topState.with(SnowyHelper.SNOW_LAYERS, 1), 2);
 
-                if (m == m1)
-                    continue;
-
-                if (bottomBiome.canSetIce(world, bottomDown, false)) {
-                    world.setBlockState(bottomDown, Blocks.ICE.getDefaultState(), Block.NOTIFY_LISTENERS);
-                }
-
-                if (bottomBiome.canSetSnow(world, bottom)) {
-                    BlockState blockState = world.getBlockState(bottomDown);
-                    if (world.setBlockState(bottom, Blocks.SNOW.getDefaultState(), Block.NOTIFY_LISTENERS) && blockState.contains(SnowyBlock.SNOWY))
-                        world.setBlockState(bottomDown, blockState.with(SnowyBlock.SNOWY, true), Block.NOTIFY_LISTENERS);
-                }
-
-                if (canSetSnow(bottomBiome, world, bottom)) {
-                    BlockState blockState = world.getBlockState(bottom);
-                    if (blockState.contains(SnowyHelper.SNOW_LAYERS)) {
-                        BlockState blockState1 = world.getBlockState(bottomDown);
-                        if (world.setBlockState(bottom, blockState.with(SnowyHelper.SNOW_LAYERS, 1), Block.NOTIFY_ALL) && blockState1.contains(SnowyBlock.SNOWY))
-                            world.setBlockState(bottomDown, blockState1.with(SnowyBlock.SNOWY, true), Block.NOTIFY_LISTENERS);
-
-                        if (world.getBlockState(bottomDown).isOf(Blocks.GRASS_BLOCK) && world.getBlockState(bottomDown).get(SnowyBlock.SNOWY) && (world.getBlockState(bottom).isOf(Blocks.AIR) || world.getBlockState(bottom).isOf(Blocks.TALL_GRASS) || world.getBlockState(bottom).isOf(Blocks.SHORT_GRASS) && SnowyHelper.isSnowy(world.getBlockState(bottom)))) {
-                            //System.out.println("bad snowy at: " + bottomDown.toShortString());
+                                    BlockState bottomState = world.getBlockState(bottom);
+                                    if (bottomState.contains(SnowyBlock.SNOWY))
+                                        world.setBlockState(bottom, bottomState.with(SnowyBlock.SNOWY, true), 2);
+                                }
+                            }
                         }
                     }
                 }

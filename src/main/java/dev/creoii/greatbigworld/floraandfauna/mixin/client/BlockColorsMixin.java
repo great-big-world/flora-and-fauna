@@ -28,7 +28,7 @@ public class BlockColorsMixin {
     private static void gbw$modifySpruceColor(BlockColors instance, BlockColorProvider provider, Block[] blocks) {
         instance.registerColorProvider((state, world, pos, tintIndex) -> {
             if (FloraAndFaunaClient.getCurrentSeason() != null && FloraAndFaunaClient.getTransitionContext() != null && !state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
-                return FloraAndFaunaClient.getTransitionContext().getSeasonGrassColor(world, pos, -10380959);
+                return FloraAndFaunaClient.getTransitionContext().getSeasonFoliageColor(world, pos, -10380959);
             }
             return -10380959;
         }, Blocks.SPRUCE_LEAVES);
@@ -38,7 +38,7 @@ public class BlockColorsMixin {
     private static void gbw$modifyBirchColor(BlockColors instance, BlockColorProvider provider, Block[] blocks) {
         instance.registerColorProvider((state, world, pos, tintIndex) -> {
             if (FloraAndFaunaClient.getCurrentSeason() != null && FloraAndFaunaClient.getTransitionContext() != null && !state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
-                return FloraAndFaunaClient.getTransitionContext().getSeasonGrassColor(world, pos, -8345771);
+                return FloraAndFaunaClient.getTransitionContext().getSeasonFoliageColor(world, pos, -8345771);
             }
             return -8345771;
         }, Blocks.BIRCH_LEAVES);

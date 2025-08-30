@@ -8,7 +8,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
 
 public final class SnowyHelper {
     public static final IntProperty SNOW_LAYERS = IntProperty.of("snow_layers", 0, 8);

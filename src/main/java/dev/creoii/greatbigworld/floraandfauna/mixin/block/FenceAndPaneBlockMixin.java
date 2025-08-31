@@ -52,6 +52,8 @@ public abstract class FenceAndPaneBlockMixin extends HorizontalConnectingBlock i
         BlockState state = ctx.getWorld().getBlockState(ctx.getBlockPos());
         if (state.isOf(Blocks.SNOW)) {
             cir.setReturnValue(getDefaultState().with(SnowyHelper.SNOW_LAYERS, state.get(SnowBlock.LAYERS)));
+        } else if (state.contains(SnowyHelper.SNOW_LAYERS) && SnowyHelper.isSnowy(state)) {
+            cir.setReturnValue(getDefaultState().with(SnowyHelper.SNOW_LAYERS, state.get(SnowyHelper.SNOW_LAYERS)));
         }
     }
 

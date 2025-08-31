@@ -119,6 +119,8 @@ public abstract class MushroomPlantBlockMixin extends PlantBlock implements Fert
             return getDefaultState().with(SnowyHelper.SNOW_LAYERS, state.get(SnowBlock.LAYERS));
         } else if (state.isOf(this)) {
             return state.with(FloraAndFaunaProperties.MUSHROOMS, Math.min(4, state.get(FloraAndFaunaProperties.MUSHROOMS) + 1));
+        } else if (state.contains(SnowyHelper.SNOW_LAYERS) && SnowyHelper.isSnowy(state)) {
+            return getDefaultState().with(SnowyHelper.SNOW_LAYERS, state.get(SnowyHelper.SNOW_LAYERS));
         }
         return super.getPlacementState(ctx);
     }

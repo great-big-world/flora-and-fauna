@@ -57,8 +57,12 @@ public abstract class TallPlantBlockMixin extends PlantBlock implements OverlayS
     @Inject(method = "getPlacementState", at = @At("RETURN"), cancellable = true)
     private void gbw$applySnowyPlacementState(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir) {
         BlockState state = ctx.getWorld().getBlockState(ctx.getBlockPos());
-        if (cir.getReturnValue().get(HALF) == DoubleBlockHalf.LOWER && state.isOf(Blocks.SNOW)) {
-            cir.setReturnValue(cir.getReturnValue().with(SnowyHelper.SNOW_LAYERS, state.get(SnowBlock.LAYERS)));
+        if (cir.getReturnValue().get(HALF) == DoubleBlockHalf.LOWER) {
+            if (state.isOf(Blocks.SNOW)) {
+                cir.setReturnValue(cir.getReturnValue().with(SnowyHelper.SNOW_LAYERS, state.get(SnowBlock.LAYERS)));
+            } else if (state.contains(SnowyHelper.SNOW_LAYERS) && SnowyHelper.isSnowy(state)) {
+                cir.setReturnValue(getDefaultState().with(SnowyHelper.SNOW_LAYERS, state.get(SnowyHelper.SNOW_LAYERS)));
+            }
         }
     }
 

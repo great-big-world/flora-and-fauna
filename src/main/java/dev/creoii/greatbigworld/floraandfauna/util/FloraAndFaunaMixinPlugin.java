@@ -16,6 +16,8 @@ public class FloraAndFaunaMixinPlugin implements IMixinConfigPlugin {
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.RenderSectionManagerAccessor", "sodium")
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.RenderSectionManagerMixin", "sodium")
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.SodiumWorldRendererAccessor", "sodium")
+            .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.SodiumGameOptionsQualitySettingsMixin", "sodium")
+            .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.SodiumGameOptionPagesMixin", "sodium")
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.visuality.CirclesOnWaterEventMixin", "visuality")
             .build();
 

@@ -1,8 +1,8 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
@@ -27,9 +27,9 @@ public abstract class LeavesBlockMixin extends Block {
         super(settings);
     }
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void gbw$initSnowyLeaves(float leafParticleChance, AbstractBlock.Settings settings, CallbackInfo ci) {
-        setDefaultState(stateManager.getDefaultState().with(SNOWY, false));
+    @ModifyExpressionValue(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;with(Lnet/minecraft/state/property/Property;Ljava/lang/Comparable;)Ljava/lang/Object;", ordinal = 2))
+    private Object gbw$initSnowyLeaves(Object original) {
+        return ((BlockState) original).with(SNOWY, false);
     }
 
     @Inject(method = "appendProperties", at = @At("TAIL"))

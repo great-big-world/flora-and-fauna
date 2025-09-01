@@ -21,6 +21,8 @@
     "block.SugarCaneBlockMixin",
     "block.TallPlantBlockMixin",
     "client.compat.particlerain.WeatherParticleSpawnerMixin",
+    "client.compat.sodium.SodiumGameOptionPagesMixin",
+    "client.compat.sodium.SodiumGameOptionsQualitySettingsMixin",
     "entity.AnimalEntityMixin",
     "entity.EscapeDangerGoalMixin",
     "entity.LivingEntityMixin",

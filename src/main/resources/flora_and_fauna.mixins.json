@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaMixinPlugin",
   "mixins": [
+    "BlockItemMixin",
     "block.BeehiveBlockEntityMixin",
     "block.CactusBlockMixin",
     "block.ChestBlockEntityMixin",

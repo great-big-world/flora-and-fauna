@@ -1,0 +1,140 @@
+{
+  "variants": {
+    "layers=1": [
+      {
+        "model": "minecraft:block/snow_height2"
+      },
+      {
+        "model": "minecraft:block/snow_height2",
+        "y": 90
+      },
+      {
+        "model": "minecraft:block/snow_height2",
+        "y": 180
+      },
+      {
+        "model": "minecraft:block/snow_height2",
+        "y": 270
+      }
+    ],
+    "layers=2": [
+      {
+        "model": "minecraft:block/snow_height4"
+      },
+      {
+        "model": "minecraft:block/snow_height4",
+        "y": 90
+      },
+      {
+        "model": "minecraft:block/snow_height4",
+        "y": 180
+      },
+      {
+        "model": "minecraft:block/snow_height4",
+        "y": 270
+      }
+    ],
+    "layers=3": [
+      {
+        "model": "minecraft:block/snow_height6"
+      },
+      {
+        "model": "minecraft:block/snow_height6",
+        "y": 90
+      },
+      {
+        "model": "minecraft:block/snow_height6",
+        "y": 180
+      },
+      {
+        "model": "minecraft:block/snow_height6",
+        "y": 270
+      }
+    ],
+    "layers=4": [
+      {
+        "model": "minecraft:block/snow_height8"
+      },
+      {
+        "model": "minecraft:block/snow_height8",
+        "y": 90
+      },
+      {
+        "model": "minecraft:block/snow_height8",
+        "y": 180
+      },
+      {
+        "model": "minecraft:block/snow_height8",
+        "y": 270
+      }
+    ],
+    "layers=5": [
+      {
+        "model": "minecraft:block/snow_height10"
+      },
+      {
+        "model": "minecraft:block/snow_height10",
+        "y": 90
+      },
+      {
+        "model": "minecraft:block/snow_height10",
+        "y": 180
+      },
+      {
+        "model": "minecraft:block/snow_height10",
+        "y": 270
+      }
+    ],
+    "layers=6": [
+      {
+        "model": "minecraft:block/snow_height12"
+      },
+      {
+        "model": "minecraft:block/snow_height12",
+        "y": 90
+      },
+      {
+        "model": "minecraft:block/snow_height12",
+        "y": 180
+      },
+      {
+        "model": "minecraft:block/snow_height12",
+        "y": 270
+      }
+    ],
+    "layers=7": [
+      {
+        "model": "minecraft:block/snow_height14"
+      },
+      {
+        "model": "minecraft:block/snow_height14",
+        "y": 90
+      },
+      {
+        "model": "minecraft:block/snow_height14",
+        "y": 180
+      },
+      {
+        "model": "minecraft:block/snow_height14",
+        "y": 270
+      }
+    ],
+    "layers=8": [
+      {
+        "model": "minecraft:block/snow_block"
+      },
+      {
+        "model": "minecraft:block/snow_block",
+        "y": 90
+      },
+      {
+        "model": "minecraft:block/snow_block",
+        "y": 180
+      },
+      {
+        "model": "minecraft:block/snow_block",
+        "y": 270
+      }
+    ]
+  }
+}

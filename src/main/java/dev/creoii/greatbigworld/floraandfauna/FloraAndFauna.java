@@ -70,5 +70,6 @@ public class FloraAndFauna implements ModInitializer {
         });
 
         ((AbstractBlockStateAccessor) Blocks.BROWN_MUSHROOM.getDefaultState()).setLuminance(0);
+        ((AbstractBlockStateAccessor) Blocks.SCULK_SHRIEKER.getDefaultState()).setLuminance(3);
     }
 }

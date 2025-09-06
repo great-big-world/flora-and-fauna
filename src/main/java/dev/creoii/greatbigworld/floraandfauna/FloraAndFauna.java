@@ -12,7 +12,9 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.registry.TillableBlockRegistry;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.HoeItem;
 import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -71,5 +73,7 @@ public class FloraAndFauna implements ModInitializer {
 
         Blocks.BROWN_MUSHROOM.getStateManager().getStates().forEach(state -> ((AbstractBlockStateAccessor) state).setLuminance(0));
         Blocks.SCULK_SHRIEKER.getStateManager().getStates().forEach(state -> ((AbstractBlockStateAccessor) state).setLuminance(3));
+
+        TillableBlockRegistry.register(FloraAndFaunaBlocks.HUMUS, HoeItem::canTillFarmland, Blocks.FARMLAND.getDefaultState());
     }
 }

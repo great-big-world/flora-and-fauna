@@ -73,7 +73,6 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
             return false;
         }
 
-        boolean placeMoss = true;
         boolean placeLeaves = true;
         for (int i = 0; i < placementPositions.size(); ++i) {
             BlockPos pos = placementPositions.get(i);
@@ -85,7 +84,7 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
 
                 int count = 1;
                 for (int j = 0; j < 3; ++j) {
-                    if (context.getRandom().nextBoolean())
+                    if (i < 2 ? context.getRandom().nextBoolean() : context.getRandom().nextInt(3) == 0)
                         ++count;
                 }
 

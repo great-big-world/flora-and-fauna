@@ -3,6 +3,7 @@ package dev.creoii.greatbigworld.floraandfauna.mixin.world;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaGameRules;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
@@ -90,7 +91,7 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
         if (seasonManager == null) {
             return original.call(instance, world, pos);
         }
-        return original.call(instance, world, pos) || (seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && world.isInHeightLimit(pos.getY()) && world.getLightLevel(LightType.BLOCK, pos) < 10);
+        return original.call(instance, world, pos) || (seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && getRegistryKey() == GreatBigWorld.ALTERWORLD_KEY && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && world.isInHeightLimit(pos.getY()) && world.getLightLevel(LightType.BLOCK, pos) < 10);
     }
 
     @Redirect(method = "tickIceAndSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;I)Lnet/minecraft/world/biome/Biome$Precipitation;"))
@@ -99,7 +100,7 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
         if (seasonManager == null) {
             return instance.getPrecipitation(pos, seaLevel);
         }
-        return seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) ? Biome.Precipitation.SNOW : instance.getPrecipitation(pos, seaLevel);
+        return seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && getRegistryKey() == GreatBigWorld.ALTERWORLD_KEY ? Biome.Precipitation.SNOW : instance.getPrecipitation(pos, seaLevel);
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;wakeSleepingPlayers()V"))

@@ -24,18 +24,18 @@ public enum Season {
     private final Function<Context, Integer> foliageColorChange;
     private final Function<Context, Integer> grassColorChange;
     private final Function<Context, Integer> particleColorChange;
-    private final TagKey<Biome> biomesNotAffectedBy;
+    private final TagKey<Biome> unaffectedBiomes;
 
-    Season(String translationKey, Function<Context, Integer> foliageColorChange, Function<Context, Integer> grassColorChange, Function<Context, Integer> particleColorChange, TagKey<Biome> biomesNotAffectedBy) {
+    Season(String translationKey, Function<Context, Integer> foliageColorChange, Function<Context, Integer> grassColorChange, Function<Context, Integer> particleColorChange, TagKey<Biome> unaffectedBiomes) {
         this.translationKey = translationKey;
         this.foliageColorChange = foliageColorChange;
         this.grassColorChange = grassColorChange;
         this.particleColorChange = particleColorChange;
-        this.biomesNotAffectedBy = biomesNotAffectedBy;
+        this.unaffectedBiomes = unaffectedBiomes;
     }
 
-    Season(String translationKey, Function<Context, Integer> colorChange, Function<Context, Integer> particleColorChange, TagKey<Biome> biomesNotAffectedBy) {
-        this(translationKey, colorChange, colorChange, particleColorChange, biomesNotAffectedBy);
+    Season(String translationKey, Function<Context, Integer> colorChange, Function<Context, Integer> particleColorChange, TagKey<Biome> unaffectedBiomes) {
+        this(translationKey, colorChange, colorChange, particleColorChange, unaffectedBiomes);
     }
 
     public static Season getNextSeason(Season season) {
@@ -63,8 +63,8 @@ public enum Season {
         return particleColorChange;
     }
 
-    public TagKey<Biome> getBiomesNotAffectedBy() {
-        return biomesNotAffectedBy;
+    public TagKey<Biome> getUnaffectedBiomes() {
+        return unaffectedBiomes;
     }
 
     private static int applyAutumnColorChangeGrass(Context context) {

@@ -3,7 +3,6 @@ package dev.creoii.greatbigworld.floraandfauna.client;
 import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.client.compat.SodiumClientCompat;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
-import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaItems;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.season.TransitionContext;
@@ -38,6 +37,9 @@ public class FloraAndFaunaClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonTransition.PACKET_ID, (payload, context) -> {
             byte[] context1 = payload.context();
             context.client().execute(() -> {
+                if (context.client().world.getRegistryKey() != GreatBigWorld.ALTERWORLD_KEY)
+                    return;
+                
                 transitionContext = new TransitionContext(Season.values()[context1[0]], Season.values()[context1[1]], context1[2] / 100f);
                 if (SODIUM_LOADED) {
                     SodiumClientCompat.rebuildSeason(context.client());

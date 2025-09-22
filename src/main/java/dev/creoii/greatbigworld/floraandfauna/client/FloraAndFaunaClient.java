@@ -29,9 +29,7 @@ public class FloraAndFaunaClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeason.PACKET_ID, (payload, context) -> {
             byte season = payload.season();
-            context.client().execute(() -> {
-                currentSeason = Season.values()[season];
-            });
+            context.client().execute(() -> currentSeason = Season.values()[season]);
         });
 
         ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonTransition.PACKET_ID, (payload, context) -> {

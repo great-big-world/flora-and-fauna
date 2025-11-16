@@ -14,7 +14,7 @@ public class EscapeDangerGoalMixin {
     private Vec3d gbw$improveEscapeDangerPos(PathAwareEntity entity, int horizontalRange, int verticalRange) {
         Vec3d vec3d = NoPenaltyTargeting.find(entity, horizontalRange, verticalRange);
         if (vec3d != null && entity.getAttacker() != null) {
-            Vec3d distance = entity.getPos().subtract(entity.getAttacker().getPos());
+            Vec3d distance = entity.getEntityPos().subtract(entity.getAttacker().getEntityPos());
             Vec3d direction = distance.normalize().multiply(distance.lengthSquared() / 2d);
             return vec3d.add(direction);
         }

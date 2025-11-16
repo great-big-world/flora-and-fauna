@@ -23,7 +23,7 @@ public abstract class AnimalEntityMixin extends PassiveEntity {
     @Inject(method = "applyDamage", at = @At("HEAD"))
     private void gbw$betterAnimalThreatResponse(ServerWorld world, DamageSource source, float amount, CallbackInfo ci) {
         if (source.isIn(FloraAndFaunaTags.ALERTS_ANIMALS) && source.getAttacker() instanceof LivingEntity attacker) {
-            getWorld().getOtherEntities(null, getBoundingBox().expand(12d), entity -> entity instanceof AnimalEntity).forEach(entity -> {                                                   // enchantment for this value
+            getEntityWorld().getOtherEntities(null, getBoundingBox().expand(12d), entity -> entity instanceof AnimalEntity).forEach(entity -> {                                                   // enchantment for this value
                 if (entity instanceof LivingEntity living && (living.squaredDistanceTo(attacker) < 16d || (attacker.getRotationVector().normalize().dotProduct(living.getRotationVector().normalize()) < -.333334d && living.canSee(attacker)))) {
                     living.setAttacker(attacker);
                 }

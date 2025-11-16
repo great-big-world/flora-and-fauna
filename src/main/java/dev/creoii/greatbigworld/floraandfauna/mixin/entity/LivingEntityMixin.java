@@ -30,7 +30,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void gbw$livingClimbHollowLogs(CallbackInfoReturnable<Boolean> cir, @Local BlockPos blockPos, @Local BlockState blockState) {
         MutableBoolean canClimbHollowLog = new MutableBoolean(true);
         BlockPos.stream(getDimensions(EntityPose.STANDING).getBoxAt(blockPos.toCenterPos())).forEach(pos -> {
-            BlockState state = getWorld().getBlockState(pos);
+            BlockState state = getEntityWorld().getBlockState(pos);
             if (!state.isIn(FloraAndFaunaTags.HOLLOW_LOGS) || state.get(HollowLogBlock.AXIS) != Direction.Axis.Y) {
                 canClimbHollowLog.setFalse();
             }

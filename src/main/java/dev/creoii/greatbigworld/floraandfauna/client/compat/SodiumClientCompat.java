@@ -3,7 +3,6 @@ package dev.creoii.greatbigworld.floraandfauna.client.compat;
 import dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.RenderSectionManagerAccessor;
 import dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.SodiumWorldRendererAccessor;
 import dev.creoii.greatbigworld.floraandfauna.util.RenderSectionManagerInvoker;
-import net.caffeinemc.mods.sodium.client.render.chunk.ChunkUpdateType;
 import net.caffeinemc.mods.sodium.client.render.chunk.RenderSection;
 import net.caffeinemc.mods.sodium.client.render.chunk.RenderSectionManager;
 import net.caffeinemc.mods.sodium.client.render.chunk.map.ChunkTracker;
@@ -20,7 +19,7 @@ public final class SodiumClientCompat {
                 for (int y = client.world.getBottomSectionCoord(); y < client.world.getTopSectionCoord(); ++y) {
                     RenderSection renderSection = ((RenderSectionManagerAccessor) renderSectionManager).getSectionByPosition().get(ChunkSectionPos.asLong(x, y, z));
                     if (renderSection != null) {
-                        renderSection.setPendingUpdate(ChunkUpdateType.REBUILD);
+                        renderSection.setPendingUpdate(2, System.nanoTime());
                         ((RenderSectionManagerInvoker) renderSectionManager).gbw$connectNeighborNodes(renderSection);
                     }
                 }

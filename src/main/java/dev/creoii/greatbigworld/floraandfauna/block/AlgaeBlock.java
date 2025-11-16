@@ -36,7 +36,7 @@ public class AlgaeBlock extends PlantBlock {
     }
 
     @Override
-    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
+    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl) {
         int maxDensity = state.get(MAX_DENSITY);
         int density = state.get(DENSITY);
         if (!entity.getType().isIn(FloraAndFaunaTags.IGNORES_ALGAE)) {

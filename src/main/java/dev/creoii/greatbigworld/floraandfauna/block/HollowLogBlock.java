@@ -77,7 +77,7 @@ public class HollowLogBlock extends PillarBlock implements Waterloggable, Adjace
         BlockPos difference = pos.subtract(entity.getBlockPos());
         if (Math.abs(difference.getY()) > .15d || difference.equals(BlockPos.ORIGIN))
             return;
-        Vec3d vecDifference = pos.toBottomCenterPos().subtract(entity.getPos());
+        Vec3d vecDifference = pos.toBottomCenterPos().subtract(entity.getEntityPos());
         boolean canEnter = switch (state.get(AXIS)) {
             case Y -> false;
             case X -> Math.abs(vecDifference.getZ()) < .1d && difference.getX() == entity.getHorizontalFacing().getOffsetX();
@@ -89,7 +89,7 @@ public class HollowLogBlock extends PillarBlock implements Waterloggable, Adjace
             living.setSwimming(true);
 
             Vec3d targetPos = pos.toBottomCenterPos();
-            Vec3d direction = entity.getPos().subtract(targetPos).normalize().multiply(.5d);
+            Vec3d direction = entity.getEntityPos().subtract(targetPos).normalize().multiply(.5d);
             Vec3d destPos = targetPos.add(direction.x, .2d, direction.z);
             living.setPos(destPos.x, destPos.y, destPos.z);
         }

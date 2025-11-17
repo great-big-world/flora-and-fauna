@@ -70,7 +70,7 @@ public enum Season {
     private static int applyAutumnColorChangeGrass(Context context) {
         RegistryEntry<Biome> biomeEntry = context.world.getBiomeFabric(context.pos);
 
-        if (biomeEntry == null || !biomeEntry.hasKeyAndValue() || biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_AUTUMN) || (MinecraftClient.getInstance().world != null && !MinecraftClient.getInstance().world.getRegistryKey().equals(GreatBigWorld.ALTERWORLD_KEY))) {
+        if (biomeEntry == null || !biomeEntry.hasKeyAndValue() || biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_AUTUMN) || (MinecraftClient.getInstance().world != null && !MinecraftClient.getInstance().world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS))) {
             return context.defaultColor;
         }
 
@@ -80,7 +80,7 @@ public enum Season {
     private static int applyAutumnColorChangeFoliage(Context context) {
         RegistryEntry<Biome> biomeEntry = context.world.getBiomeFabric(context.pos);
 
-        if (biomeEntry == null || !biomeEntry.hasKeyAndValue() || biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_AUTUMN) || (MinecraftClient.getInstance().world != null && !MinecraftClient.getInstance().world.getRegistryKey().equals(GreatBigWorld.ALTERWORLD_KEY))) {
+        if (biomeEntry == null || !biomeEntry.hasKeyAndValue() || biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_AUTUMN) || (MinecraftClient.getInstance().world != null && !MinecraftClient.getInstance().world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS))) {
             return context.defaultColor;
         }
 
@@ -99,7 +99,7 @@ public enum Season {
     private static int applyWinterColorChange(Context context) {
         RegistryEntry<Biome> biomeEntry = context.world.getBiomeFabric(context.pos);
 
-        if (biomeEntry == null || !biomeEntry.hasKeyAndValue() || biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) || (MinecraftClient.getInstance().world != null && !MinecraftClient.getInstance().world.getRegistryKey().equals(GreatBigWorld.ALTERWORLD_KEY))) {
+        if (biomeEntry == null || !biomeEntry.hasKeyAndValue() || biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) || (MinecraftClient.getInstance().world != null && !MinecraftClient.getInstance().world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS))) {
             return context.defaultColor;
         }
 
@@ -113,7 +113,7 @@ public enum Season {
     private static int applySpringColorChange(Context context) {
         RegistryEntry<Biome> biomeEntry = context.world.getBiomeFabric(context.pos);
 
-        if (biomeEntry == null || !biomeEntry.hasKeyAndValue() || biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_SPRING) || (MinecraftClient.getInstance().world != null && !MinecraftClient.getInstance().world.getRegistryKey().equals(GreatBigWorld.ALTERWORLD_KEY))) {
+        if (biomeEntry == null || !biomeEntry.hasKeyAndValue() || biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_SPRING) || (MinecraftClient.getInstance().world != null && !MinecraftClient.getInstance().world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS))) {
             return context.defaultColor;
         }
 

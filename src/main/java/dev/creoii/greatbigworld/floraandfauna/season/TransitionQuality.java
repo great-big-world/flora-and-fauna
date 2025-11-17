@@ -7,9 +7,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.TranslatableOption;
+
+import java.util.Arrays;
 
 @Environment(EnvType.CLIENT)
 public enum TransitionQuality implements TranslatableOption, StringIdentifiable {
@@ -19,6 +22,7 @@ public enum TransitionQuality implements TranslatableOption, StringIdentifiable 
     INSTANT(1, "options.seasonTransitionQuality.instant");
 
     public static final Codec<TransitionQuality> CODEC = StringIdentifiable.createCodec(TransitionQuality::values);
+    public static final Text[] NAMES = Arrays.stream(values()).map(TranslatableOption::getText).toArray(Text[]::new);
     private final int quality;
     private final String translationKey;
 

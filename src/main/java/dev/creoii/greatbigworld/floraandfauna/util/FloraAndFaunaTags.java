@@ -1,7 +1,6 @@
 package dev.creoii.greatbigworld.floraandfauna.util;
 
 import dev.creoii.greatbigworld.GreatBigWorld;
-import dev.creoii.greatbigworld.floraandfauna.FloraAndFauna;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageType;
@@ -9,6 +8,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.dimension.DimensionType;
 
 public final class FloraAndFaunaTags {
     public static final TagKey<Block> IGNORE_SEASON_COLOR = TagKey.of(RegistryKeys.BLOCK, Identifier.of(GreatBigWorld.NAMESPACE, "ignore_season_color"));
@@ -23,4 +23,6 @@ public final class FloraAndFaunaTags {
     public static final TagKey<EntityType<?>> IGNORES_ALGAE = TagKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(GreatBigWorld.NAMESPACE, "ignores_algae"));
 
     public static final TagKey<DamageType> ALERTS_ANIMALS = TagKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(GreatBigWorld.NAMESPACE, "alerts_animals"));
+
+    public static final TagKey<DimensionType> AFFECTED_BY_SEASONS = TagKey.of(RegistryKeys.DIMENSION_TYPE, Identifier.of(GreatBigWorld.NAMESPACE, "affected_by_seasons"));
 }

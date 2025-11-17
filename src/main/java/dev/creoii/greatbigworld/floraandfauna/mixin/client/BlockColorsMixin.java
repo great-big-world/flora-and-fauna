@@ -1,6 +1,5 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.client;
 
-import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.minecraft.block.Block;
@@ -21,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BlockColorsMixin {
     @Inject(method = "getParticleColor", at = @At(value = "RETURN", ordinal = 0), cancellable = true)
     private void gbw$modifyParticleColor(BlockState state, World world, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
-        if (FloraAndFaunaClient.getCurrentSeason() != null && FloraAndFaunaClient.getTransitionContext() != null && !state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR) && world.getRegistryKey() == GreatBigWorld.ALTERWORLD_KEY) {
+        if (FloraAndFaunaClient.getCurrentSeason() != null && FloraAndFaunaClient.getTransitionContext() != null && !state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR) && world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
             cir.setReturnValue(FloraAndFaunaClient.getTransitionContext().getSeasonGrassColor(world, pos, cir.getReturnValue()));
         }
     }
@@ -29,7 +28,7 @@ public class BlockColorsMixin {
     @Redirect(method = "create", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/color/block/BlockColors;registerColorProvider(Lnet/minecraft/client/color/block/BlockColorProvider;[Lnet/minecraft/block/Block;)V", ordinal = 3))
     private static void gbw$modifySpruceColor(BlockColors instance, BlockColorProvider provider, Block[] blocks) {
         instance.registerColorProvider((state, world, pos, tintIndex) -> {
-            if (world instanceof ClientWorld clientWorld && clientWorld.getRegistryKey() != GreatBigWorld.ALTERWORLD_KEY)
+            if (world instanceof ClientWorld clientWorld && !clientWorld.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS))
                 return -8345771;
             if (FloraAndFaunaClient.getCurrentSeason() != null && FloraAndFaunaClient.getTransitionContext() != null && !state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
                 return FloraAndFaunaClient.getTransitionContext().getSeasonFoliageColor(world, pos, -10380959);
@@ -41,7 +40,7 @@ public class BlockColorsMixin {
     @Redirect(method = "create", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/color/block/BlockColors;registerColorProvider(Lnet/minecraft/client/color/block/BlockColorProvider;[Lnet/minecraft/block/Block;)V", ordinal = 4))
     private static void gbw$modifyBirchColor(BlockColors instance, BlockColorProvider provider, Block[] blocks) {
         instance.registerColorProvider((state, world, pos, tintIndex) -> {
-            if (world instanceof ClientWorld clientWorld && clientWorld.getRegistryKey() != GreatBigWorld.ALTERWORLD_KEY)
+            if (world instanceof ClientWorld clientWorld && !clientWorld.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS))
                 return -8345771;
             if (FloraAndFaunaClient.getCurrentSeason() != null && FloraAndFaunaClient.getTransitionContext() != null && !state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
                 return FloraAndFaunaClient.getTransitionContext().getSeasonFoliageColor(world, pos, -8345771);

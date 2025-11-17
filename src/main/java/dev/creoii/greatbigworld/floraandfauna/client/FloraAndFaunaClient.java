@@ -6,6 +6,7 @@ import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.season.TransitionContext;
+import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -35,7 +36,7 @@ public class FloraAndFaunaClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonTransition.PACKET_ID, (payload, context) -> {
             byte[] context1 = payload.context();
             context.client().execute(() -> {
-                if (context.client().world.getRegistryKey() != GreatBigWorld.ALTERWORLD_KEY)
+                if (!context.client().world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS))
                     return;
 
                 transitionContext = new TransitionContext(Season.values()[context1[0]], Season.values()[context1[1]], context1[2] / 100f);

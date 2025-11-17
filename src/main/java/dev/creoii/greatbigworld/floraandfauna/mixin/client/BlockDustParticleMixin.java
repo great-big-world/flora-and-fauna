@@ -3,7 +3,6 @@ package dev.creoii.greatbigworld.floraandfauna.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
@@ -20,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class BlockDustParticleMixin {
     @WrapOperation(method = "<init>(Lnet/minecraft/client/world/ClientWorld;DDDDDDLnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/color/block/BlockColors;getColor(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/util/math/BlockPos;I)I"))
     private int gbw$tintBlockBreakParticle(BlockColors instance, BlockState state, BlockRenderView blockRenderView, BlockPos pos, int tintIndex, Operation<Integer> original, @Local(argsOnly = true) ClientWorld world) {
-        if (world instanceof ClientWorld clientWorld && clientWorld.getRegistryKey() != GreatBigWorld.ALTERWORLD_KEY)
+        if (world instanceof ClientWorld clientWorld && !clientWorld.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS))
             return original.call(instance, state, world, pos, tintIndex);
         if (!state.isIn(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
             Season season = FloraAndFaunaClient.getCurrentSeason();

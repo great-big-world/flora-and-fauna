@@ -1,9 +1,9 @@
 package dev.creoii.greatbigworld.floraandfauna;
 
-import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.registry.*;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.season.TransitionQuality;
+import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.mixin.AbstractBlockStateAccessor;
 import dev.creoii.greatbigworld.util.EntityBlockCollisionSpliterator;
 import net.fabricmc.api.ModInitializer;
@@ -17,7 +17,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.HoeItem;
 import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 
 public class FloraAndFauna implements ModInitializer {
     @Override
@@ -41,21 +40,22 @@ public class FloraAndFauna implements ModInitializer {
                 if (seasonManager == null)
                     return;
                 seasonManager.setSeasonTransitionQuality(quality);
-                ServerWorld alterworld = context.server().getWorld(GreatBigWorld.ALTERWORLD_KEY);
-                if (alterworld != null)
-                    seasonManager.updateSeasonTime(alterworld);
+                context.server().getWorlds().forEach(serverWorld -> {
+                    if (serverWorld.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS))
+                        seasonManager.updateSeasonTime(serverWorld);
+                });
             });
         });
 
         ServerWorldEvents.LOAD.register((server, world) -> {
-            if (world.getRegistryKey() == GreatBigWorld.ALTERWORLD_KEY) {
+            if (world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
                 SeasonManager manager = SeasonManager.getInstance(server);
                 if (manager != null)
                     manager.load(world);
             }
         });
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-            if (world.getRegistryKey() == GreatBigWorld.ALTERWORLD_KEY && entity instanceof ServerPlayerEntity serverPlayer) {
+            if (world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && entity instanceof ServerPlayerEntity serverPlayer) {
                 SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
                 if (seasonManager != null) {
                     ServerPlayNetworking.send(serverPlayer, new SeasonManager.SyncSeason((byte) seasonManager.getCurrentSeason().ordinal()));
@@ -64,7 +64,7 @@ public class FloraAndFauna implements ModInitializer {
             }
         });
         ServerTickEvents.END_WORLD_TICK.register(world -> {
-            if (world.getRegistryKey() == GreatBigWorld.ALTERWORLD_KEY && world.getTickManager().shouldTick()) {
+            if (world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && world.getTickManager().shouldTick()) {
                 SeasonManager manager = SeasonManager.getInstance(world.getServer());
                 if (manager != null)
                     manager.tick(world);

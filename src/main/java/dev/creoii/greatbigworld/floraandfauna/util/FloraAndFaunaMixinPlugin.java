@@ -12,13 +12,14 @@ import java.util.Set;
 
 public class FloraAndFaunaMixinPlugin implements IMixinConfigPlugin {
     private static final Map<String, String> MOD_DEPENDENT_MIXINS = new ImmutableMap.Builder<String, String>()
-            .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.DefaultColorProvidersMixin", "sodium")
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.RenderSectionManagerAccessor", "sodium")
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.RenderSectionManagerMixin", "sodium")
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.SodiumWorldRendererAccessor", "sodium")
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.SodiumGameOptionsQualitySettingsMixin", "sodium")
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.SodiumGameOptionPagesMixin", "sodium")
             .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.visuality.CirclesOnWaterEventMixin", "visuality")
+            .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.particlerain.WeatherParticleManagerMixin", "particlerain")
+            .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.particlerain.VersionUtilMixin", "particlerain")
             .build();
 
     @Override

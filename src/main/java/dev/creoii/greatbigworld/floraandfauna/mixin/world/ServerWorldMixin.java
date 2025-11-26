@@ -62,8 +62,9 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
                     setBlockState(top2, Blocks.ICE.getDefaultState());
                 }
 
+                SeasonManager seasonManager = SeasonManager.getInstance(getServer());
                 int i = getGameRules().getInt(GameRules.SNOW_ACCUMULATION_HEIGHT);
-                if (i > 0 && biome.canSetSnow(this, top)) {
+                if (i > 0 && (biome.canSetSnow(this, top) || (seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && Blocks.SNOW.getDefaultState().canPlaceAt(this, pos) && isInHeightLimit(pos.getY()) && getLightLevel(LightType.BLOCK, pos) < 10))) {
                     BlockState blockState1 = getBlockState(top);
                     if (blockState1.isOf(Blocks.SNOW)) {
                         int j = blockState1.get(SnowBlock.LAYERS);

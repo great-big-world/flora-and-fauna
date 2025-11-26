@@ -20,14 +20,14 @@ import org.spongepowered.asm.mixin.injection.At;
 public class BiomeMixin {
     @WrapOperation(method = "canSetSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;I)Lnet/minecraft/world/biome/Biome$Precipitation;"))
     private Biome.Precipitation gbw$modifyCanSetSnowForWinter(Biome instance, BlockPos pos, int seaLevel, Operation<Biome.Precipitation> original, @Local(argsOnly = true) WorldView world) {
-        if (world.isClient() && (FloraAndFaunaClient.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && world.isInHeightLimit(pos.getY()) && world.getLightLevel(LightType.BLOCK, pos) < 10))
+        if (world.isClient() && (FloraAndFaunaClient.getCurrentSeason() == Season.WINTER && !world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && world.isInHeightLimit(pos.getY()) && world.getLightLevel(LightType.BLOCK, pos) < 10))
             return Biome.Precipitation.SNOW;
         else {
             if (world instanceof ServerWorld serverWorld) {
                 SeasonManager seasonManager = SeasonManager.getInstance(serverWorld.getServer());
                 if (seasonManager == null || !serverWorld.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS))
                     return original.call(instance, pos, seaLevel);
-                return (seasonManager.getCurrentSeason() != Season.WINTER || world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && world.isInHeightLimit(pos.getY()) && world.getLightLevel(LightType.BLOCK, pos) < 10) ? Biome.Precipitation.SNOW : original.call(instance, pos, seaLevel);
+                return (seasonManager.getCurrentSeason() == Season.WINTER && !world.getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.getDefaultState().canPlaceAt(world, pos) && world.isInHeightLimit(pos.getY()) && world.getLightLevel(LightType.BLOCK, pos) < 10) ? Biome.Precipitation.SNOW : original.call(instance, pos, seaLevel);
             } else return original.call(instance, pos, seaLevel);
         }
     }

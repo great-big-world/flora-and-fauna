@@ -55,7 +55,7 @@ public abstract class SnowBlockMixin extends Block {
     private void gbw$meltInNonWinterSeason(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
         SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
-        if (seasonManager != null && world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && world.getLightLevel(LightType.BLOCK, pos) > 11 || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos, world.getSeaLevel()))) {
+        if (seasonManager != null && ((world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && world.getLightLevel(LightType.BLOCK, pos) > 11) || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos, world.getSeaLevel())))) {
             dropStacks(state, world, pos);
             world.removeBlock(pos, false);
             ci.cancel();

@@ -106,9 +106,8 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
                         Block.pushEntitiesUpBeforeBlockChange(state, newState, this, cursor);
                         setBlockState(cursor, newState, 2);
 
-                        if (stateBelow.contains(SnowyBlock.SNOWY)) {
-                            if (!stateBelow.get(SnowyBlock.SNOWY))
-                                setBlockState(below, stateBelow.with(SnowyBlock.SNOWY, true), 2);
+                        if (stateBelow.contains(SnowyBlock.SNOWY) && !stateBelow.get(SnowyBlock.SNOWY)) {
+                            setBlockState(below, stateBelow.with(SnowyBlock.SNOWY, true), 2);
                         }
                     }
                 }
@@ -121,9 +120,8 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
                         setBlockState(below, newState, 2);
 
                         BlockState stateBelow2 = getBlockState(below.down());
-                        if (stateBelow2.contains(SnowyBlock.SNOWY)) {
-                            if (!stateBelow.get(SnowyBlock.SNOWY))
-                                setBlockState(below.down(), stateBelow2.with(SnowyBlock.SNOWY, true), 2);
+                        if (stateBelow2.contains(SnowyBlock.SNOWY) && !stateBelow2.get(SnowyBlock.SNOWY)) {
+                            setBlockState(below.down(), stateBelow2.with(SnowyBlock.SNOWY, true), 2);
                         }
                     }
                 }

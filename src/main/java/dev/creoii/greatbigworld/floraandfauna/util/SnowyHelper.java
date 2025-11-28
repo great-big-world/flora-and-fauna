@@ -31,9 +31,8 @@ public final class SnowyHelper {
                 world.setBlockState(pos, blockState2);
 
                 BlockState stateBelow = world.getBlockState(pos.down());
-                if (stateBelow.contains(SnowyBlock.SNOWY)) {
-                    if (!stateBelow.get(SnowyBlock.SNOWY))
-                        world.setBlockState(pos.down(), stateBelow.with(SnowyBlock.SNOWY, true), 2);
+                if (stateBelow.contains(SnowyBlock.SNOWY) && !stateBelow.get(SnowyBlock.SNOWY)) {
+                    world.setBlockState(pos.down(), stateBelow.with(SnowyBlock.SNOWY, true), 2);
                 }
             }
         }

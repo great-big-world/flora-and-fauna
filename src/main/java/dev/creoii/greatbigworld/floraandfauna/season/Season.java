@@ -1,6 +1,5 @@
 package dev.creoii.greatbigworld.floraandfauna.season;
 
-import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.util.ColorHelper;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.world.fastnoise.FastNoiseLite;

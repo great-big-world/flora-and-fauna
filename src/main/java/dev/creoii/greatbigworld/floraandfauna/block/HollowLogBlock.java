@@ -84,14 +84,20 @@ public class HollowLogBlock extends PillarBlock implements Waterloggable, Adjace
             case Z -> Math.abs(vecDifference.getX()) < .1d && difference.getZ() == entity.getHorizontalFacing().getOffsetZ();
         };
 
-        if (canEnter && entity instanceof LivingEntity living) {
-            living.setPose(EntityPose.SWIMMING);
-            living.setSwimming(true);
+        if (canEnter) {
+            BlockPos entrancePos = BlockPos.ofFloored(entity.getX(), entity.getY() - .01d, entity.getZ()).offset(state.get(AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X, 0);
+            VoxelShape shape = entity.getEntityWorld().getBlockState(entrancePos).getCollisionShape(entity.getEntityWorld(), entrancePos);
+            final double y = shape.getMax(Direction.Axis.Y);
+            if (y > .375d)
+                return;
 
-            Vec3d targetPos = pos.toBottomCenterPos();
-            Vec3d direction = entity.getEntityPos().subtract(targetPos).normalize().multiply(.5d);
-            Vec3d destPos = targetPos.add(direction.x, .2d, direction.z);
-            living.setPos(destPos.x, destPos.y, destPos.z);
+            Vec3d target = pos.toBottomCenterPos();
+            Vec3d direction = entity.getEntityPos().subtract(target).normalize();
+            Vec3d destination = target.add(direction.x, Math.min(.1875d, y), direction.z);
+
+            entity.setPose(EntityPose.SWIMMING);
+            entity.setSwimming(true);
+            entity.setPos(destination.x, destination.y, destination.z);
         }
     }
 }

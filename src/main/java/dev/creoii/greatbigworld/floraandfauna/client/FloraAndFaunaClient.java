@@ -36,8 +36,10 @@ public class FloraAndFaunaClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonTransition.PACKET_ID, (payload, context) -> {
             byte[] context1 = payload.context();
             context.client().execute(() -> {
-                if (!context.client().world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS))
+                if (!context.client().world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
+                    transitionContext = null;
                     return;
+                }
 
                 transitionContext = new TransitionContext(Season.values()[context1[0]], Season.values()[context1[1]], context1[2] / 100f);
                 if (SODIUM_LOADED) {

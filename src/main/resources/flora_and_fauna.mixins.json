@@ -21,6 +21,7 @@
     "block.SnowyBlockMixin",
     "block.SugarCaneBlockMixin",
     "block.TallPlantBlockMixin",
+    "block.TintedParticleLeavesBlockMixin",
     "client.compat.particlerain.VersionUtilMixin",
     "client.compat.particlerain.WeatherParticleManagerMixin",
     "client.compat.sodium.SodiumGameOptionPagesMixin",

@@ -2,6 +2,7 @@ package dev.creoii.greatbigworld.floraandfauna.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SnowyBlock;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
@@ -28,6 +29,12 @@ public final class SnowyHelper {
                 BlockState blockState2 = state.with(SNOW_LAYERS, i + 1);
                 Block.pushEntitiesUpBeforeBlockChange(state, blockState2, world, pos);
                 world.setBlockState(pos, blockState2);
+
+                BlockState stateBelow = world.getBlockState(pos.down());
+                if (stateBelow.contains(SnowyBlock.SNOWY)) {
+                    if (!stateBelow.get(SnowyBlock.SNOWY))
+                        world.setBlockState(pos.down(), stateBelow.with(SnowyBlock.SNOWY, true), 2);
+                }
             }
         }
     }

@@ -85,15 +85,15 @@ public class HollowLogBlock extends PillarBlock implements Waterloggable, Adjace
         };
 
         if (canEnter) {
-            BlockPos entrancePos = BlockPos.ofFloored(entity.getX(), entity.getY() - .01d, entity.getZ()).offset(state.get(AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X, 0);
+            BlockPos entrancePos = BlockPos.ofFloored(entity.getEntityPos()).offset(state.get(AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X, 0);
             VoxelShape shape = entity.getEntityWorld().getBlockState(entrancePos).getCollisionShape(entity.getEntityWorld(), entrancePos);
-            final double y = shape.getMax(Direction.Axis.Y);
-            if (y > .375d)
+            final double y = shape.isEmpty() ? 0d : shape.getMax(Direction.Axis.Y);
+            if (y >= .375d)
                 return;
 
             Vec3d target = pos.toBottomCenterPos();
-            Vec3d direction = entity.getEntityPos().subtract(target).normalize();
-            Vec3d destination = target.add(direction.x, Math.min(.1875d, y), direction.z);
+            Vec3d direction = entity.getEntityPos().subtract(target).normalize().multiply(.5d);
+            Vec3d destination = target.add(direction.x, Math.min(.2d, y), direction.z);
 
             entity.setPose(EntityPose.SWIMMING);
             entity.setSwimming(true);

@@ -7,10 +7,12 @@ import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.Items;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -41,6 +43,13 @@ public abstract class FenceGateBlockMixin extends HorizontalFacingBlock implemen
         }
     }
 
+    @Inject(method = "getCollisionShape", at = @At("RETURN"), cancellable = true)
+    private void gbw$mergeSnowCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
+        if (SnowyHelper.isSnowy(state)) {
+            cir.setReturnValue(VoxelShapes.union(cir.getReturnValue(), SnowyHelper.LAYERS_TO_SHAPE[state.get(SnowyHelper.SNOW_LAYERS) - 1]));
+        }
+    }
+
     @Inject(method = "getPlacementState", at = @At("RETURN"), cancellable = true)
     private void gbw$applyFenceGateSnowPlacementState(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir) {
         BlockState state = ctx.getWorld().getBlockState(ctx.getBlockPos());
@@ -57,6 +66,11 @@ public abstract class FenceGateBlockMixin extends HorizontalFacingBlock implemen
     }
 
     @Override
+    protected boolean hasRandomTicks(BlockState state) {
+        return SnowyHelper.isSnowy(state);
+    }
+
+    @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
         SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
@@ -65,6 +79,14 @@ public abstract class FenceGateBlockMixin extends HorizontalFacingBlock implemen
                 dropStacks(Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS)), world, pos);
             world.setBlockState(pos, state.with(SnowyHelper.SNOW_LAYERS, 0));
         }
+    }
+
+    @Override
+    protected boolean canReplace(BlockState state, ItemPlacementContext context) {
+        if (context.getStack().isOf(Items.SNOW) && context.getSide() == Direction.UP && context.shouldCancelInteraction() && state.get(SnowyHelper.SNOW_LAYERS) < 8) {
+            return true;
+        }
+        return super.canReplace(state, context);
     }
 
     @Override

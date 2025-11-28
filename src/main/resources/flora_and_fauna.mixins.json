@@ -7,10 +7,12 @@
   "mixins": [
     "BlockItemMixin",
     "block.BeehiveBlockEntityMixin",
+    "block.BushBlockMixin",
     "block.CactusBlockMixin",
     "block.ChestBlockEntityMixin",
     "block.FenceAndPaneBlockMixin",
     "block.FenceGateBlockMixin",
+    "block.FireflyBushBlockMixin",
     "block.FlowerBlockMixin",
     "block.IceBlockMixin",
     "block.LeavesBlockMixin",

@@ -1,7 +1,4 @@
 accessWidener v2 named
-accessible class net/minecraft/client/render/chunk/ChunkBuilder$BuiltChunk$RebuildTask
-accessible class net/minecraft/block/entity/BeehiveBlockEntity$Bee
-
 accessible field net/minecraft/client/renderer/LevelRenderer viewArea Lnet/minecraft/client/renderer/ViewArea;
 accessible field net/minecraft/world/level/block/entity/ChestBlockEntity chestLidController Lnet/minecraft/world/level/block/entity/ChestLidController;
 accessible field net/minecraft/world/level/block/entity/ChestLidController openness F

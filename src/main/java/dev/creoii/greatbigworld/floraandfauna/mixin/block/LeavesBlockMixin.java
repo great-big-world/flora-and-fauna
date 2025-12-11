@@ -3,15 +3,15 @@ package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,35 +21,35 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LeavesBlock.class)
 public abstract class LeavesBlockMixin extends Block {
     @Unique
-    private static final BooleanProperty SNOWY = Properties.SNOWY;
+    private static final BooleanProperty SNOWY = BlockStateProperties.SNOWY;
 
-    public LeavesBlockMixin(Settings settings) {
+    public LeavesBlockMixin(Properties settings) {
         super(settings);
     }
 
-    @ModifyExpressionValue(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;with(Lnet/minecraft/state/property/Property;Ljava/lang/Comparable;)Ljava/lang/Object;", ordinal = 2))
+    @ModifyExpressionValue(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;setValue(Lnet/minecraft/world/level/block/state/properties/Property;Ljava/lang/Comparable;)Ljava/lang/Object;", ordinal = 2))
     private Object gbw$initSnowyLeaves(Object original) {
-        return ((BlockState) original).with(SNOWY, false);
+        return ((BlockState) original).setValue(SNOWY, false);
     }
 
-    @Inject(method = "appendProperties", at = @At("TAIL"))
-    private void gbw$addSnowyProperty(StateManager.Builder<Block, BlockState> builder, CallbackInfo ci) {
+    @Inject(method = "createBlockStateDefinition", at = @At("TAIL"))
+    private void gbw$addSnowyProperty(StateDefinition.Builder<Block, BlockState> builder, CallbackInfo ci) {
         builder.add(SNOWY);
     }
 
-    @ModifyReturnValue(method = "getStateForNeighborUpdate", at = @At("RETURN"))
+    @ModifyReturnValue(method = "updateShape", at = @At("RETURN"))
     private BlockState gbw$snowLeavesNeighborUpdate(BlockState original, @Local(argsOnly = true) Direction direction, @Local(argsOnly = true, ordinal = 1) BlockState neighborState) {
-        return direction == Direction.UP ? original.with(SNOWY, isSnow(neighborState)) : original;
+        return direction == Direction.UP ? original.setValue(SNOWY, isSnow(neighborState)) : original;
     }
 
-    @ModifyReturnValue(method = "getPlacementState", at = @At("RETURN"))
-    private BlockState gbw$snowLeavesPlacementState(BlockState original, @Local(argsOnly = true)ItemPlacementContext context) {
-        BlockState blockState = context.getWorld().getBlockState(context.getBlockPos().up());
-        return original.with(SNOWY, isSnow(blockState));
+    @ModifyReturnValue(method = "getStateForPlacement", at = @At("RETURN"))
+    private BlockState gbw$snowLeavesPlacementState(BlockState original, @Local(argsOnly = true)BlockPlaceContext context) {
+        BlockState blockState = context.getLevel().getBlockState(context.getClickedPos().above());
+        return original.setValue(SNOWY, isSnow(blockState));
     }
 
     @Unique
     private static boolean isSnow(BlockState state) {
-        return state.isIn(BlockTags.SNOW);
+        return state.is(BlockTags.SNOW);
     }
 }

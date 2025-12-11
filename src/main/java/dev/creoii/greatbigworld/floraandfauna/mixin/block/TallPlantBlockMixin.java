@@ -5,25 +5,31 @@ import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
-import net.minecraft.block.*;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.SnowLayerBlock;
+import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -32,119 +38,119 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(TallPlantBlock.class)
-public abstract class TallPlantBlockMixin extends PlantBlock implements OverlayState {
+@Mixin(DoublePlantBlock.class)
+public abstract class TallPlantBlockMixin extends VegetationBlock implements OverlayState {
     @Shadow @Final public static EnumProperty<DoubleBlockHalf> HALF;
 
-    protected TallPlantBlockMixin(Settings settings) {
+    protected TallPlantBlockMixin(Properties settings) {
         super(settings);
     }
 
     @Override
-    public boolean hasDynamicBounds() {
+    public boolean hasDynamicShape() {
         return true;
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void gbw$setSnowyDefaultState(Settings settings, CallbackInfo ci) {
-        BlockState defaultState = getStateManager().getDefaultState().with(HALF, DoubleBlockHalf.LOWER);
-        if (defaultState.contains(SnowyHelper.SNOW_LAYERS))
-            defaultState = defaultState.with(SnowyHelper.SNOW_LAYERS, 0);
-        setDefaultState(defaultState);
+    private void gbw$setSnowyDefaultState(Properties settings, CallbackInfo ci) {
+        BlockState defaultState = getStateDefinition().any().setValue(HALF, DoubleBlockHalf.LOWER);
+        if (defaultState.hasProperty(SnowyHelper.SNOW_LAYERS))
+            defaultState = defaultState.setValue(SnowyHelper.SNOW_LAYERS, 0);
+        registerDefaultState(defaultState);
     }
 
-    @Inject(method = "getPlacementState", at = @At("RETURN"), cancellable = true)
-    private void gbw$applySnowyPlacementState(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir) {
-        BlockState state = ctx.getWorld().getBlockState(ctx.getBlockPos());
-        if (cir.getReturnValue().get(HALF) == DoubleBlockHalf.LOWER) {
-            if (state.isOf(Blocks.SNOW)) {
-                cir.setReturnValue(cir.getReturnValue().with(SnowyHelper.SNOW_LAYERS, state.get(SnowBlock.LAYERS)));
-            } else if (state.contains(SnowyHelper.SNOW_LAYERS) && SnowyHelper.isSnowy(state)) {
-                cir.setReturnValue(getDefaultState().with(SnowyHelper.SNOW_LAYERS, state.get(SnowyHelper.SNOW_LAYERS)));
+    @Inject(method = "getStateForPlacement", at = @At("RETURN"), cancellable = true)
+    private void gbw$applySnowyPlacementState(BlockPlaceContext ctx, CallbackInfoReturnable<BlockState> cir) {
+        BlockState state = ctx.getLevel().getBlockState(ctx.getClickedPos());
+        if (cir.getReturnValue().getValue(HALF) == DoubleBlockHalf.LOWER) {
+            if (state.is(Blocks.SNOW)) {
+                cir.setReturnValue(cir.getReturnValue().setValue(SnowyHelper.SNOW_LAYERS, state.getValue(SnowLayerBlock.LAYERS)));
+            } else if (state.hasProperty(SnowyHelper.SNOW_LAYERS) && SnowyHelper.isSnowy(state)) {
+                cir.setReturnValue(defaultBlockState().setValue(SnowyHelper.SNOW_LAYERS, state.getValue(SnowyHelper.SNOW_LAYERS)));
             }
         }
     }
 
-    @Inject(method = "appendProperties", at = @At("TAIL"))
-    private void gbw$addSnowyProperty(StateManager.Builder<Block, BlockState> builder, CallbackInfo ci) {
+    @Inject(method = "createBlockStateDefinition", at = @At("TAIL"))
+    private void gbw$addSnowyProperty(StateDefinition.Builder<Block, BlockState> builder, CallbackInfo ci) {
         builder.add(SnowyHelper.SNOW_LAYERS);
     }
 
-    @Inject(method = "onPlaced", at = @At("HEAD"), cancellable = true)
-    private void gbw$fixSnowPlacementBug(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack, CallbackInfo ci) {
-        if (SnowyHelper.isSnowy(state) && state.get(HALF) == DoubleBlockHalf.UPPER) {
+    @Inject(method = "setPlacedBy", at = @At("HEAD"), cancellable = true)
+    private void gbw$fixSnowPlacementBug(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack, CallbackInfo ci) {
+        if (SnowyHelper.isSnowy(state) && state.getValue(HALF) == DoubleBlockHalf.UPPER) {
             ci.cancel();
         }
     }
 
     @Override
-    public boolean hasRandomTicks(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return SnowyHelper.isSnowy(state);
     }
 
     @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        Holder<Biome> biomeEntry = world.getBiome(pos);
         SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
-        if (seasonManager != null && world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && world.getLightLevel(LightType.BLOCK, pos) > 11 || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos, world.getSeaLevel()))) {
-            if (state.get(SnowyHelper.SNOW_LAYERS) > 0)
-                dropStacks(Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS)), world, pos);
-            world.setBlockState(pos, state.with(SnowyHelper.SNOW_LAYERS, 0));
+        if (seasonManager != null && world.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && world.getBrightness(LightLayer.BLOCK, pos) > 11 || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.is(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().warmEnoughToRain(pos, world.getSeaLevel()))) {
+            if (state.getValue(SnowyHelper.SNOW_LAYERS) > 0)
+                dropResources(Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, state.getValue(SnowyHelper.SNOW_LAYERS)), world, pos);
+            world.setBlockAndUpdate(pos, state.setValue(SnowyHelper.SNOW_LAYERS, 0));
 
-            BlockState up = world.getBlockState(pos.up());
-            if (state.get(HALF) == DoubleBlockHalf.LOWER && SnowyHelper.isSnowy(up)) {
-                world.setBlockState(pos.up(), up.with(SnowyHelper.SNOW_LAYERS, 0));
+            BlockState up = world.getBlockState(pos.above());
+            if (state.getValue(HALF) == DoubleBlockHalf.LOWER && SnowyHelper.isSnowy(up)) {
+                world.setBlockAndUpdate(pos.above(), up.setValue(SnowyHelper.SNOW_LAYERS, 0));
             }
         }
     }
 
     @Override
-    public boolean canReplace(BlockState state, ItemPlacementContext context) {
-        int i = state.get(SnowyHelper.SNOW_LAYERS);
-        BlockState down = context.getWorld().getBlockState(context.getBlockPos().down());
-        if (state.get(HALF) == DoubleBlockHalf.LOWER) {
-            return context.getStack().isOf(Items.SNOW) && i < 8;
-        } else if (down.isOf(this) && down.get(SnowyHelper.SNOW_LAYERS) == 8) {
-            return context.getStack().isOf(Items.SNOW) && i < 8;
-        } else return super.canReplace(state, context);
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
+        int i = state.getValue(SnowyHelper.SNOW_LAYERS);
+        BlockState down = context.getLevel().getBlockState(context.getClickedPos().below());
+        if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
+            return context.getItemInHand().is(Items.SNOW) && i < 8;
+        } else if (down.is(this) && down.getValue(SnowyHelper.SNOW_LAYERS) == 8) {
+            return context.getItemInHand().is(Items.SNOW) && i < 8;
+        } else return super.canBeReplaced(state, context);
     }
 
     @Override
-    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
-        if (type == NavigationType.LAND)
-            return state.get(SnowyHelper.SNOW_LAYERS) < 5;
+    protected boolean isPathfindable(BlockState state, PathComputationType type) {
+        if (type == PathComputationType.LAND)
+            return state.getValue(SnowyHelper.SNOW_LAYERS) < 5;
         return false;
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (SnowyHelper.isSnowy(state)) {
-            return SnowyHelper.LAYERS_TO_SHAPE[state.get(SnowyHelper.SNOW_LAYERS) - 1];
+            return SnowyHelper.LAYERS_TO_SHAPE[state.getValue(SnowyHelper.SNOW_LAYERS) - 1];
         }
-        return VoxelShapes.empty();
+        return Shapes.empty();
     }
 
     @Override
-    public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
+    public VoxelShape getBlockSupportShape(BlockState state, BlockGetter world, BlockPos pos) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.getSnowShape(state);
         }
-        return VoxelShapes.empty();
+        return Shapes.empty();
     }
 
     @Override
-    public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (SnowyHelper.isSnowy(state)) {
             return SnowyHelper.getSnowShape(state);
         }
-        return VoxelShapes.empty();
+        return Shapes.empty();
     }
 
     @Override
-    public BlockState gbw$getOverlayState(BlockState state, BlockPos pos, Random random) {
+    public BlockState gbw$getOverlayState(BlockState state, BlockPos pos, RandomSource random) {
         if (SnowyHelper.isSnowy(state)) {
-            return Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS));
+            return Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, state.getValue(SnowyHelper.SNOW_LAYERS));
         }
-        return Blocks.AIR.getDefaultState();
+        return Blocks.AIR.defaultBlockState();
     }
 }

@@ -5,20 +5,26 @@ import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
-import net.minecraft.block.*;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.Items;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.LightType;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CrossCollisionBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.SnowLayerBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -27,79 +33,79 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin({
         FenceBlock.class,
-        PaneBlock.class
+        IronBarsBlock.class
 })
-public abstract class FenceAndPaneBlockMixin extends HorizontalConnectingBlock implements OverlayState {
-    protected FenceAndPaneBlockMixin(float radius1, float radius2, float boundingHeight1, float boundingHeight2, float collisionHeight, Settings settings) {
+public abstract class FenceAndPaneBlockMixin extends CrossCollisionBlock implements OverlayState {
+    protected FenceAndPaneBlockMixin(float radius1, float radius2, float boundingHeight1, float boundingHeight2, float collisionHeight, Properties settings) {
         super(radius1, radius2, boundingHeight1, boundingHeight2, collisionHeight, settings);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void gbw$setSnowyDefaultState(Settings settings, CallbackInfo ci) {
-        setDefaultState(getStateManager().getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(WATERLOGGED, false).with(SnowyHelper.SNOW_LAYERS, 0));
+    private void gbw$setSnowyDefaultState(Properties settings, CallbackInfo ci) {
+        registerDefaultState(getStateDefinition().any().setValue(NORTH, false).setValue(EAST, false).setValue(SOUTH, false).setValue(WEST, false).setValue(WATERLOGGED, false).setValue(SnowyHelper.SNOW_LAYERS, 0));
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        VoxelShape shape = super.getOutlineShape(state, world, pos, context);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        VoxelShape shape = super.getShape(state, world, pos, context);
         if (SnowyHelper.isSnowy(state)) {
-            shape = VoxelShapes.union(shape, SnowyHelper.getSnowShape(state));
+            shape = Shapes.or(shape, SnowyHelper.getSnowShape(state));
         }
         return shape;
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (SnowyHelper.isSnowy(state)) {
-            return VoxelShapes.union(super.getCollisionShape(state, world, pos, context), SnowyHelper.LAYERS_TO_SHAPE[state.get(SnowyHelper.SNOW_LAYERS) - 1]);
+            return Shapes.or(super.getCollisionShape(state, world, pos, context), SnowyHelper.LAYERS_TO_SHAPE[state.getValue(SnowyHelper.SNOW_LAYERS) - 1]);
         }
         return super.getCollisionShape(state, world, pos, context);
     }
 
-    @Inject(method = "getPlacementState", at = @At("RETURN"), cancellable = true)
-    private void gbw$applyFenceGateSnowPlacementState(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir) {
-        BlockState state = ctx.getWorld().getBlockState(ctx.getBlockPos());
-        if (state.isOf(Blocks.SNOW)) {
-            cir.setReturnValue(getDefaultState().with(SnowyHelper.SNOW_LAYERS, state.get(SnowBlock.LAYERS)));
-        } else if (state.contains(SnowyHelper.SNOW_LAYERS) && SnowyHelper.isSnowy(state)) {
-            cir.setReturnValue(getDefaultState().with(SnowyHelper.SNOW_LAYERS, state.get(SnowyHelper.SNOW_LAYERS)));
+    @Inject(method = "getStateForPlacement", at = @At("RETURN"), cancellable = true)
+    private void gbw$applyFenceGateSnowPlacementState(BlockPlaceContext ctx, CallbackInfoReturnable<BlockState> cir) {
+        BlockState state = ctx.getLevel().getBlockState(ctx.getClickedPos());
+        if (state.is(Blocks.SNOW)) {
+            cir.setReturnValue(defaultBlockState().setValue(SnowyHelper.SNOW_LAYERS, state.getValue(SnowLayerBlock.LAYERS)));
+        } else if (state.hasProperty(SnowyHelper.SNOW_LAYERS) && SnowyHelper.isSnowy(state)) {
+            cir.setReturnValue(defaultBlockState().setValue(SnowyHelper.SNOW_LAYERS, state.getValue(SnowyHelper.SNOW_LAYERS)));
         }
     }
 
-    @Inject(method = "appendProperties", at = @At("TAIL"))
-    private void gbw$appendSnowLayersProperty(StateManager.Builder<Block, BlockState> builder, CallbackInfo ci) {
+    @Inject(method = "createBlockStateDefinition", at = @At("TAIL"))
+    private void gbw$appendSnowLayersProperty(StateDefinition.Builder<Block, BlockState> builder, CallbackInfo ci) {
         builder.add(SnowyHelper.SNOW_LAYERS);
     }
 
     @Override
-    protected boolean hasRandomTicks(BlockState state) {
+    protected boolean isRandomlyTicking(BlockState state) {
         return SnowyHelper.isSnowy(state);
     }
 
     @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        Holder<Biome> biomeEntry = world.getBiome(pos);
         SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
-        if (seasonManager != null && world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && world.getLightLevel(LightType.BLOCK, pos) > 11 || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos, world.getSeaLevel()))) {
-            if (state.get(SnowyHelper.SNOW_LAYERS) > 0)
-                dropStacks(Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS)), world, pos);
-            world.setBlockState(pos, state.with(SnowyHelper.SNOW_LAYERS, 0));
+        if (seasonManager != null && world.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && world.getBrightness(LightLayer.BLOCK, pos) > 11 || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.is(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().warmEnoughToRain(pos, world.getSeaLevel()))) {
+            if (state.getValue(SnowyHelper.SNOW_LAYERS) > 0)
+                dropResources(Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, state.getValue(SnowyHelper.SNOW_LAYERS)), world, pos);
+            world.setBlockAndUpdate(pos, state.setValue(SnowyHelper.SNOW_LAYERS, 0));
         }
     }
 
     @Override
-    protected boolean canReplace(BlockState state, ItemPlacementContext context) {
-        if (context.getStack().isOf(Items.SNOW) && state.get(SnowyHelper.SNOW_LAYERS) < 8) {
+    protected boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
+        if (context.getItemInHand().is(Items.SNOW) && state.getValue(SnowyHelper.SNOW_LAYERS) < 8) {
             return true;
         }
-        return super.canReplace(state, context);
+        return super.canBeReplaced(state, context);
     }
 
     @Override
-    public BlockState gbw$getOverlayState(BlockState state, BlockPos pos, Random random) {
+    public BlockState gbw$getOverlayState(BlockState state, BlockPos pos, RandomSource random) {
         if (SnowyHelper.isSnowy(state)) {
-            return Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS));
+            return Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, state.getValue(SnowyHelper.SNOW_LAYERS));
         }
-        return Blocks.AIR.getDefaultState();
+        return Blocks.AIR.defaultBlockState();
     }
 }

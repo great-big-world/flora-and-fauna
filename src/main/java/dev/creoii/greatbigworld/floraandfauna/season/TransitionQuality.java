@@ -4,25 +4,23 @@ import com.mojang.serialization.Codec;
 import dev.creoii.greatbigworld.GreatBigWorld;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.TranslatableOption;
-
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.StringRepresentable;
 import java.util.Arrays;
 
 @Environment(EnvType.CLIENT)
-public enum TransitionQuality implements TranslatableOption, StringIdentifiable {
+public enum TransitionQuality implements StringRepresentable {
     HIGH(36, "options.seasonTransitionQuality.high"),
     NORMAL(22, "options.seasonTransitionQuality.normal"),
     LOW(8, "options.seasonTransitionQuality.low"),
     INSTANT(1, "options.seasonTransitionQuality.instant");
 
-    public static final Codec<TransitionQuality> CODEC = StringIdentifiable.createCodec(TransitionQuality::values);
-    public static final Text[] NAMES = Arrays.stream(values()).map(TranslatableOption::getText).toArray(Text[]::new);
+    public static final Codec<TransitionQuality> CODEC = StringRepresentable.fromEnum(TransitionQuality::values);
+    public static final Component[] NAMES = Arrays.stream(values()).map(transitionQuality -> Component.translatable(transitionQuality.translationKey)).toArray(Component[]::new);
     private final int quality;
     private final String translationKey;
 
@@ -36,34 +34,24 @@ public enum TransitionQuality implements TranslatableOption, StringIdentifiable 
     }
 
     @Override
-    public String getTranslationKey() {
-        return translationKey;
-    }
-
-    @Override
-    public int getId() {
-        return ordinal();
-    }
-
-    @Override
-    public String asString() {
+    public String getSerializedName() {
         return name().toLowerCase();
     }
 
-    public record SyncTransitionQuality(byte quality) implements CustomPayload {
-        public static final CustomPayload.Id<SyncTransitionQuality> PACKET_ID = new CustomPayload.Id<>(Identifier.of(GreatBigWorld.NAMESPACE, "sync_season_transition_quality"));
-        public static final PacketCodec<RegistryByteBuf, SyncTransitionQuality> PACKET_CODEC = PacketCodec.of(SyncTransitionQuality::write, SyncTransitionQuality::new);
+    public record SyncTransitionQuality(byte quality) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<SyncTransitionQuality> PACKET_ID = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "sync_season_transition_quality"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, SyncTransitionQuality> PACKET_CODEC = StreamCodec.ofMember(SyncTransitionQuality::write, SyncTransitionQuality::new);
 
-        public SyncTransitionQuality(RegistryByteBuf buf) {
+        public SyncTransitionQuality(RegistryFriendlyByteBuf buf) {
             this(buf.readByte());
         }
 
-        public void write(RegistryByteBuf buf) {
+        public void write(RegistryFriendlyByteBuf buf) {
             buf.writeByte(quality);
         }
 
         @Override
-        public CustomPayload.Id<? extends CustomPayload> getId() {
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
             return PACKET_ID;
         }
     }

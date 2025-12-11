@@ -2,9 +2,9 @@ accessWidener v2 named
 accessible class net/minecraft/client/render/chunk/ChunkBuilder$BuiltChunk$RebuildTask
 accessible class net/minecraft/block/entity/BeehiveBlockEntity$Bee
 
-accessible field net/minecraft/client/render/WorldRenderer chunks Lnet/minecraft/client/render/BuiltChunkStorage;
-accessible field net/minecraft/block/entity/ChestBlockEntity lidAnimator Lnet/minecraft/block/entity/ChestLidAnimator;
-accessible field net/minecraft/block/entity/ChestLidAnimator open Z
-accessible field net/minecraft/block/entity/ChestLidAnimator progress F
+accessible field net/minecraft/client/renderer/LevelRenderer viewArea Lnet/minecraft/client/renderer/ViewArea;
+accessible field net/minecraft/world/level/block/entity/ChestBlockEntity chestLidController Lnet/minecraft/world/level/block/entity/ChestLidController;
+accessible field net/minecraft/world/level/block/entity/ChestLidController openness F
+accessible field net/minecraft/world/level/block/entity/ChestLidController shouldBeOpen Z
 
-accessible method net/minecraft/client/render/WeatherRendering getPrecipitationAt (Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;
+accessible method net/minecraft/client/renderer/WeatherEffectRenderer getPrecipitationAt (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome$Precipitation;

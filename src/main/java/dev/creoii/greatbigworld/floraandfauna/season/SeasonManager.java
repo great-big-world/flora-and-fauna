@@ -6,16 +6,18 @@ import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaGameRules;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.*;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import org.jetbrains.annotations.Nullable;
 
-public class SeasonManager extends PersistentState {
+public class SeasonManager extends SavedData {
     public static final Codec<SeasonManager> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(Codec.INT.optionalFieldOf("season", 3).forGetter(manager -> {
             return manager.currentSeason.ordinal();
@@ -35,7 +37,7 @@ public class SeasonManager extends PersistentState {
         });
     });
 
-    private static final PersistentStateType<SeasonManager> STATE_TYPE = new PersistentStateType<>("gbw_seasons", SeasonManager::new, CODEC, null);
+    private static final SavedDataType<SeasonManager> STATE_TYPE = new SavedDataType<>("gbw_seasons", SeasonManager::new, CODEC, null);
     private static SeasonManager instance;
     @Nullable
     private MinecraftServer server = null;
@@ -53,7 +55,7 @@ public class SeasonManager extends PersistentState {
         return instance == null ? instance = getServerState(server) : instance;
     }
 
-    public void setCurrentSeason(ServerWorld world, Season season, boolean preserveTime) {
+    public void setCurrentSeason(ServerLevel world, Season season, boolean preserveTime) {
         currentSeason = season;
         if (!preserveTime) {
             seasonTime = 0;
@@ -74,13 +76,13 @@ public class SeasonManager extends PersistentState {
         this.seasonTransitionQuality = seasonTransitionQuality;
     }
 
-    public void load(ServerWorld world) {
+    public void load(ServerLevel world) {
         server = world.getServer();
         updateSeasonTime(world);
         syncWorld(world);
     }
 
-    public void tick(ServerWorld world) {
+    public void tick(ServerLevel world) {
         if (server == null)
             server = world.getServer();
         if (instance == null) {
@@ -98,8 +100,8 @@ public class SeasonManager extends PersistentState {
             load(world);
         }
 
-        if (world.getGameRules().getBoolean(FloraAndFaunaGameRules.DO_SEASON_CYCLE)) {
-            if (seasonLength != world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH))
+        if (world.getGameRules().get(FloraAndFaunaGameRules.ADVANCE_SEASONS)) {
+            if (seasonLength != world.getGameRules().get(FloraAndFaunaGameRules.SEASON_LENGTH))
                 updateSeasonTime(world);
 
             // check for SEASON_TRANSITION_COUNT / 2 before transition occurs
@@ -136,8 +138,8 @@ public class SeasonManager extends PersistentState {
         }
     }
 
-    public void updateSeasonTime(ServerWorld world) {
-        seasonLength = world.getGameRules().getInt(FloraAndFaunaGameRules.SEASON_LENGTH);
+    public void updateSeasonTime(ServerLevel world) {
+        seasonLength = world.getGameRules().get(FloraAndFaunaGameRules.SEASON_LENGTH);
         seasonTransitionLength = seasonLength / 3;
         seasonTransitionIncrement = Math.max(1, seasonTransitionLength / seasonTransitionQuality);
         seasonTransitionIncrementAmount = (float) seasonTransitionIncrement / seasonTransitionLength;
@@ -150,7 +152,7 @@ public class SeasonManager extends PersistentState {
         });
     }
 
-    public void syncWorld(ServerWorld world) {
+    public void syncWorld(ServerLevel world) {
         PlayerLookup.world(world).forEach(serverPlayer -> {
             ServerPlayNetworking.send(serverPlayer, new SyncSeason((byte) currentSeason.ordinal()));
             ServerPlayNetworking.send(serverPlayer, new SyncSeasonTransition(context));
@@ -171,50 +173,50 @@ public class SeasonManager extends PersistentState {
 
     @Nullable
     private static SeasonManager getServerState(MinecraftServer server) {
-        ServerWorld serverWorld = server.getWorld(GreatBigWorld.ALTERWORLD_KEY);
+        ServerLevel serverWorld = server.getLevel(GreatBigWorld.ALTERWORLD_KEY);
         if (serverWorld == null)
             return null;
-        SeasonManager manager = serverWorld.getPersistentStateManager().getOrCreate(STATE_TYPE);
-        manager.markDirty();
+        SeasonManager manager = serverWorld.getDataStorage().computeIfAbsent(STATE_TYPE);
+        manager.setDirty();
         return manager;
     }
 
-    public record SyncSeason(byte season) implements CustomPayload {
-        public static final CustomPayload.Id<SyncSeason> PACKET_ID = new CustomPayload.Id<>(Identifier.of(GreatBigWorld.NAMESPACE, "sync_season"));
-        public static final PacketCodec<RegistryByteBuf, SyncSeason> PACKET_CODEC = PacketCodec.of(SyncSeason::write, SyncSeason::new);
+    public record SyncSeason(byte season) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<SyncSeason> PACKET_ID = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "sync_season"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, SyncSeason> PACKET_CODEC = StreamCodec.ofMember(SyncSeason::write, SyncSeason::new);
 
-        public SyncSeason(RegistryByteBuf buf) {
+        public SyncSeason(RegistryFriendlyByteBuf buf) {
             this(buf.readByte());
         }
 
-        public void write(RegistryByteBuf buf) {
+        public void write(RegistryFriendlyByteBuf buf) {
             buf.writeByte(season);
         }
 
         @Override
-        public Id<? extends CustomPayload> getId() {
+        public Type<? extends CustomPacketPayload> type() {
             return PACKET_ID;
         }
     }
 
-    public record SyncSeasonTransition(byte[] context) implements CustomPayload {
-        public static final CustomPayload.Id<SyncSeasonTransition> PACKET_ID = new CustomPayload.Id<>(Identifier.of(GreatBigWorld.NAMESPACE, "sync_season_color"));
-        public static final PacketCodec<RegistryByteBuf, SyncSeasonTransition> PACKET_CODEC = PacketCodec.of(SyncSeasonTransition::write, SyncSeasonTransition::new);
+    public record SyncSeasonTransition(byte[] context) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<SyncSeasonTransition> PACKET_ID = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "sync_season_color"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, SyncSeasonTransition> PACKET_CODEC = StreamCodec.ofMember(SyncSeasonTransition::write, SyncSeasonTransition::new);
 
         public SyncSeasonTransition(TransitionContext context) {
             this(new byte[]{(byte) context.getCurrent().ordinal(), (byte) (context.getNext() == null ? context.getCurrent().ordinal() : context.getNext().ordinal()), (byte) Math.min(127, context.getPercentage() * 100)});
         }
 
-        public SyncSeasonTransition(RegistryByteBuf buf) {
+        public SyncSeasonTransition(RegistryFriendlyByteBuf buf) {
             this(buf.readByteArray());
         }
 
-        public void write(RegistryByteBuf buf) {
+        public void write(RegistryFriendlyByteBuf buf) {
             buf.writeByteArray(context);
         }
 
         @Override
-        public Id<? extends CustomPayload> getId() {
+        public Type<? extends CustomPacketPayload> type() {
             return PACKET_ID;
         }
     }

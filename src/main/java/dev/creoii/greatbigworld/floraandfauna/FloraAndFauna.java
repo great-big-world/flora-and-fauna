@@ -13,10 +13,10 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.TillableBlockRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.HoeItem;
-import net.minecraft.registry.tag.EntityTypeTags;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.level.block.Blocks;
 
 public class FloraAndFauna implements ModInitializer {
     @Override
@@ -31,7 +31,7 @@ public class FloraAndFauna implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(SeasonManager.SyncSeasonTransition.PACKET_ID, SeasonManager.SyncSeasonTransition.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(TransitionQuality.SyncTransitionQuality.PACKET_ID, TransitionQuality.SyncTransitionQuality.PACKET_CODEC);
 
-        EntityBlockCollisionSpliterator.INTERACTIONS.put(EntityTypeTags.BOAT, context -> !context.state().isOf(Blocks.LILY_PAD));
+        EntityBlockCollisionSpliterator.INTERACTIONS.put(EntityTypeTags.BOAT, context -> !context.state().is(Blocks.LILY_PAD));
 
         ServerPlayNetworking.registerGlobalReceiver(TransitionQuality.SyncTransitionQuality.PACKET_ID, (payload, context) -> {
             int quality = payload.quality();
@@ -40,22 +40,22 @@ public class FloraAndFauna implements ModInitializer {
                 if (seasonManager == null)
                     return;
                 seasonManager.setSeasonTransitionQuality(quality);
-                context.server().getWorlds().forEach(serverWorld -> {
-                    if (serverWorld.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS))
+                context.server().getAllLevels().forEach(serverWorld -> {
+                    if (serverWorld.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS))
                         seasonManager.updateSeasonTime(serverWorld);
                 });
             });
         });
 
         ServerWorldEvents.LOAD.register((server, world) -> {
-            if (world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
+            if (world.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
                 SeasonManager manager = SeasonManager.getInstance(server);
                 if (manager != null)
                     manager.load(world);
             }
         });
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-            if (world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && entity instanceof ServerPlayerEntity serverPlayer) {
+            if (world.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && entity instanceof ServerPlayer serverPlayer) {
                 SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
                 if (seasonManager != null) {
                     ServerPlayNetworking.send(serverPlayer, new SeasonManager.SyncSeason((byte) seasonManager.getCurrentSeason().ordinal()));
@@ -64,16 +64,16 @@ public class FloraAndFauna implements ModInitializer {
             }
         });
         ServerTickEvents.END_WORLD_TICK.register(world -> {
-            if (world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && world.getTickManager().shouldTick()) {
+            if (world.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && world.tickRateManager().runsNormally()) {
                 SeasonManager manager = SeasonManager.getInstance(world.getServer());
                 if (manager != null)
                     manager.tick(world);
             }
         });
 
-        Blocks.BROWN_MUSHROOM.getStateManager().getStates().forEach(state -> ((AbstractBlockStateAccessor) state).setLuminance(0));
-        Blocks.SCULK_SHRIEKER.getStateManager().getStates().forEach(state -> ((AbstractBlockStateAccessor) state).setLuminance(3));
+        Blocks.BROWN_MUSHROOM.getStateDefinition().getPossibleStates().forEach(state -> ((AbstractBlockStateAccessor) state).setLightEmission(0));
+        Blocks.SCULK_SHRIEKER.getStateDefinition().getPossibleStates().forEach(state -> ((AbstractBlockStateAccessor) state).setLightEmission(3));
 
-        TillableBlockRegistry.register(FloraAndFaunaBlocks.HUMUS, HoeItem::canTillFarmland, Blocks.FARMLAND.getDefaultState());
+        TillableBlockRegistry.register(FloraAndFaunaBlocks.HUMUS, HoeItem::onlyIfAirAbove, Blocks.FARMLAND.defaultBlockState());
     }
 }

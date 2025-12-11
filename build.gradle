@@ -21,7 +21,7 @@ configurations {
 }
 
 dependencies {
-    modCompileOnly "maven.modrinth:sodium:mc1.21.10-0.7.3-fabric"
+    modCompileOnly "maven.modrinth:sodium:mc1.21.11-0.8.0-fabric"
     modCompileOnly "maven.modrinth:visuality:0.7.11+1.21.9"
     modCompileOnly "maven.modrinth:particle-rain:v4-beta.3+1.21.9-fabric"
     common(project(path: ':core', configuration: 'namedElements')) { transitive false }

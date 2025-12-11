@@ -6,26 +6,26 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
 
 public final class FloraAndFaunaCommands {
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("season")
-                    .requires(source -> source.hasPermissionLevel(2))
+            dispatcher.register(LiteralArgumentBuilder.<CommandSourceStack>literal("season")
+                    .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                     .executes(context -> {
                         SeasonManager seasonManager = SeasonManager.getInstance(context.getSource().getServer());
                         if (seasonManager == null) {
-                            context.getSource().sendError(Text.literal("An unexpected error occurred"));
+                            context.getSource().sendFailure(Component.literal("An unexpected error occurred"));
                             return -1;
                         }
-                        context.getSource().sendFeedback(() -> Text.literal("The current season is " + StringUtils.capitalize(seasonManager.getCurrentSeason().name().toLowerCase())), false);
+                        context.getSource().sendSuccess(() -> Component.literal("The current season is " + StringUtils.capitalize(seasonManager.getCurrentSeason().name().toLowerCase())), false);
                         return 1;
                     })
-                    .then(CommandManager.argument("season", StringArgumentType.string())
+                    .then(Commands.argument("season", StringArgumentType.string())
                             .suggests((context1, builder) -> {
                                 for (Season season : Season.values()) {
                                     builder.suggest(season.name().toLowerCase());
@@ -35,7 +35,7 @@ public final class FloraAndFaunaCommands {
                             .executes(context -> {
                                 return executeSetSeason(context.getSource(), StringArgumentType.getString(context, "season"), false);
                             })
-                            .then(CommandManager.argument("preserveTime", BoolArgumentType.bool())
+                            .then(Commands.argument("preserveTime", BoolArgumentType.bool())
                                     .executes(context -> {
                                         return executeSetSeason(context.getSource(), StringArgumentType.getString(context, "season"), BoolArgumentType.getBool(context, "preserveTime"));
                                     }))
@@ -44,15 +44,15 @@ public final class FloraAndFaunaCommands {
         });
     }
 
-    private static int executeSetSeason(ServerCommandSource source, String season, boolean preserveTime) {
+    private static int executeSetSeason(CommandSourceStack source, String season, boolean preserveTime) {
         SeasonManager manager = SeasonManager.getInstance(source.getServer());
         if (manager != null) {
-            manager.setCurrentSeason(source.getWorld(), Season.valueOf(season.toUpperCase()), preserveTime);
+            manager.setCurrentSeason(source.getLevel(), Season.valueOf(season.toUpperCase()), preserveTime);
         } else {
-            source.sendError(Text.literal("An unexpected error occurred"));
+            source.sendFailure(Component.literal("An unexpected error occurred"));
             return -1;
         }
-        source.sendFeedback(() -> Text.literal("Set season to " + StringUtils.capitalize(season)), true);
+        source.sendSuccess(() -> Component.literal("Set season to " + StringUtils.capitalize(season)), true);
         return 1;
     }
 }

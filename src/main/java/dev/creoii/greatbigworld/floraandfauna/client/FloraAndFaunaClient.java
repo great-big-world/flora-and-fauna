@@ -10,7 +10,7 @@ import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.render.chunk.ChunkBuilder;
+import net.minecraft.client.renderer.chunk.SectionRenderDispatcher;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +36,7 @@ public class FloraAndFaunaClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(SeasonManager.SyncSeasonTransition.PACKET_ID, (payload, context) -> {
             byte[] context1 = payload.context();
             context.client().execute(() -> {
-                if (!context.client().world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
+                if (!context.client().level.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
                     transitionContext = null;
                     return;
                 }
@@ -45,11 +45,11 @@ public class FloraAndFaunaClient implements ClientModInitializer {
                 if (SODIUM_LOADED) {
                     SodiumClientCompat.rebuildSeason(context.client());
                 } else {
-                    if (context.client().world != null && context.client().worldRenderer.chunks != null && context.client().player != null) {
-                        for (ChunkBuilder.BuiltChunk chunk : Objects.requireNonNull(context.client().worldRenderer.chunks).chunks) {
+                    if (context.client().level != null && context.client().levelRenderer.viewArea != null && context.client().player != null) {
+                        for (SectionRenderDispatcher.RenderSection chunk : Objects.requireNonNull(context.client().levelRenderer.viewArea).sections) {
                             if (chunk == null)
                                 continue;
-                            chunk.scheduleRebuild(true);
+                            chunk.setDirty(true);
                         }
                     }
                 }

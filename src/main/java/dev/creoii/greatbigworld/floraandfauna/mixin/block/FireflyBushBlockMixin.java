@@ -5,18 +5,24 @@ import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
-import net.minecraft.block.*;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.LightType;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FireflyBushBlock;
+import net.minecraft.world.level.block.SnowLayerBlock;
+import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,72 +30,72 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FireflyBushBlock.class)
-public abstract class FireflyBushBlockMixin extends PlantBlock implements OverlayState {
-    protected FireflyBushBlockMixin(Settings settings) {
+public abstract class FireflyBushBlockMixin extends VegetationBlock implements OverlayState {
+    protected FireflyBushBlockMixin(Properties settings) {
         super(settings);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void gbw$setSnowyDefaultState(Settings settings, CallbackInfo ci) {
-        setDefaultState(getStateManager().getDefaultState().with(SnowyHelper.SNOW_LAYERS, 0));
+    private void gbw$setSnowyDefaultState(Properties settings, CallbackInfo ci) {
+        registerDefaultState(getStateDefinition().any().setValue(SnowyHelper.SNOW_LAYERS, 0));
     }
 
     @Override
-    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (SnowyHelper.isSnowy(state)) {
-            return VoxelShapes.union(super.getOutlineShape(state, world, pos, context), SnowyHelper.getSnowShape(state));
+            return Shapes.or(super.getShape(state, world, pos, context), SnowyHelper.getSnowShape(state));
         }
-        return super.getOutlineShape(state, world, pos, context);
+        return super.getShape(state, world, pos, context);
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (SnowyHelper.isSnowy(state)) {
-            return SnowyHelper.LAYERS_TO_SHAPE[state.get(SnowyHelper.SNOW_LAYERS) - 1];
+            return SnowyHelper.LAYERS_TO_SHAPE[state.getValue(SnowyHelper.SNOW_LAYERS) - 1];
         }
         return super.getCollisionShape(state, world, pos, context);
     }
 
     @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = super.getPlacementState(ctx);
-        BlockState state = ctx.getWorld().getBlockState(ctx.getBlockPos());
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        BlockState blockState = super.getStateForPlacement(ctx);
+        BlockState state = ctx.getLevel().getBlockState(ctx.getClickedPos());
 
-        if (state.isOf(Blocks.SNOW)) {
-            return blockState.with(SnowyHelper.SNOW_LAYERS, state.get(SnowBlock.LAYERS));
-        } else if (state.contains(SnowyHelper.SNOW_LAYERS) && SnowyHelper.isSnowy(state)) {
-            return state.with(SnowyHelper.SNOW_LAYERS, state.get(SnowyHelper.SNOW_LAYERS));
+        if (state.is(Blocks.SNOW)) {
+            return blockState.setValue(SnowyHelper.SNOW_LAYERS, state.getValue(SnowLayerBlock.LAYERS));
+        } else if (state.hasProperty(SnowyHelper.SNOW_LAYERS) && SnowyHelper.isSnowy(state)) {
+            return state.setValue(SnowyHelper.SNOW_LAYERS, state.getValue(SnowyHelper.SNOW_LAYERS));
         }
 
         return blockState;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(SnowyHelper.SNOW_LAYERS);
     }
 
     @Override
-    protected boolean hasRandomTicks(BlockState state) {
+    protected boolean isRandomlyTicking(BlockState state) {
         return SnowyHelper.isSnowy(state);
     }
 
     @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        Holder<Biome> biomeEntry = world.getBiome(pos);
         SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
-        if (seasonManager != null && world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && world.getLightLevel(LightType.BLOCK, pos) > 11 || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().doesNotSnow(pos, world.getSeaLevel()))) {
-            if (state.get(SnowyHelper.SNOW_LAYERS) > 0)
-                dropStacks(Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS)), world, pos);
-            world.setBlockState(pos, state.with(SnowyHelper.SNOW_LAYERS, 0));
+        if (seasonManager != null && world.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && world.getBrightness(LightLayer.BLOCK, pos) > 11 || (seasonManager.getCurrentSeason() != Season.WINTER && !biomeEntry.is(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && biomeEntry.value().warmEnoughToRain(pos, world.getSeaLevel()))) {
+            if (state.getValue(SnowyHelper.SNOW_LAYERS) > 0)
+                dropResources(Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, state.getValue(SnowyHelper.SNOW_LAYERS)), world, pos);
+            world.setBlockAndUpdate(pos, state.setValue(SnowyHelper.SNOW_LAYERS, 0));
         }
     }
 
     @Override
-    public BlockState gbw$getOverlayState(BlockState state, BlockPos pos, Random random) {
+    public BlockState gbw$getOverlayState(BlockState state, BlockPos pos, RandomSource random) {
         if (SnowyHelper.isSnowy(state)) {
-            return Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, state.get(SnowyHelper.SNOW_LAYERS));
+            return Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, state.getValue(SnowyHelper.SNOW_LAYERS));
         }
-        return Blocks.AIR.getDefaultState();
+        return Blocks.AIR.defaultBlockState();
     }
 }

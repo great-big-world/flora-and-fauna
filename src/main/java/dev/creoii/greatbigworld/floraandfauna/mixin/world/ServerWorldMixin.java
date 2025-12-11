@@ -5,19 +5,28 @@ import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import dev.creoii.greatbigworld.floraandfauna.util.SnowyHelper;
-import net.minecraft.block.*;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.*;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SnowLayerBlock;
+import net.minecraft.world.level.block.SnowyDirtBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.storage.WritableLevelData;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,30 +36,30 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.BooleanSupplier;
 
-@Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin extends World implements StructureWorldAccess {
+@Mixin(ServerLevel.class)
+public abstract class ServerWorldMixin extends Level implements WorldGenLevel {
     @Shadow @NotNull public abstract MinecraftServer getServer();
     @Shadow public abstract GameRules getGameRules();
 
-    protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
+    protected ServerWorldMixin(WritableLevelData properties, ResourceKey<Level> registryRef, RegistryAccess registryManager, Holder<DimensionType> dimensionEntry, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
         super(properties, registryRef, registryManager, dimensionEntry, isClient, debugWorld, seed, maxChainedNeighborUpdates);
     }
 
-    @Inject(method = "tickIceAndSnow", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "tickPrecipitation", at = @At("HEAD"), cancellable = true)
     private void gbw$tickSnowyUnderTrees(BlockPos pos, CallbackInfo ci) {
         if (!isRaining())
             return;
 
         // top including leaves
-        int top = getTopY(Heightmap.Type.MOTION_BLOCKING, pos);
+        int top = getHeight(Heightmap.Types.MOTION_BLOCKING, pos);
         // top excluding leaves
-        int noLeavesTop = getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos);
+        int noLeavesTop = getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos);
 
-        BlockPos.Mutable cursor = new BlockPos.Mutable();
-        BlockPos.Mutable below = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+        BlockPos.MutableBlockPos below = new BlockPos.MutableBlockPos();
 
         SeasonManager seasonManager = SeasonManager.getInstance(getServer());
-        int maxLayers = getGameRules().getInt(GameRules.SNOW_ACCUMULATION_HEIGHT);
+        int maxLayers = getGameRules().get(GameRules.MAX_SNOW_ACCUMULATION_HEIGHT);
 
         for (int y = top; y >= noLeavesTop; --y) {
             cursor.set(pos.getX(), y, pos.getZ());
@@ -61,74 +70,74 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
 
             Biome biome = getBiome(cursor).value();
 
-            if (state.isIn(BlockTags.LEAVES))
+            if (state.is(BlockTags.LEAVES))
                 continue;
 
-            if (biome.canSetIce(this, below, false)) {
-                setBlockState(below, Blocks.ICE.getDefaultState(), 2);
+            if (biome.shouldFreeze(this, below, false)) {
+                setBlock(below, Blocks.ICE.defaultBlockState(), 2);
                 continue;
             }
 
-            if (seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).isIn(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && maxLayers > 0) {
-                if (state.isOf(Blocks.SNOW)) {
-                    int layers = state.get(SnowBlock.LAYERS);
+            if (seasonManager.getCurrentSeason() == Season.WINTER && !getBiome(pos).is(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && maxLayers > 0) {
+                if (state.is(Blocks.SNOW)) {
+                    int layers = state.getValue(SnowLayerBlock.LAYERS);
                     if (layers < Math.min(maxLayers, 8)) {
-                        BlockState newState = state.with(SnowBlock.LAYERS, layers + 1);
-                        Block.pushEntitiesUpBeforeBlockChange(state, newState, this, cursor);
-                        setBlockState(cursor, newState, 2);
+                        BlockState newState = state.setValue(SnowLayerBlock.LAYERS, layers + 1);
+                        Block.pushEntitiesUp(state, newState, this, cursor);
+                        setBlock(cursor, newState, 2);
                     }
-                } else if (state.contains(SnowyHelper.SNOW_LAYERS)) {
-                    if (!(state.contains(Properties.DOUBLE_BLOCK_HALF) && state.get(Properties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)) {
-                        int layers = state.get(SnowyHelper.SNOW_LAYERS);
+                } else if (state.hasProperty(SnowyHelper.SNOW_LAYERS)) {
+                    if (!(state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF) && state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)) {
+                        int layers = state.getValue(SnowyHelper.SNOW_LAYERS);
                         if (layers < Math.min(maxLayers, 8)) {
-                            BlockState newState = state.with(SnowyHelper.SNOW_LAYERS, layers + 1);
-                            Block.pushEntitiesUpBeforeBlockChange(state, newState, this, cursor);
-                            setBlockState(cursor, newState);
+                            BlockState newState = state.setValue(SnowyHelper.SNOW_LAYERS, layers + 1);
+                            Block.pushEntitiesUp(state, newState, this, cursor);
+                            setBlockAndUpdate(cursor, newState);
 
-                            if (stateBelow.contains(SnowyBlock.SNOWY) && !stateBelow.get(SnowyBlock.SNOWY)) {
-                                setBlockState(below, stateBelow.with(SnowyBlock.SNOWY, true));
+                            if (stateBelow.hasProperty(SnowyDirtBlock.SNOWY) && !stateBelow.getValue(SnowyDirtBlock.SNOWY)) {
+                                setBlockAndUpdate(below, stateBelow.setValue(SnowyDirtBlock.SNOWY, true));
                             }
                         }
                     }
-                } else if (stateBelow.contains(SnowyHelper.SNOW_LAYERS)) {
-                    if (!(stateBelow.contains(Properties.DOUBLE_BLOCK_HALF) && stateBelow.get(Properties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)) {
-                        int layers = stateBelow.get(SnowyHelper.SNOW_LAYERS);
+                } else if (stateBelow.hasProperty(SnowyHelper.SNOW_LAYERS)) {
+                    if (!(stateBelow.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF) && stateBelow.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)) {
+                        int layers = stateBelow.getValue(SnowyHelper.SNOW_LAYERS);
                         if (layers < Math.min(maxLayers, 8)) {
-                            BlockState newState = stateBelow.with(SnowyHelper.SNOW_LAYERS, layers + 1);
-                            Block.pushEntitiesUpBeforeBlockChange(stateBelow, newState, this, below);
-                            setBlockState(below, newState);
+                            BlockState newState = stateBelow.setValue(SnowyHelper.SNOW_LAYERS, layers + 1);
+                            Block.pushEntitiesUp(stateBelow, newState, this, below);
+                            setBlockAndUpdate(below, newState);
 
-                            BlockState stateBelow2 = getBlockState(below.down());
-                            if (stateBelow2.contains(SnowyBlock.SNOWY) && !stateBelow2.get(SnowyBlock.SNOWY)) {
-                                setBlockState(below.down(), stateBelow2.with(SnowyBlock.SNOWY, true));
+                            BlockState stateBelow2 = getBlockState(below.below());
+                            if (stateBelow2.hasProperty(SnowyDirtBlock.SNOWY) && !stateBelow2.getValue(SnowyDirtBlock.SNOWY)) {
+                                setBlockAndUpdate(below.below(), stateBelow2.setValue(SnowyDirtBlock.SNOWY, true));
                             }
                         }
                     }
-                } else if (Blocks.SNOW.getDefaultState().canPlaceAt(this, cursor)) {
-                    setBlockState(cursor, Blocks.SNOW.getDefaultState());
+                } else if (Blocks.SNOW.defaultBlockState().canSurvive(this, cursor)) {
+                    setBlockAndUpdate(cursor, Blocks.SNOW.defaultBlockState());
 
-                    if (stateBelow.contains(SnowyBlock.SNOWY) && !stateBelow.get(SnowyBlock.SNOWY)) {
-                        setBlockState(below, stateBelow.with(SnowyBlock.SNOWY, true));
+                    if (stateBelow.hasProperty(SnowyDirtBlock.SNOWY) && !stateBelow.getValue(SnowyDirtBlock.SNOWY)) {
+                        setBlockAndUpdate(below, stateBelow.setValue(SnowyDirtBlock.SNOWY, true));
                     }
                 }
             }
 
-            BlockPos topPos = getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos);
-            BlockPos downPos = topPos.down();
+            BlockPos topPos = getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos);
+            BlockPos downPos = topPos.below();
 
-            Biome.Precipitation precipitation = getBiome(topPos).value().getPrecipitation(downPos, getSeaLevel());
+            Biome.Precipitation precipitation = getBiome(topPos).value().getPrecipitationAt(downPos, getSeaLevel());
             if (precipitation != Biome.Precipitation.NONE) {
                 BlockState precipitationState = getBlockState(downPos);
-                precipitationState.getBlock().precipitationTick(precipitationState, this, downPos, precipitation);
+                precipitationState.getBlock().handlePrecipitation(precipitationState, this, downPos, precipitation);
             }
         }
 
         ci.cancel();
     }
 
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;wakeSleepingPlayers()V"))
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;wakeUpAllPlayers()V"))
     private void gbw$sleepingSkipsSeasonTime(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
-        if (getGameRules().getBoolean(FloraAndFaunaGameRules.DO_SEASON_CYCLE)) {
+        if (getGameRules().get(FloraAndFaunaGameRules.ADVANCE_SEASONS)) {
             SeasonManager seasonManager = SeasonManager.getInstance(getServer());
             if (seasonManager == null)
                 return;

@@ -6,20 +6,20 @@ import com.llamalad7.mixinextras.sugar.Local;
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.color.block.BlockColors;
-import net.minecraft.client.particle.BlockDustParticle;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.TerrainParticle;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(BlockDustParticle.class)
+@Mixin(TerrainParticle.class)
 public class BlockDustParticleMixin {
-    @WrapOperation(method = "<init>(Lnet/minecraft/client/world/ClientWorld;DDDDDDLnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/color/block/BlockColors;getColor(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/util/math/BlockPos;I)I"))
-    private int gbw$tintBlockBreakParticle(BlockColors instance, BlockState state, BlockRenderView blockRenderView, BlockPos pos, int tintIndex, Operation<Integer> original, @Local(argsOnly = true) ClientWorld world) {
-        if (!world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && FloraAndFaunaClient.getCurrentSeason() != null) {
+    @WrapOperation(method = "<init>(Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/color/block/BlockColors;getColor(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/core/BlockPos;I)I"))
+    private int gbw$tintBlockBreakParticle(BlockColors instance, BlockState state, BlockAndTintGetter blockRenderView, BlockPos pos, int tintIndex, Operation<Integer> original, @Local(argsOnly = true) ClientLevel world) {
+        if (!world.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && FloraAndFaunaClient.getCurrentSeason() != null) {
             if (FloraAndFaunaClient.getTransitionContext() != null) {
                 return FloraAndFaunaClient.getTransitionContext().getSeasonFoliageColor(world, pos, original.call(instance, state, world, pos, tintIndex));
             } else {

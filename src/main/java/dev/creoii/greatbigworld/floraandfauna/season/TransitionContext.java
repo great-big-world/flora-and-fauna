@@ -3,10 +3,10 @@ package dev.creoii.greatbigworld.floraandfauna.season;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.creoii.greatbigworld.util.ColorHelper;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
 public class TransitionContext {
@@ -59,12 +59,12 @@ public class TransitionContext {
         this.percentage = percentage;
     }
 
-    public int getSeasonGrassColor(BlockRenderView world, BlockPos pos, int color) {
+    public int getSeasonGrassColor(BlockAndTintGetter world, BlockPos pos, int color) {
         if (world == null)
             return color;
 
-        RegistryEntry<Biome> biomeEntry = world.getBiomeFabric(pos);
-        if (biomeEntry == null || !biomeEntry.hasKeyAndValue()) {
+        Holder<Biome> biomeEntry = world.getBiomeFabric(pos);
+        if (biomeEntry == null || !biomeEntry.isBound()) {
             return color;
         }
 
@@ -72,12 +72,12 @@ public class TransitionContext {
         return ColorHelper.interpolate(getPercentage(), getCurrent().getGrassColorChange().apply(context), getNext() == null ? getCurrent().getGrassColorChange().apply(context) : getNext().getGrassColorChange().apply(context));
     }
 
-    public int getSeasonFoliageColor(BlockRenderView world, BlockPos pos, int color) {
+    public int getSeasonFoliageColor(BlockAndTintGetter world, BlockPos pos, int color) {
         if (world == null)
             return color;
 
-        RegistryEntry<Biome> biomeEntry = world.getBiomeFabric(pos);
-        if (biomeEntry == null || !biomeEntry.hasKeyAndValue()) {
+        Holder<Biome> biomeEntry = world.getBiomeFabric(pos);
+        if (biomeEntry == null || !biomeEntry.isBound()) {
             return color;
         }
 

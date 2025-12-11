@@ -27,7 +27,6 @@
     "client.compat.particlerain.VersionUtilMixin",
     "client.compat.particlerain.WeatherParticleManagerMixin",
     "client.compat.sodium.SodiumGameOptionPagesMixin",
-    "client.compat.sodium.SodiumGameOptionsQualitySettingsMixin",
     "entity.AnimalEntityMixin",
     "entity.EscapeDangerGoalMixin",
     "entity.LivingEntityMixin",

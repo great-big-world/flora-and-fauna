@@ -2,87 +2,91 @@ package dev.creoii.greatbigworld.floraandfauna.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
-import net.minecraft.block.*;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCollisionHandler;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.IceBlock;
+import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class AlgaeBlock extends PlantBlock {
-    public static final IntProperty DENSITY = IntProperty.of("density", 1, 3);
-    public static final IntProperty MAX_DENSITY = IntProperty.of("max_density", 1, 3);
-    public static final BooleanProperty COLLIDED = BooleanProperty.of("collided");
-    public static final MapCodec<AlgaeBlock> CODEC = AlgaeBlock.createCodec(AlgaeBlock::new);
-    public static final VoxelShape SHAPE = Block.createCuboidShape(0d, 0d, 0d, 16d, 1.5d, 16d);
+public class AlgaeBlock extends VegetationBlock {
+    public static final IntegerProperty DENSITY = IntegerProperty.create("density", 1, 3);
+    public static final IntegerProperty MAX_DENSITY = IntegerProperty.create("max_density", 1, 3);
+    public static final BooleanProperty COLLIDED = BooleanProperty.create("collided");
+    public static final MapCodec<AlgaeBlock> CODEC = AlgaeBlock.simpleCodec(AlgaeBlock::new);
+    public static final VoxelShape SHAPE = Block.box(0d, 0d, 0d, 16d, 1.5d, 16d);
 
-    public AlgaeBlock(Settings settings) {
+    public AlgaeBlock(Properties settings) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(DENSITY, 3).with(MAX_DENSITY, 3).with(COLLIDED, false));
+        registerDefaultState(getStateDefinition().any().setValue(DENSITY, 3).setValue(MAX_DENSITY, 3).setValue(COLLIDED, false));
     }
 
     @Override
-    protected MapCodec<? extends AlgaeBlock> getCodec() {
+    protected MapCodec<? extends AlgaeBlock> codec() {
         return CODEC;
     }
 
     @Override
-    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl) {
-        int maxDensity = state.get(MAX_DENSITY);
-        int density = state.get(DENSITY);
-        if (!entity.getType().isIn(FloraAndFaunaTags.IGNORES_ALGAE)) {
+    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler, boolean bl) {
+        int maxDensity = state.getValue(MAX_DENSITY);
+        int density = state.getValue(DENSITY);
+        if (!entity.getType().is(FloraAndFaunaTags.IGNORES_ALGAE)) {
             if (density == 2) {
-                entity.slowMovement(state, new Vec3d(.75d, .95d, .75d));
+                entity.makeStuckInBlock(state, new Vec3(.75d, .95d, .75d));
             } else if (density == 3) {
-                entity.slowMovement(state, new Vec3d(.5d, .75d, .5d));
+                entity.makeStuckInBlock(state, new Vec3(.5d, .75d, .5d));
             }
         }
 
         if (density > 1) {
-            world.setBlockState(pos, state.with(DENSITY, Math.max(1, density - 1)), 3);
-            if (!state.get(COLLIDED)) {
-                world.scheduleBlockTick(pos, state.getBlock(), 80);
+            world.setBlock(pos, state.setValue(DENSITY, Math.max(1, density - 1)), 3);
+            if (!state.getValue(COLLIDED)) {
+                world.scheduleTick(pos, state.getBlock(), 80);
             }
         }
     }
 
     @Override
-    protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (!state.get(COLLIDED)) {
-            int density = state.get(DENSITY);
-            world.setBlockState(pos, state.with(DENSITY, Math.min(3, density + 1)), 3);
-            if (state.get(DENSITY) < 3) {
-                world.scheduleBlockTick(pos, state.getBlock(), 80);
+    protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        if (!state.getValue(COLLIDED)) {
+            int density = state.getValue(DENSITY);
+            world.setBlock(pos, state.setValue(DENSITY, Math.min(3, density + 1)), 3);
+            if (state.getValue(DENSITY) < 3) {
+                world.scheduleTick(pos, state.getBlock(), 80);
             }
         }
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(DENSITY, MAX_DENSITY, COLLIDED);
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return VoxelShapes.empty();
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return Shapes.empty();
     }
 
     @Override
-    protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos) {
-        return (world.getFluidState(pos).getFluid() == Fluids.WATER || floor.getBlock() instanceof IceBlock) && world.getFluidState(pos.up()).getFluid() == Fluids.EMPTY;
+    protected boolean mayPlaceOn(BlockState floor, BlockGetter world, BlockPos pos) {
+        return (world.getFluidState(pos).getType() == Fluids.WATER || floor.getBlock() instanceof IceBlock) && world.getFluidState(pos.above()).getType() == Fluids.EMPTY;
     }
 }

@@ -85,6 +85,10 @@ public abstract class ServerWorldMixin extends Level implements WorldGenLevel {
                         BlockState newState = state.setValue(SnowLayerBlock.LAYERS, layers + 1);
                         Block.pushEntitiesUp(state, newState, this, cursor);
                         setBlock(cursor, newState, 2);
+
+                        if (stateBelow.hasProperty(SnowyDirtBlock.SNOWY) && !stateBelow.getValue(SnowyDirtBlock.SNOWY)) {
+                            setBlockAndUpdate(below, stateBelow.setValue(SnowyDirtBlock.SNOWY, true));
+                        }
                     }
                 } else if (state.hasProperty(SnowyHelper.SNOW_LAYERS)) {
                     if (!(state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF) && state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)) {
@@ -116,7 +120,7 @@ public abstract class ServerWorldMixin extends Level implements WorldGenLevel {
                 } else if (Blocks.SNOW.defaultBlockState().canSurvive(this, cursor)) {
                     setBlockAndUpdate(cursor, Blocks.SNOW.defaultBlockState());
 
-                    if (stateBelow.hasProperty(SnowyDirtBlock.SNOWY) && !stateBelow.getValue(SnowyDirtBlock.SNOWY)) {
+                    if (stateBelow.hasProperty(SnowyDirtBlock.SNOWY)) {
                         setBlockAndUpdate(below, stateBelow.setValue(SnowyDirtBlock.SNOWY, true));
                     }
                 }

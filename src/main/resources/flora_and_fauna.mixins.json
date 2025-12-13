@@ -21,6 +21,7 @@
     "block.SmallDripleafBlockMixin",
     "block.SnowBlockMixin",
     "block.SnowyBlockMixin",
+    "block.SpreadingSnowyDirtBlockMixin",
     "block.SugarCaneBlockMixin",
     "block.TallPlantBlockMixin",
     "block.TintedParticleLeavesBlockMixin",

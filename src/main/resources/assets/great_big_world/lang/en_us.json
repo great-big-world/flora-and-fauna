@@ -48,8 +48,8 @@
   "biome.great_big_world.jungle_river": "Jungle River",
   "biome.great_big_world.swamp_river": "Swamp River",
 
-  "gamerule.doSeasonCycle": "Advance seasons",
-  "gamerule.seasonLength": "Length of seasons in ticks",
+  "gamerule.great_big_world.advance_seasons": "Advance seasons",
+  "gamerule.great_big_world.season_length": "Length of seasons in ticks",
 
   "season.autumn": "Autumn",
   "season.winter": "Winter",

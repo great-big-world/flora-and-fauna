@@ -14,8 +14,9 @@
     "great_big_world:alter_snowy_plains",
     "great_big_world:alter_swamp",
     "minecraft:mangrove_swamp",
+    "great_big_world:swamp_river",
     "great_big_world:alter_swamp_river",
-    "great_big_world:alter_frozen_river",
+    "great_big_world:alter_jungle_river",
     "minecraft:lush_caves"
   ]
 }

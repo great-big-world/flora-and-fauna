@@ -59,7 +59,7 @@ public class FloraAndFauna implements ModInitializer {
                 SeasonManager seasonManager = SeasonManager.getInstance(world.getServer());
                 if (seasonManager != null) {
                     ServerPlayNetworking.send(serverPlayer, new SeasonManager.SyncSeason((byte) seasonManager.getCurrentSeason().ordinal()));
-                    ServerPlayNetworking.send(serverPlayer, new SeasonManager.SyncSeasonTransition(seasonManager.getTransitionContext()));
+                    ServerPlayNetworking.send(serverPlayer, new SeasonManager.SyncSeasonTransition(seasonManager, seasonManager.getTransitionContext()));
                 }
             }
         });

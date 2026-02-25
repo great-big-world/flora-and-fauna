@@ -20,6 +20,7 @@ public class FloraAndFaunaClient implements ClientModInitializer {
     private static final boolean SODIUM_LOADED = FabricLoader.getInstance().isModLoaded("sodium");
     @Nullable private static Season currentSeason;
     @Nullable private static TransitionContext transitionContext;
+    private static boolean transitioning = false;
 
     @Override
     public void onInitializeClient() {
@@ -42,6 +43,7 @@ public class FloraAndFaunaClient implements ClientModInitializer {
                 }
 
                 transitionContext = new TransitionContext(Season.values()[context1[0]], Season.values()[context1[1]], context1[2] / 100f);
+                transitioning = context1[3] != 0;
                 if (SODIUM_LOADED) {
                     SodiumClientCompat.rebuildSeason(context.client());
                 } else {
@@ -63,5 +65,9 @@ public class FloraAndFaunaClient implements ClientModInitializer {
 
     public static @Nullable TransitionContext getTransitionContext() {
         return transitionContext;
+    }
+
+    public static boolean isTransitioning() {
+        return transitioning;
     }
 }

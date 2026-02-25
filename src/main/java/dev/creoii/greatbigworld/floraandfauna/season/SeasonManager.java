@@ -148,14 +148,14 @@ public class SeasonManager extends SavedData {
     public void syncAll(MinecraftServer server) {
         PlayerLookup.all(server).forEach(serverPlayer -> {
             ServerPlayNetworking.send(serverPlayer, new SyncSeason((byte) currentSeason.ordinal()));
-            ServerPlayNetworking.send(serverPlayer, new SyncSeasonTransition(context));
+            ServerPlayNetworking.send(serverPlayer, new SyncSeasonTransition(this, context));
         });
     }
 
     public void syncWorld(ServerLevel world) {
         PlayerLookup.world(world).forEach(serverPlayer -> {
             ServerPlayNetworking.send(serverPlayer, new SyncSeason((byte) currentSeason.ordinal()));
-            ServerPlayNetworking.send(serverPlayer, new SyncSeasonTransition(context));
+            ServerPlayNetworking.send(serverPlayer, new SyncSeasonTransition(this, context));
         });
     }
 
@@ -167,7 +167,7 @@ public class SeasonManager extends SavedData {
 
     private void syncSeasonTransition(MinecraftServer server) {
         PlayerLookup.all(server).forEach(serverPlayer -> {
-            ServerPlayNetworking.send(serverPlayer, new SyncSeasonTransition(context));
+            ServerPlayNetworking.send(serverPlayer, new SyncSeasonTransition(this, context));
         });
     }
 
@@ -203,8 +203,8 @@ public class SeasonManager extends SavedData {
         public static final CustomPacketPayload.Type<SyncSeasonTransition> PACKET_ID = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "sync_season_color"));
         public static final StreamCodec<RegistryFriendlyByteBuf, SyncSeasonTransition> PACKET_CODEC = StreamCodec.ofMember(SyncSeasonTransition::write, SyncSeasonTransition::new);
 
-        public SyncSeasonTransition(TransitionContext context) {
-            this(new byte[]{(byte) context.getCurrent().ordinal(), (byte) (context.getNext() == null ? context.getCurrent().ordinal() : context.getNext().ordinal()), (byte) Math.min(127, context.getPercentage() * 100)});
+        public SyncSeasonTransition(SeasonManager seasonManager, TransitionContext context) {
+            this(new byte[]{(byte) context.getCurrent().ordinal(), (byte) (context.getNext() == null ? context.getCurrent().ordinal() : context.getNext().ordinal()), (byte) Math.min(127, context.getPercentage() * 100), (byte) (seasonManager.transitioning ? 1 : 0)});
         }
 
         public SyncSeasonTransition(RegistryFriendlyByteBuf buf) {

@@ -3,8 +3,12 @@ package dev.creoii.greatbigworld.floraandfauna.mixin.block;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.creoii.greatbigworld.block.OverlayState;
+import dev.creoii.greatbigworld.floraandfauna.registry.FloraAndFaunaBlocks;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeavesBlock;
@@ -19,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LeavesBlock.class)
-public abstract class LeavesBlockMixin extends Block {
+public abstract class LeavesBlockMixin extends Block implements OverlayState {
     @Unique
     private static final BooleanProperty SNOWY = BlockStateProperties.SNOWY;
 
@@ -51,5 +55,10 @@ public abstract class LeavesBlockMixin extends Block {
     @Unique
     private static boolean isSnow(BlockState state) {
         return state.is(BlockTags.SNOW);
+    }
+
+    @Override
+    public BlockState gbw$getOverlayState(BlockState state, BlockPos pos, RandomSource random) {
+        return state.getValue(SNOWY) ? FloraAndFaunaBlocks.OVERLAY_SNOW.defaultBlockState() : OverlayState.super.gbw$getOverlayState(state, pos, random);
     }
 }

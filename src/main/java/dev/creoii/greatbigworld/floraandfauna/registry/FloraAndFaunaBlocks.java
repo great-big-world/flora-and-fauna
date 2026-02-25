@@ -72,6 +72,7 @@ public final class FloraAndFaunaBlocks {
     public static Block STRIPPED_HOLLOW_WARPED_STEM;
     public static Block STRIPPED_HOLLOW_CRIMSON_STEM;
     public static Block ALGAE;
+    public static Block OVERLAY_SNOW;
 
     public static void register() {
         HUMUS = RegistryHelper.registerBlock(Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "humus"), SnowyDirtBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK).mapColor(MapColor.TERRACOTTA_BROWN));
@@ -121,6 +122,8 @@ public final class FloraAndFaunaBlocks {
         STRIPPED_HOLLOW_CRIMSON_STEM = RegistryHelper.registerBlock(Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "stripped_hollow_crimson_stem"), HollowLogBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_CRIMSON_STEM));
 
         ALGAE = RegistryHelper.registerBlock(Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "algae"), AlgaeBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.LILY_PAD));
+
+        OVERLAY_SNOW = RegistryHelper.registerBlock(Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "overlay_snow"), Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.AIR));
 
         FlammableBlockRegistry.getDefaultInstance().add(TROPICAL_FERN, 60, 100);
         FlammableBlockRegistry.getDefaultInstance().add(LARGE_TROPICAL_FERN, 60, 100);
@@ -172,7 +175,7 @@ public final class FloraAndFaunaBlocks {
                 TROPICAL_FERN, LARGE_TROPICAL_FERN, POTTED_TROPICAL_FERN,
                 RED_HIBISCUS, ORANGE_HIBISCUS, YELLOW_HIBISCUS, BLUE_HIBISCUS, PINK_HIBISCUS, PURPLE_HIBISCUS, BLACK_HIBISCUS, WHITE_HIBISCUS,
                 POTTED_RED_HIBISCUS, POTTED_ORANGE_HIBISCUS, POTTED_YELLOW_HIBISCUS, POTTED_BLUE_HIBISCUS, POTTED_PINK_HIBISCUS, POTTED_PURPLE_HIBISCUS, POTTED_BLACK_HIBISCUS, POTTED_WHITE_HIBISCUS,
-                ALGAE
+                ALGAE, OVERLAY_SNOW
         );
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {

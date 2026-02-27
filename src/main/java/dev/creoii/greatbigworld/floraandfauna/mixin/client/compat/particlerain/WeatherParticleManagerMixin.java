@@ -34,7 +34,7 @@ public class WeatherParticleManagerMixin {
     }
 
     @WrapWithCondition(method = "tickSkyFX", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/ParticleEngine;add(Lnet/minecraft/client/particle/Particle;)V"))
-    private static boolean gbw$overrideParticleRainSkyFX(ParticleEngine instance, Particle particle, @Local(name = "biome") Holder<Biome> biome, @Local(name = "data") ConfigData.ParticleData data, @Local(argsOnly = true, name = "arg0") ClientLevel level) {
+    private static boolean gbw$overrideParticleRainSkyFX(ParticleEngine instance, Particle particle, @Local(name = "biome") Holder<Biome> biome, @Local(name = "data") ConfigData.ParticleData data, @Local(argsOnly = true) ClientLevel level) {
         return "snow".equals(data.id) == (FloraAndFaunaClient.getCurrentSeason() == Season.WINTER && level.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && !biome.is(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
     }
 
@@ -44,7 +44,7 @@ public class WeatherParticleManagerMixin {
     }
 
     @WrapWithCondition(method = "tickSurfaceFX", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/ParticleEngine;add(Lnet/minecraft/client/particle/Particle;)V"))
-    private static boolean gbw$overrideParticleRainSurfaceFX(ParticleEngine instance, Particle particle, @Local(name = "biome") Holder<Biome> biome, @Local(name = "data") ConfigData.ParticleData data, @Local(argsOnly = true, name = "arg0") ClientLevel level) {
+    private static boolean gbw$overrideParticleRainSurfaceFX(ParticleEngine instance, Particle particle, @Local(name = "biome") Holder<Biome> biome, @Local(name = "data") ConfigData.ParticleData data, @Local(argsOnly = true) ClientLevel level) {
         return "snow".equals(data.id) == (FloraAndFaunaClient.getCurrentSeason() == Season.WINTER && level.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && !biome.is(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER));
     }
 }

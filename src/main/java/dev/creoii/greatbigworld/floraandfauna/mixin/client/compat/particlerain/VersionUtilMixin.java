@@ -18,7 +18,7 @@ import pigcart.particlerain.VersionUtil;
 @Mixin(VersionUtil.class)
 public class VersionUtilMixin {
     @WrapOperation(method = "getPrecipitationAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;getPrecipitationAt(Lnet/minecraft/core/BlockPos;I)Lnet/minecraft/world/level/biome/Biome$Precipitation;"))
-    private static Biome.Precipitation gbw$modifyCanSetSnowForWinter(Biome instance, BlockPos pos, int seaLevel, Operation<Biome.Precipitation> original, @Local(argsOnly = true, name = "arg0") Level level) {
+    private static Biome.Precipitation gbw$modifyCanSetSnowForWinter(Biome instance, BlockPos pos, int seaLevel, Operation<Biome.Precipitation> original, @Local(argsOnly = true) Level level) {
         if (level.isClientSide() && FloraAndFaunaClient.getCurrentSeason() == Season.WINTER && level.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS) && !level.getBiome(pos).is(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER))
             return Biome.Precipitation.SNOW;
         else {

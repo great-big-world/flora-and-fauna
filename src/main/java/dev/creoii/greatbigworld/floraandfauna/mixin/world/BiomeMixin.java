@@ -19,15 +19,15 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(Biome.class)
 public class BiomeMixin {
     @WrapOperation(method = "shouldSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;getPrecipitationAt(Lnet/minecraft/core/BlockPos;I)Lnet/minecraft/world/level/biome/Biome$Precipitation;"))
-    private Biome.Precipitation gbw$modifyCanSetSnowForWinter(Biome instance, BlockPos pos, int seaLevel, Operation<Biome.Precipitation> original, @Local(argsOnly = true) LevelReader world) {
-        if (world.isClientSide() && (FloraAndFaunaClient.getCurrentSeason() == Season.WINTER && !world.getBiome(pos).is(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.defaultBlockState().canSurvive(world, pos) && world.isInsideBuildHeight(pos.getY()) && world.getBrightness(LightLayer.BLOCK, pos) < 10))
+    private Biome.Precipitation gbw$modifyCanSetSnowForWinter(Biome instance, BlockPos pos, int seaLevel, Operation<Biome.Precipitation> original, @Local(argsOnly = true) LevelReader levelReader) {
+        if (levelReader.isClientSide() && (FloraAndFaunaClient.getCurrentSeason() == Season.WINTER && !levelReader.getBiome(pos).is(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.defaultBlockState().canSurvive(levelReader, pos) && levelReader.isInsideBuildHeight(pos.getY()) && levelReader.getBrightness(LightLayer.BLOCK, pos) < 10))
             return Biome.Precipitation.SNOW;
         else {
-            if (world instanceof ServerLevel serverWorld) {
+            if (levelReader instanceof ServerLevel serverWorld) {
                 SeasonManager seasonManager = SeasonManager.getInstance(serverWorld.getServer());
                 if (seasonManager == null || !serverWorld.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS))
                     return original.call(instance, pos, seaLevel);
-                return (seasonManager.getCurrentSeason() == Season.WINTER && !world.getBiome(pos).is(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.defaultBlockState().canSurvive(world, pos) && world.isInsideBuildHeight(pos.getY()) && world.getBrightness(LightLayer.BLOCK, pos) < 10) ? Biome.Precipitation.SNOW : original.call(instance, pos, seaLevel);
+                return (seasonManager.getCurrentSeason() == Season.WINTER && !levelReader.getBiome(pos).is(FloraAndFaunaTags.NOT_AFFECTED_BY_WINTER) && Blocks.SNOW.defaultBlockState().canSurvive(levelReader, pos) && levelReader.isInsideBuildHeight(pos.getY()) && levelReader.getBrightness(LightLayer.BLOCK, pos) < 10) ? Biome.Precipitation.SNOW : original.call(instance, pos, seaLevel);
             } else return original.call(instance, pos, seaLevel);
         }
     }

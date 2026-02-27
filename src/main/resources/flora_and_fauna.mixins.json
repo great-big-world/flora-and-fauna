@@ -39,8 +39,6 @@
     "client.BiomeColorsMixin",
     "client.BlockColorsMixin",
     "client.ClientWorldMixin",
-    "client.GameOptionsMixin",
-    "client.VideoOptionsScreenMixin",
     "client.WeatherRenderingMixin",
     "client.compat.sodium.RenderSectionManagerAccessor",
     "client.compat.sodium.RenderSectionManagerMixin",

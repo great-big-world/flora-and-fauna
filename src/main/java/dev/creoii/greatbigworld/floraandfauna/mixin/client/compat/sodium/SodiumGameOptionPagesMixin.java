@@ -29,7 +29,7 @@ public class SodiumGameOptionPagesMixin {
 
     @ModifyExpressionValue(method = "buildQualityPage", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/api/config/structure/OptionGroupBuilder;addOption(Lnet/caffeinemc/mods/sodium/api/config/structure/OptionBuilder;)Lnet/caffeinemc/mods/sodium/api/config/structure/OptionGroupBuilder;", ordinal = 1), remap = false)
     private OptionGroupBuilder gbw$addSodiumSeasonTransitionQualityOption(OptionGroupBuilder original, @Local(argsOnly = true) ConfigBuilder builder) {
-        return original.addOption(builder.createEnumOption(Identifier.fromNamespaceAndPath("sodium", "season_transition_quality"), TransitionQuality.class).setName(Component.translatable("options.seasonTransitionQuality")).setTooltip(Component.empty()).setElementNameProvider(EnumOptionBuilder.nameProviderFrom(TransitionQuality.NAMES)).setBinding(quality -> {
+        return original.addOption(builder.createEnumOption(Identifier.fromNamespaceAndPath("sodium", "season_transition_quality"), TransitionQuality.class).setName(Component.translatable("options.seasonTransitionQuality")).setTooltip(Component.translatable("options.seasonTransitionQuality.tooltip")).setElementNameProvider(EnumOptionBuilder.nameProviderFrom(TransitionQuality.NAMES)).setBinding(quality -> {
             ClientPlayNetworking.send(new TransitionQuality.SyncTransitionQuality((byte) quality.getQuality()));
         }, () -> {
             @SuppressWarnings("unchecked")

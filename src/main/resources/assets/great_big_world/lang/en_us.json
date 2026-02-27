@@ -60,5 +60,6 @@
   "options.seasonTransitionQuality.high": "High",
   "options.seasonTransitionQuality.normal": "Normal",
   "options.seasonTransitionQuality.low": "Low",
-  "options.seasonTransitionQuality.instant": "Instant"
+  "options.seasonTransitionQuality.instant": "Instant",
+  "options.seasonTransitionQuality.tooltip": "Controls the frequency of season-based block tint updates during season transitions"
 }

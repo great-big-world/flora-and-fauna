@@ -1,16 +1,14 @@
 {
   "parent": "block/block",
   "textures": {
-    "top": "minecraft:block/snow",
     "snow": "great_big_world:block/snow_side",
     "particle": "#snow"
   },
   "elements": [
     {
-      "from": [-0.01, 0, -0.01],
-      "to": [16.02, 16, 16.02],
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
       "faces": {
-        "up": {"uv": [0, 0, 16, 16], "texture": "#top", "cullface": "up"},
         "north": {"uv": [0, 0, 16, 16], "texture": "#snow", "cullface": "north"},
         "east": {"uv": [0, 0, 16, 16], "texture": "#snow", "cullface": "east"},
         "south": {"uv": [0, 0, 16, 16], "texture": "#snow", "cullface": "south"},

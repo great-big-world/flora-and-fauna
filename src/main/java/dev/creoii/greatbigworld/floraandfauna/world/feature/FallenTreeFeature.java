@@ -73,11 +73,11 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
             return false;
         }
 
-        boolean placeLeaves = true;
+        boolean placeLeaves = leafChance > 0f && leafState != null;
         for (int i = 0; i < placementPositions.size(); ++i) {
             BlockPos pos = placementPositions.get(i);
 
-            world.setBlock(pos, state, Block.UPDATE_ALL);
+            world.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, world.isWaterAt(pos)), Block.UPDATE_ALL);
 
             if (context.random().nextFloat() > .075f) {
                 BlockState mushroomState = context.random().nextBoolean() ? Blocks.RED_MUSHROOM.defaultBlockState() : Blocks.BROWN_MUSHROOM.defaultBlockState();
@@ -91,7 +91,7 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
                 world.setBlock(pos.above(), mushroomState.setValue(FloraAndFaunaProperties.MUSHROOMS, count), Block.UPDATE_ALL);
             }
 
-            if (leafChance == -1f || context.random().nextFloat() > leafChance || leafState == null)
+            if (context.random().nextFloat() > leafChance)
                 placeLeaves = false;
 
             if (placeLeaves) {

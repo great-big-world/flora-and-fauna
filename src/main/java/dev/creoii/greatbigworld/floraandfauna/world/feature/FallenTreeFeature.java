@@ -77,7 +77,10 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
         for (int i = 0; i < placementPositions.size(); ++i) {
             BlockPos pos = placementPositions.get(i);
 
-            world.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, world.isWaterAt(pos)), Block.UPDATE_ALL);
+            if (state.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                state = state.setValue(BlockStateProperties.WATERLOGGED, world.isWaterAt(pos));
+            }
+            world.setBlock(pos, state, Block.UPDATE_ALL);
 
             if (context.random().nextFloat() > .075f) {
                 BlockState mushroomState = context.random().nextBoolean() ? Blocks.RED_MUSHROOM.defaultBlockState() : Blocks.BROWN_MUSHROOM.defaultBlockState();

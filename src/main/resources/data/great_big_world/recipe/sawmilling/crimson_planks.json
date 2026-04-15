@@ -11,6 +11,7 @@
   "count": 2,
   "ingredient": "#great_big_world:hollow_crimson_stems",
   "result": {
-    "id": "minecraft:crimson_planks"
+    "id": "minecraft:crimson_planks",
+    "count": 2
   }
 }

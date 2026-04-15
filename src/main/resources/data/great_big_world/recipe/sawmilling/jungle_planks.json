@@ -11,6 +11,7 @@
   "count": 2,
   "ingredient": "#great_big_world:hollow_jungle_logs",
   "result": {
-    "id": "minecraft:jungle_planks"
+    "id": "minecraft:jungle_planks",
+    "count": 2
   }
 }

@@ -11,6 +11,7 @@
   "count": 2,
   "ingredient": "#great_big_world:hollow_warped_stems",
   "result": {
-    "id": "minecraft:warped_planks"
+    "id": "minecraft:warped_planks",
+    "count": 2
   }
 }

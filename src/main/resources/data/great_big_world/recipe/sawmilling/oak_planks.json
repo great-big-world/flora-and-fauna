@@ -11,6 +11,7 @@
   "count": 2,
   "ingredient": "#great_big_world:hollow_oak_logs",
   "result": {
-    "id": "minecraft:oak_planks"
+    "id": "minecraft:oak_planks",
+    "count": 2
   }
 }

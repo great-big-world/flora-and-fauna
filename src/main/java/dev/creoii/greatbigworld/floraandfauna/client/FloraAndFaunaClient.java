@@ -10,6 +10,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +43,8 @@ public class FloraAndFaunaClient implements ClientModInitializer {
                     OptionInstance<TransitionQuality> optionInstance = (OptionInstance<TransitionQuality>) OptionsAPI.getOption(seasonTransitionQualityId);
                     ClientPlayNetworking.send(new TransitionQuality.SyncTransitionQuality((byte) optionInstance.get().getQuality()));
                 }));
+
+        DebugScreenEntries.register(SeasonDebugHudEntry.CURRENT_SEASON, new SeasonDebugHudEntry());
     }
 
     public static @Nullable Season getCurrentSeason() {

@@ -2,7 +2,7 @@ package dev.creoii.greatbigworld.floraandfauna.registry;
 
 import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.floraandfauna.block.AlgaeBlock;
-import dev.creoii.greatbigworld.floraandfauna.block.HollowLogBlock;
+import dev.creoii.greatbigworld.block.HollowLogBlock;
 import dev.creoii.greatbigworld.util.ColorHelper;
 import dev.creoii.greatbigworld.util.RegistryHelper;
 import net.fabricmc.api.EnvType;

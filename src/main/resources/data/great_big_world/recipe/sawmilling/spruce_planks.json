@@ -11,6 +11,7 @@
   "count": 2,
   "ingredient": "#great_big_world:hollow_spruce_logs",
   "result": {
-    "id": "minecraft:spruce_planks"
+    "id": "minecraft:spruce_planks",
+    "count": 2
   }
 }

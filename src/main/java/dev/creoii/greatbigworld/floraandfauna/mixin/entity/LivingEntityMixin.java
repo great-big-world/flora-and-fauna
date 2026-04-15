@@ -1,7 +1,7 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.entity;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.creoii.greatbigworld.floraandfauna.block.HollowLogBlock;
+import dev.creoii.greatbigworld.block.HollowLogBlock;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

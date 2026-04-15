@@ -26,6 +26,12 @@
       "min_inclusive": 5,
       "max_inclusive": 8
     },
+    "leaf_state": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:spruce_leaves"
+      }
+    },
     "leaf_chance": 40
   }
 }

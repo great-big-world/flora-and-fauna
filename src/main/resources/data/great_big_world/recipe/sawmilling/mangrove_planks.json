@@ -11,6 +11,7 @@
   "count": 2,
   "ingredient": "#great_big_world:hollow_mangrove_logs",
   "result": {
-    "id": "minecraft:mangrove_planks"
+    "id": "minecraft:mangrove_planks",
+    "count": 2
   }
 }

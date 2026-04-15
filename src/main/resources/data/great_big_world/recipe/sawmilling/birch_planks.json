@@ -11,6 +11,7 @@
   "count": 2,
   "ingredient": "#great_big_world:hollow_birch_logs",
   "result": {
-    "id": "minecraft:birch_planks"
+    "id": "minecraft:birch_planks",
+    "count": 2
   }
 }

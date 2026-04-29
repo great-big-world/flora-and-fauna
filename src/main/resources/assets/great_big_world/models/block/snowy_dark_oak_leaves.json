@@ -1,6 +1,7 @@
 {
   "parent": "great_big_world:block/snowy_leaves",
   "textures": {
-    "leaves": "great_big_world:block/snowy_dark_oak_leaves"
+    "leaves": "great_big_world:block/snowy_dark_oak_leaves",
+    "bottom": "minecraft:block/dark_oak_leaves"
   }
 }

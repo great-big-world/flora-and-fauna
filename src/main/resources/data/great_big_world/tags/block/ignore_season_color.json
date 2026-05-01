@@ -1,5 +1,6 @@
 {
   "values": [
-    "minecraft:redstone_wire"
+    "minecraft:redstone_wire",
+    "great_big_world:engraved_stone"
   ]
 }

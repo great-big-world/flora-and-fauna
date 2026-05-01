@@ -3,5 +3,6 @@ accessible field net/minecraft/client/renderer/LevelRenderer viewArea Lnet/minec
 accessible field net/minecraft/world/level/block/entity/ChestBlockEntity chestLidController Lnet/minecraft/world/level/block/entity/ChestLidController;
 accessible field net/minecraft/world/level/block/entity/ChestLidController openness F
 accessible field net/minecraft/world/level/block/entity/ChestLidController shouldBeOpen Z
+accessible field net/minecraft/client/renderer/chunk/RenderSectionRegion level Lnet/minecraft/world/level/Level;
 
 accessible method net/minecraft/client/renderer/WeatherEffectRenderer getPrecipitationAt (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome$Precipitation;

@@ -38,9 +38,7 @@ public class BlockColorsMixin {
                 } else
                     cir.setReturnValue(FloraAndFaunaClient.getCurrentSeason().getParticleColorChange().apply(new Season.Context(world, pos, cir.getReturnValue())));
             } else if (world.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
-                System.out.println("BlockColorsMixin Particle2");
-                Season.Context context = new Season.Context(world, pos, cir.getReturnValue());
-                cir.setReturnValue(Season.SPRING.getGrassColorChange().apply(context));
+                cir.setReturnValue(Season.applyOverworldColorChange(cir.getReturnValue()));
             }
         }
     }
@@ -54,9 +52,7 @@ public class BlockColorsMixin {
                 } else
                     cir.setReturnValue(FloraAndFaunaClient.getCurrentSeason().getParticleColorChange().apply(new Season.Context(level, pos, cir.getReturnValue())));
             } else if (world instanceof RenderSectionRegion region && region.level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
-                System.out.println("BlockColorsMixin Particle1");
-                Season.Context context = new Season.Context(world, pos, cir.getReturnValue());
-                cir.setReturnValue(Season.SPRING.getGrassColorChange().apply(context));
+                cir.setReturnValue(Season.applyOverworldColorChange(cir.getReturnValue()));
             }
         }
     }
@@ -68,9 +64,7 @@ public class BlockColorsMixin {
                 cir.setReturnValue(-10380959);
                 return;
             } else if (world instanceof RenderSectionRegion region && region.level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
-                System.out.println("BlockColorsMixin Spruce");
-                Season.Context context = new Season.Context(world, pos, -10380959);
-                cir.setReturnValue(Season.SPRING.getGrassColorChange().apply(context));
+                cir.setReturnValue(Season.applyOverworldColorChange(-10380959));
             }
             if (FloraAndFaunaClient.getCurrentSeason() != null) {
                 if (FloraAndFaunaClient.getTransitionContext() != null) {
@@ -88,9 +82,7 @@ public class BlockColorsMixin {
                 cir.setReturnValue(-8345771);
                 return;
             } else if (world instanceof RenderSectionRegion region && region.level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
-                System.out.println("BlockColorsMixin Birch");
-                Season.Context context = new Season.Context(world, pos, -8345771);
-                cir.setReturnValue(Season.SPRING.getGrassColorChange().apply(context));
+                cir.setReturnValue(Season.applyOverworldColorChange(-8345771));
             }
             if (FloraAndFaunaClient.getCurrentSeason() != null) {
                 if (FloraAndFaunaClient.getTransitionContext() != null) {

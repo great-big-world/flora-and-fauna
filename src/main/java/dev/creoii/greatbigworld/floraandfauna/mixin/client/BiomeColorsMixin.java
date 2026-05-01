@@ -3,7 +3,6 @@ package dev.creoii.greatbigworld.floraandfauna.mixin.client;
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.chunk.RenderSectionRegion;
 import net.minecraft.core.BlockPos;
@@ -20,9 +19,7 @@ public class BiomeColorsMixin {
     private static void gbw$modifyBiomeFoliageColor(BlockAndTintGetter world, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
         if (!world.getBlockState(pos).is(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
             if (world instanceof RenderSectionRegion region && region.level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
-                System.out.println("BiomeColorsMixin Foliage");
-                Season.Context context = new Season.Context(world, pos, cir.getReturnValue());
-                cir.setReturnValue(Season.SPRING.getGrassColorChange().apply(context));
+                cir.setReturnValue(Season.applyOverworldColorChange(cir.getReturnValue()));
                 return;
             }
             if (FloraAndFaunaClient.getCurrentSeason() != null) {
@@ -39,9 +36,8 @@ public class BiomeColorsMixin {
     private static void gbw$modifyBiomeGrassColor(BlockAndTintGetter world, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
         if (!world.getBlockState(pos).is(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
             if (world instanceof RenderSectionRegion region && region.level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
-                System.out.println("BiomeColorsMixin Grass");
                 Season.Context context = new Season.Context(world, pos, cir.getReturnValue());
-                cir.setReturnValue(Season.SPRING.getGrassColorChange().apply(context));
+                cir.setReturnValue(Season.applyOverworldColorChange(cir.getReturnValue()));
                 return;
             }
             if (FloraAndFaunaClient.getCurrentSeason() != null) {
@@ -58,9 +54,7 @@ public class BiomeColorsMixin {
     private static void gbw$modifyBiomeDryFoliageColor(BlockAndTintGetter world, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
         if (!world.getBlockState(pos).is(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
             if (world instanceof RenderSectionRegion region && region.level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
-                System.out.println("BiomeColorsMixin Dry Foliage");
-                Season.Context context = new Season.Context(world, pos, cir.getReturnValue());
-                cir.setReturnValue(Season.SPRING.getGrassColorChange().apply(context));
+                cir.setReturnValue(Season.applyOverworldColorChange(cir.getReturnValue()));
                 return;
             }
             if (FloraAndFaunaClient.getCurrentSeason() != null) {

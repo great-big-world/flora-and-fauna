@@ -126,5 +126,9 @@ public enum Season {
         return context.defaultColor;
     }
 
+    public static int applyOverworldColorChange(int color) {
+        return ColorHelper.add(color, 10, 100, 0);
+    }
+
     public record Context(BlockAndTintGetter world, BlockPos pos, int defaultColor) {}
 }

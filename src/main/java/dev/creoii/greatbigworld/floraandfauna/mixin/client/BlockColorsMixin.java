@@ -1,8 +1,11 @@
 package dev.creoii.greatbigworld.floraandfauna.mixin.client;
 
 import dev.creoii.greatbigworld.floraandfauna.client.FloraAndFaunaClient;
+import dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.LevelSliceAccessor;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
+import net.caffeinemc.mods.sodium.client.world.LevelSlice;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.chunk.RenderSectionRegion;
@@ -30,15 +33,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockColors.class)
 public class BlockColorsMixin {
     @Inject(method = "getColor(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)I", at = @At(value = "RETURN", ordinal = 0), cancellable = true)
-    private void gbw$modifyParticleColor(BlockState state, Level world, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
+    private void gbw$modifyParticleColor(BlockState state, Level level, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
         if (!state.is(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
-            if (FloraAndFaunaClient.getCurrentSeason() != null && world.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
+            if (level != null) {
+                if (level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
+                    cir.setReturnValue(Season.applyOverworldColorChange(cir.getReturnValue()));
+                    return;
+                } else if (!level.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
+                    cir.setReturnValue(cir.getReturnValue());
+                    return;
+                }
+            }
+
+            if (FloraAndFaunaClient.getCurrentSeason() != null) {
                 if (FloraAndFaunaClient.getTransitionContext() != null) {
-                    cir.setReturnValue(FloraAndFaunaClient.getTransitionContext().getSeasonGrassColor(world, pos, cir.getReturnValue()));
+                    cir.setReturnValue(FloraAndFaunaClient.getTransitionContext().getSeasonGrassColor(level, pos, cir.getReturnValue()));
                 } else
-                    cir.setReturnValue(FloraAndFaunaClient.getCurrentSeason().getParticleColorChange().apply(new Season.Context(world, pos, cir.getReturnValue())));
-            } else if (world.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
-                cir.setReturnValue(Season.applyOverworldColorChange(cir.getReturnValue()));
+                    cir.setReturnValue(FloraAndFaunaClient.getCurrentSeason().getParticleColorChange().apply(new Season.Context(level, pos, cir.getReturnValue())));
             }
         }
     }
@@ -46,13 +57,27 @@ public class BlockColorsMixin {
     @Inject(method = "getColor(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/core/BlockPos;I)I", at = @At(value = "RETURN"), cancellable = true)
     private void gbw$modifyParticleColor(BlockState state, BlockAndTintGetter world, BlockPos pos, int i, CallbackInfoReturnable<Integer> cir) {
         if (!state.is(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
-            if (FloraAndFaunaClient.getCurrentSeason() != null && world instanceof Level level && level.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
+            Level level = world instanceof RenderSectionRegion region ? region.level : world instanceof ClientLevel clientLevel ? clientLevel : null;
+
+            if (level == null && FabricLoader.getInstance().isModLoaded("sodium")) {
+                if (world instanceof LevelSlice levelSlice) level = ((LevelSliceAccessor) (Object) levelSlice).gbw$getLevel();
+            }
+
+            if (level != null) {
+                if (level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
+                    cir.setReturnValue(Season.applyOverworldColorChange(cir.getReturnValue()));
+                    return;
+                } else if (!level.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
+                    cir.setReturnValue(cir.getReturnValue());
+                    return;
+                }
+            }
+
+            if (FloraAndFaunaClient.getCurrentSeason() != null) {
                 if (FloraAndFaunaClient.getTransitionContext() != null) {
                     cir.setReturnValue(FloraAndFaunaClient.getTransitionContext().getSeasonGrassColor(level, pos, cir.getReturnValue()));
                 } else
                     cir.setReturnValue(FloraAndFaunaClient.getCurrentSeason().getParticleColorChange().apply(new Season.Context(level, pos, cir.getReturnValue())));
-            } else if (world instanceof RenderSectionRegion region && region.level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
-                cir.setReturnValue(Season.applyOverworldColorChange(cir.getReturnValue()));
             }
         }
     }
@@ -60,12 +85,22 @@ public class BlockColorsMixin {
     @Inject(method = "method_1695", at = @At("HEAD"), cancellable = true)
     private static void gbw$modifySpruceColor(BlockState state, BlockAndTintGetter world, BlockPos pos, int i, CallbackInfoReturnable<Integer> cir) {
         if (!state.is(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
-            if (world instanceof ClientLevel clientWorld && !clientWorld.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
-                cir.setReturnValue(-10380959);
-                return;
-            } else if (world instanceof RenderSectionRegion region && region.level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
-                cir.setReturnValue(Season.applyOverworldColorChange(-10380959));
+            Level level = world instanceof RenderSectionRegion region ? region.level : world instanceof ClientLevel clientLevel ? clientLevel : null;
+
+            if (level == null && FabricLoader.getInstance().isModLoaded("sodium")) {
+                if (world instanceof LevelSlice levelSlice) level = ((LevelSliceAccessor) (Object) levelSlice).gbw$getLevel();
             }
+
+            if (level != null) {
+                if (level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
+                    cir.setReturnValue(Season.applyOverworldColorChange(-10380959));
+                    return;
+                } else if (!level.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
+                    cir.setReturnValue(-10380959);
+                    return;
+                }
+            }
+
             if (FloraAndFaunaClient.getCurrentSeason() != null) {
                 if (FloraAndFaunaClient.getTransitionContext() != null) {
                     cir.setReturnValue(FloraAndFaunaClient.getTransitionContext().getSeasonFoliageColor(world, pos, -10380959));
@@ -78,12 +113,22 @@ public class BlockColorsMixin {
     @Inject(method = "method_1687", at = @At("HEAD"), cancellable = true)
     private static void gbw$modifyBirchColor(BlockState state, BlockAndTintGetter world, BlockPos pos, int i, CallbackInfoReturnable<Integer> cir) {
         if (!state.is(FloraAndFaunaTags.IGNORE_SEASON_COLOR)) {
-            if (world instanceof ClientLevel clientWorld && !clientWorld.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
-                cir.setReturnValue(-8345771);
-                return;
-            } else if (world instanceof RenderSectionRegion region && region.level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
-                cir.setReturnValue(Season.applyOverworldColorChange(-8345771));
+            Level level = world instanceof RenderSectionRegion region ? region.level : world instanceof ClientLevel clientLevel ? clientLevel : null;
+
+            if (level == null && FabricLoader.getInstance().isModLoaded("sodium")) {
+                if (world instanceof LevelSlice levelSlice) level = ((LevelSliceAccessor) (Object) levelSlice).gbw$getLevel();
             }
+
+            if (level != null) {
+                if (level.dimensionTypeRegistration().is(BuiltinDimensionTypes.OVERWORLD)) {
+                    cir.setReturnValue(Season.applyOverworldColorChange(-8345771));
+                    return;
+                } else if (!level.dimensionTypeRegistration().is(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
+                    cir.setReturnValue(-8345771);
+                    return;
+                }
+            }
+
             if (FloraAndFaunaClient.getCurrentSeason() != null) {
                 if (FloraAndFaunaClient.getTransitionContext() != null) {
                     cir.setReturnValue(FloraAndFaunaClient.getTransitionContext().getSeasonFoliageColor(world, pos, -8345771));

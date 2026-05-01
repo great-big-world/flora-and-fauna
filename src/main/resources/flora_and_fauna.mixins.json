@@ -27,6 +27,7 @@
     "block.TintedParticleLeavesBlockMixin",
     "client.compat.particlerain.VersionUtilMixin",
     "client.compat.particlerain.WeatherParticleManagerMixin",
+    "client.compat.sodium.LevelSliceAccessor",
     "client.compat.sodium.SodiumGameOptionPagesMixin",
     "entity.AnimalEntityMixin",
     "entity.EscapeDangerGoalMixin",

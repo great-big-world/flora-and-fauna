@@ -1,0 +1,12 @@
+{
+  "type": "lithostitched:replace_partially",
+  "dimension": "minecraft:overworld",
+  "priority": 1500,
+  "targets": "minecraft:river",
+  "replacement": "great_big_world:desert_river",
+  "parameters": {
+    "temperature": {
+      "min_inclusive": 0.55
+    }
+  }
+}

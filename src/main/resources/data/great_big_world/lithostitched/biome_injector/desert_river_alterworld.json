@@ -1,0 +1,12 @@
+{
+  "type": "lithostitched:replace_partially",
+  "dimension": "great_big_world:the_alterworld",
+  "priority": 1500,
+  "targets": "great_big_world:alter_river",
+  "replacement": "great_big_world:alter_desert_river",
+  "parameters": {
+    "temperature": {
+      "min_inclusive": 0.55
+    }
+  }
+}

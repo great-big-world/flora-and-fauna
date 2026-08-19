@@ -33,8 +33,7 @@
     "entity.EscapeDangerGoalMixin",
     "entity.LivingEntityMixin",
     "world.BiomeMixin",
-    "world.ServerWorldMixin",
-    "world.VanillaBiomeParametersMixin"
+    "world.ServerWorldMixin"
   ],
   "client": [
     "client.BiomeColorsMixin",

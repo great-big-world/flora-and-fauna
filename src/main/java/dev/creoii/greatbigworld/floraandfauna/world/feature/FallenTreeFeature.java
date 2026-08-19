@@ -73,7 +73,7 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
             return false;
         }
 
-        boolean placeLeaves = leafChance > 0f && leafState != null;
+        boolean placeLeaves = context.random().nextFloat() < leafChance && leafState != null;
         for (int i = 0; i < placementPositions.size(); ++i) {
             BlockPos pos = placementPositions.get(i);
 
@@ -94,9 +94,6 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
                 world.setBlock(pos.above(), mushroomState.setValue(FloraAndFaunaProperties.MUSHROOMS, count), Block.UPDATE_ALL);
             }
 
-            if (context.random().nextFloat() > leafChance)
-                placeLeaves = false;
-
             if (placeLeaves) {
                 for (Direction direction1 : Direction.values()) {
                     if (direction1.getAxis() == direction.getAxis())
@@ -105,7 +102,7 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
                     BlockPos offset = pos.relative(direction1);
                     BlockState offsetState = world.getBlockState(offset);
                     if ((offsetState.isAir() || offsetState.canBeReplaced()) && !world.isWaterAt(offset)) {
-                        if (i > placementPositions.size() / 2 && context.random().nextFloat() < leafChance) {
+                        if (i > placementPositions.size() * .66669f && context.random().nextFloat() < leafChance) {
                             world.setBlock(offset, leafState.setValue(LeavesBlock.DISTANCE, 1), 19);
                         }
                     }

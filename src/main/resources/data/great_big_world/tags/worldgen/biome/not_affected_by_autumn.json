@@ -2,6 +2,9 @@
   "values": [
     "great_big_world:alter_jungle",
     "great_big_world:jungle_river",
+    "great_big_world:cold_river",
+    "great_big_world:alter_cold_river",
+    "minecraft:taiga",
     "minecraft:bamboo_jungle",
     "minecraft:sparse_jungle",
     "minecraft:ice_spikes",

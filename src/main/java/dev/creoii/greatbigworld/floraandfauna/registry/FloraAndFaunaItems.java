@@ -85,44 +85,18 @@ public final class FloraAndFaunaItems {
             entries.addAfter(Items.FERN, TROPICAL_FERN);
             entries.addAfter(Items.LARGE_FERN, LARGE_TROPICAL_FERN);
             entries.addAfter(Items.LILY_OF_THE_VALLEY, RED_HIBISCUS, ORANGE_HIBISCUS, YELLOW_HIBISCUS, BLUE_HIBISCUS, PINK_HIBISCUS, PURPLE_HIBISCUS, BLACK_HIBISCUS, WHITE_HIBISCUS);
-            entries.addAfter(Items.OAK_LOG, HOLLOW_OAK_LOG);
-            entries.addAfter(Items.SPRUCE_LOG, HOLLOW_SPRUCE_LOG);
-            entries.addAfter(Items.BIRCH_LOG, HOLLOW_BIRCH_LOG);
-            entries.addAfter(Items.JUNGLE_LOG, HOLLOW_JUNGLE_LOG);
-            entries.addAfter(Items.DARK_OAK_LOG, HOLLOW_DARK_OAK_LOG);
-            entries.addAfter(Items.ACACIA_LOG, HOLLOW_ACACIA_LOG);
-            entries.addAfter(Items.MANGROVE_LOG, HOLLOW_MANGROVE_LOG);
-            entries.addAfter(Items.CHERRY_LOG, HOLLOW_CHERRY_LOG);
-            entries.addAfter(Items.PALE_OAK_LOG, HOLLOW_PALE_OAK_LOG);
-            entries.addAfter(Items.WARPED_STEM, HOLLOW_WARPED_STEM);
-            entries.addAfter(Items.CRIMSON_STEM, HOLLOW_CRIMSON_STEM);
+            entries.addAfter(Items.OAK_LOG, HOLLOW_OAK_LOG, STRIPPED_HOLLOW_OAK_LOG);
+            entries.addAfter(Items.SPRUCE_LOG, HOLLOW_SPRUCE_LOG, STRIPPED_HOLLOW_SPRUCE_LOG);
+            entries.addAfter(Items.BIRCH_LOG, HOLLOW_BIRCH_LOG, STRIPPED_HOLLOW_BIRCH_LOG);
+            entries.addAfter(Items.JUNGLE_LOG, HOLLOW_JUNGLE_LOG, STRIPPED_HOLLOW_JUNGLE_LOG);
+            entries.addAfter(Items.DARK_OAK_LOG, HOLLOW_DARK_OAK_LOG, STRIPPED_HOLLOW_DARK_OAK_LOG);
+            entries.addAfter(Items.ACACIA_LOG, HOLLOW_ACACIA_LOG, STRIPPED_HOLLOW_ACACIA_LOG);
+            entries.addAfter(Items.MANGROVE_LOG, HOLLOW_MANGROVE_LOG, STRIPPED_HOLLOW_MANGROVE_LOG);
+            entries.addAfter(Items.CHERRY_LOG, HOLLOW_CHERRY_LOG, STRIPPED_HOLLOW_CHERRY_LOG);
+            entries.addAfter(Items.PALE_OAK_LOG, HOLLOW_PALE_OAK_LOG, STRIPPED_HOLLOW_PALE_OAK_LOG);
+            entries.addAfter(Items.WARPED_STEM, HOLLOW_WARPED_STEM, STRIPPED_HOLLOW_WARPED_STEM);
+            entries.addAfter(Items.CRIMSON_STEM, HOLLOW_CRIMSON_STEM, STRIPPED_HOLLOW_CRIMSON_STEM);
             entries.addAfter(Items.LILY_PAD, ALGAE);
-        });
-
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.BUILDING_BLOCKS).register(entries -> {
-            entries.addAfter(Items.OAK_WOOD, HOLLOW_OAK_LOG);
-            entries.addAfter(Items.SPRUCE_WOOD, HOLLOW_SPRUCE_LOG);
-            entries.addAfter(Items.BIRCH_WOOD, HOLLOW_BIRCH_LOG);
-            entries.addAfter(Items.JUNGLE_WOOD, HOLLOW_JUNGLE_LOG);
-            entries.addAfter(Items.ACACIA_WOOD, HOLLOW_ACACIA_LOG);
-            entries.addAfter(Items.DARK_OAK_WOOD, HOLLOW_DARK_OAK_LOG);
-            entries.addAfter(Items.MANGROVE_WOOD, HOLLOW_MANGROVE_LOG);
-            entries.addAfter(Items.CHERRY_WOOD, HOLLOW_CHERRY_LOG);
-            entries.addAfter(Items.PALE_OAK_WOOD, HOLLOW_PALE_OAK_LOG);
-            entries.addAfter(Items.WARPED_HYPHAE, HOLLOW_WARPED_STEM);
-            entries.addAfter(Items.CRIMSON_HYPHAE, HOLLOW_CRIMSON_STEM);
-
-            entries.addAfter(Items.STRIPPED_OAK_WOOD, STRIPPED_HOLLOW_OAK_LOG);
-            entries.addAfter(Items.STRIPPED_SPRUCE_WOOD, STRIPPED_HOLLOW_SPRUCE_LOG);
-            entries.addAfter(Items.STRIPPED_BIRCH_WOOD, STRIPPED_HOLLOW_BIRCH_LOG);
-            entries.addAfter(Items.STRIPPED_JUNGLE_WOOD, STRIPPED_HOLLOW_JUNGLE_LOG);
-            entries.addAfter(Items.STRIPPED_ACACIA_WOOD, STRIPPED_HOLLOW_ACACIA_LOG);
-            entries.addAfter(Items.STRIPPED_DARK_OAK_WOOD, STRIPPED_HOLLOW_DARK_OAK_LOG);
-            entries.addAfter(Items.STRIPPED_MANGROVE_WOOD, STRIPPED_HOLLOW_MANGROVE_LOG);
-            entries.addAfter(Items.STRIPPED_CHERRY_WOOD, STRIPPED_HOLLOW_CHERRY_LOG);
-            entries.addAfter(Items.STRIPPED_PALE_OAK_WOOD, STRIPPED_HOLLOW_PALE_OAK_LOG);
-            entries.addAfter(Items.STRIPPED_WARPED_HYPHAE, STRIPPED_HOLLOW_WARPED_STEM);
-            entries.addAfter(Items.STRIPPED_CRIMSON_HYPHAE, STRIPPED_HOLLOW_CRIMSON_STEM);
         });
     }
 }
